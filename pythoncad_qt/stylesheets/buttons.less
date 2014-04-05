@@ -1,0 +1,41 @@
+.FlatButton() {
+    border: none;
+}
+
+.DefaultButton() {
+    .FlatButton;
+    background-color: #C1BEB6;
+    padding: 7px;
+    font-size: 14px;
+    color: #FFF;
+    &:pressed {
+        outline: none;
+    }
+}
+
+Button {
+    .DefaultButton;
+}
+
+PrimaryButton {
+    .DefaultButton;
+    background-color: @primary;
+    border: 1px solid darken(@primary, 10%);
+    &:hover {
+        background-color: lighten(@primary, 5%)
+    }
+    &:pressed {
+        background-color: darken(@primary, 5%)
+    }
+}
+
+DangerButton {
+    .DefaultButton;
+    background-color: @danger;
+    &:hover {
+        background-color: lighten(@danger, 5%)
+    }
+    &:pressed {
+        background-color: darken(@danger, 5%)
+    }
+}

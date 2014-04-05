@@ -1,0 +1,325 @@
+Button {
+  border: none;
+  background-color: #C1BEB6;
+  padding: 7px;
+  font-size: 14px;
+  color: #FFF;
+}
+Button:pressed {
+  outline: none;
+}
+PrimaryButton {
+  border: none;
+  background-color: #C1BEB6;
+  padding: 7px;
+  font-size: 14px;
+  color: #FFF;
+  background-color: #428bca;
+  border: 1px solid #3071a9;
+}
+PrimaryButton:pressed {
+  outline: none;
+}
+PrimaryButton:hover {
+  background-color: #5697d0;
+}
+PrimaryButton:pressed {
+  background-color: #357ebd;
+}
+DangerButton {
+  border: none;
+  background-color: #C1BEB6;
+  padding: 7px;
+  font-size: 14px;
+  color: #FFF;
+  background-color: #d9534f;
+}
+DangerButton:pressed {
+  outline: none;
+}
+DangerButton:hover {
+  background-color: #de6764;
+}
+DangerButton:pressed {
+  background-color: #d43f3a;
+}
+ClearableLineEdit {
+  border: 1px solid #b7c4cc;
+  padding: 3px;
+  font-size: 12px;
+  padding: 5px;
+}
+ClearableLineEdit:hover {
+  background-color: #f2f2f2;
+}
+ClearableLineEdit QToolButton {
+  image: url(images/clear.png);
+  border: none;
+  margin-top: 1px;
+}
+ClearableLineEdit QToolButton:hover {
+  image: url(images/clear_hover.png);
+}
+ClearableLineEdit QToolButton:pressed {
+  image: url(images/clear_pressed.png);
+}
+Sidebar SidebarPaneSelector {
+  background-color: #2682C2;
+  border: none;
+  color: white;
+  padding: 10px;
+  font-size: 20px;
+}
+Sidebar SidebarPaneSelector:hover {
+  background-color: #2991D6;
+}
+Sidebar SidebarPaneSelector::drop-down {
+  subcontrol-origin: content;
+  subcontrol-position: right top;
+  border: none;
+}
+Sidebar SidebarPaneSelector::down-arrow {
+  image: url(images/down-arrow.png);
+  width: 16px;
+  height: 8px;
+}
+Sidebar SidebarPaneSelector QAbstractItemView {
+  background-color: #2682C2;
+  border: none;
+  color: white;
+  outline: none;
+  font-size: 20px;
+}
+Sidebar SidebarPaneSelector QAbstractItemView::item {
+  padding: 10px;
+  background-color: #2682C2;
+  color: white;
+}
+Sidebar SidebarPaneSelector QAbstractItemView::item:hover {
+  background-color: #32AEDE;
+}
+Sidebar SidebarPaneStack {
+  background-color: #e4e9ec;
+  min-width: 250px;
+}
+Sidebar SidebarPaneStack QGroupBox {
+  border: none;
+  margin-top: 1em;
+  font-size: 14px;
+}
+Sidebar SidebarPaneStack QGroupBox::title {
+  color: #333333;
+  subcontrol-origin: margin;
+}
+Sidebar SidebarPaneStack QGroupBox QLabel {
+  font-weight: bold;
+  font-size: 12px;
+  color: #333333;
+}
+Sidebar SidebarPaneStack QGroupBox QLineEdit {
+  border: 1px solid #b7c4cc;
+  padding: 3px;
+  font-size: 12px;
+}
+Sidebar SidebarPaneStack QGroupBox QLineEdit:hover {
+  background-color: #f2f2f2;
+}
+FilterableTreeView QComboBox {
+  border: none;
+  padding: 5px;
+  font-size: 12px;
+  background-color: #2daa6d;
+  color: #fff;
+}
+FilterableTreeView QComboBox:hover {
+  background-color: #289660;
+}
+FilterableTreeView QComboBox::drop-down {
+  subcontrol-origin: content;
+  subcontrol-position: right top;
+  border: none;
+}
+FilterableTreeView QComboBox::down-arrow {
+  image: url(images/down-arrow.png);
+  width: 12px;
+  height: 7px;
+}
+FilterableTreeView QComboBox QAbstractItemView {
+  background-color: #2daa6d;
+  border: none;
+  color: white;
+  outline: none;
+  font-size: 12px;
+}
+FilterableTreeView QComboBox QAbstractItemView::item {
+  padding: 5px;
+  background-color: #2daa6d;
+  color: white;
+}
+FilterableTreeView QComboBox QAbstractItemView::item:hover {
+  background-color: #3ecc87;
+}
+FilterableTreeView QTreeView {
+  border: 1px solid #b7c4cc;
+  outline: none;
+}
+FilterableTreeView QTreeView::item {
+  border: none;
+  font-size: 12px;
+  padding: 10px;
+}
+FilterableTreeView QTreeView::item:selected {
+  color: #000;
+  background-color: #f2f2f2;
+}
+CommandPane QLineEdit {
+  border: 1px solid #b7c4cc;
+  margin: 10px;
+  margin-bottom: 0px;
+  padding: 5px;
+}
+CommandPane CenteredButton {
+  background-color: #dee4e8;
+  color: #000;
+  border: 1px solid #d5dde1;
+}
+CommandPane CenteredButton:hover {
+  background-color: #ccd5db;
+}
+CommandPane CenteredButton:pressed {
+  background-color: #c0ccd3;
+}
+CommandPane CenteredLabel {
+  padding: 10px 5px;
+  qproperty-alignment: AlignCenter;
+  qproperty-wordWrap: true;
+}
+CommandPane CategoryHeading {
+  color: #566d7b;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 10px 5px;
+  border: none;
+  border-bottom: 2px solid #c6d1d7;
+}
+Section QLabel {
+  color: #8aa0ad;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 10px 5px;
+  border: none;
+}
+Section CommandButton {
+  border: none;
+  padding: 5px 5px;
+  font-size: 12px;
+  padding-left: 20px;
+  background-color: transparent;
+  color: #000000;
+  text-align: left;
+}
+Section CommandButton:hover {
+  background-color: #ccd5db;
+}
+Section CommandButton:pressed {
+  background-color: #c0ccd3;
+}
+CommandListContainer > QFrame {
+  border: 1px solid #b7c4cc;
+}
+CommandScrollArea {
+  border: none;
+  background: #edf0f2;
+}
+CommandScrollArea SectionContainer {
+  background: transparent;
+}
+CommandScrollArea QScrollBar:vertical {
+  border: none;
+  width: 5px;
+  background-color: #edf0f2;
+}
+CommandScrollArea QScrollBar::handle:vertical {
+  background-color: #c6d1d7;
+}
+CommandScrollArea QScrollBar::add-page:vertical,
+CommandScrollArea QScrollBar::sub-page:vertical {
+  background: none;
+}
+CommandScrollArea QScrollBar::add-line:vertical,
+CommandScrollArea QScrollBar::sub-line:vertical {
+  height: 0px;
+  width: 0px;
+}
+CommandScrollArea QScrollBar:horizontal {
+  border: none;
+  height: 5px;
+  background-color: #edf0f2;
+}
+CommandScrollArea QScrollBar::handle:horizontal {
+  background-color: #c6d1d7;
+}
+CommandScrollArea QScrollBar::add-page:horizontal,
+CommandScrollArea QScrollBar::sub-page:horizontal {
+  background: none;
+}
+CommandScrollArea QScrollBar::add-line:horizontal,
+CommandScrollArea QScrollBar::sub-line:horizontal {
+  height: 0px;
+  width: 0px;
+}
+TopBar {
+  background-color: #445059;
+}
+TopBar QLabel {
+  font-size: 20px;
+  padding: 10px;
+  color: #fff;
+}
+TopBar Button {
+  font-size: 12px;
+  border: 1px solid #2e363c;
+  background-color: #323b42;
+}
+TopBar Button:hover {
+  background-color: #46535c;
+}
+TopBar Button:pressed {
+  background-color: #23292e;
+}
+Document TitleBar {
+  background-color: #2682C2;
+}
+Document TitleBar DocumentTitleLabel {
+  font-size: 20px;
+  padding: 11px;
+  color: #fff;
+}
+Document TitleBar QLabel {
+  color: #fff;
+}
+Document TitleBar Button {
+  font-size: 12px;
+  border: 1px solid #3071a9;
+  background-color: #3276b1;
+}
+Document TitleBar Button:hover {
+  background-color: #5697d0;
+}
+Document TitleBar Button:pressed {
+  background-color: #2a6496;
+}
+Document QGraphicsView {
+  border: none;
+}
+Console ConsoleTitle {
+  background-color: #2682C2;
+}
+Console ConsoleTitle QLabel {
+  font-size: 14px;
+  padding: 5px;
+  color: #fff;
+}
+Console QListWidget {
+  border: none;
+}

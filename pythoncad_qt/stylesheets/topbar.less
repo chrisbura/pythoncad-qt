@@ -1,0 +1,19 @@
+TopBar {
+    background-color: @topbar;
+    QLabel {
+        font-size: 20px;
+        padding: 10px;
+        color: #fff;
+    }
+    Button {
+        font-size: 12px;
+        border: 1px solid darken(@topbar, 10%);
+        background-color: darken(@topbar, 8%);
+        &:hover {
+            background-color: lighten(@topbar, 1%);
+        }
+        &:pressed {
+            background-color: darken(@topbar, 15%)
+        }
+    }
+}

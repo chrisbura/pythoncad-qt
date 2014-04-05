@@ -1,0 +1,41 @@
+Document {
+    TitleBar {
+        background-color: #2682C2;
+        DocumentTitleLabel {
+            font-size: 20px;
+            padding: 11px;
+            color: #fff;
+        }
+        QLabel {
+            color: #fff;
+        }
+        Button {
+            font-size: 12px;
+            border: 1px solid darken(@primary, 10%);
+            background-color: darken(@primary, 8%);
+            &:hover {
+                background-color: lighten(@primary, 5%);
+            }
+            &:pressed {
+                background-color: darken(@primary, 15%)
+            }
+        }
+    }
+    QGraphicsView {
+        border: none;
+    }
+}
+
+Console {
+    ConsoleTitle {
+        background-color: #2682C2;
+        QLabel {
+            font-size: 14px;
+            padding: 5px;
+            color: #fff;
+        }
+    }
+    QListWidget {
+        border: none;
+    }
+}

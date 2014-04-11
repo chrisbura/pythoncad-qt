@@ -63,11 +63,6 @@ class PythoncadQt(QtGui.QMainWindow):
         # Document Viewport
         document_view = DocumentView()
 
-        # Document
-        document = DocumentWithConsole()
-        document_view.add_document(document)
-
-
         ### Right Vertical Layout
         properties_widget = Sidebar()
 

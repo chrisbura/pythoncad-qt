@@ -11,8 +11,10 @@ class ConsoleTitle(HorizontalLayout, ComponentBase):
 
 
 class Console(VerticalLayout, ComponentBase):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, drawing, *args, **kwargs):
         super(Console, self).__init__(*args, **kwargs)
+
+        self.drawing = drawing
 
         self.title = ConsoleTitle(self)
         self.console = QtGui.QListWidget(self)

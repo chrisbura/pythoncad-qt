@@ -20,6 +20,9 @@ class DocumentView(VerticalLayout, ComponentBase):
         self.document_stack = DocumentStack()
         self.add_component(self.document_stack)
 
+        # Open initial blank drawing on component creation
+        self.open_document()
+
     def add_document(self, document):
         self.document_stack.addWidget(document)
 
@@ -28,12 +31,17 @@ class DocumentView(VerticalLayout, ComponentBase):
 
         if filename is None:
             # Create blank drawing in temporary location
-            temporary_file = NamedTemporaryFile(prefix='pycad_', suffix='.pdr')
+            # TODO: Use sqlite memory database instead of temp file
+            temporary_file = NamedTemporaryFile(prefix='pycad_qt_', suffix='.pdr')
             filename = temporary_file.name
             temporary_file.close()
 
         # Open drawing
-        self.drawing = Drawing(filename)
+        drawing = Drawing(filename)
+        document = DocumentWithConsole(drawing)
+
+        # Add document to document stack
+        self.add_document(document)
 
 
 class ConsoleSplitter(QtGui.QSplitter):
@@ -43,15 +51,20 @@ class ConsoleSplitter(QtGui.QSplitter):
 
 
 class DocumentWithConsole(VerticalLayout, ComponentBase):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, drawing, *args, **kwargs):
         super(DocumentWithConsole, self).__init__(*args, **kwargs)
+        self.drawing = drawing
+        self.setup_ui()
 
+    def setup_ui(self):
         self.splitter = ConsoleSplitter(QtCore.Qt.Vertical)
         self.add_component(self.splitter)
 
-        self.document = Document(self.splitter)
-        self.console = Console(self.splitter)
+        self.document = Document(self.drawing)
+        self.console = Console(self.drawing)
 
+        self.splitter.addWidget(self.document)
+        self.splitter.addWidget(self.console)
         self.splitter.setStretchFactor(0, 9)
         self.splitter.setStretchFactor(1, 2)
 
@@ -82,11 +95,19 @@ class TitleBar(HorizontalLayout, ComponentBase):
         self.expand = Button(QtGui.QIcon('images/maximize.png'), 'Expand')
         self.add_component(self.expand)
 
+    def set_filename(self, filename):
+        self.filename.setText(filename)
+
+
 class Document(VerticalLayout, ComponentBase):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, drawing, *args, **kwargs):
         super(Document, self).__init__(*args, **kwargs)
 
+        self.drawing = drawing
+
         self.titlebar = TitleBar(self)
+        self.titlebar.set_filename(self.drawing.db_path)
+
         self.graphicsview = QtGui.QGraphicsView(self)
 
         self.add_component(self.titlebar)

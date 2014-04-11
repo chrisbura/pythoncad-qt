@@ -7,7 +7,7 @@ from components.buttons import PrimaryButton, DangerButton
 from components.topbar import TopBar
 from components.viewport import Viewport
 from components.console import Console
-from components.document import Document
+from components.document import Document, DocumentView, DocumentWithConsole
 from components.sidebar_panes import *
 
 sip.setdestroyonexit(False)
@@ -60,15 +60,12 @@ class PythoncadQt(QtGui.QMainWindow):
         layer_pane = LayerPane()
         left_sidebar.add_pane('Layers', layer_pane)
 
-        ### Center Vertical Layout
-        center_splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-        center_splitter.setChildrenCollapsible(False)
+        # Document Viewport
+        document_view = DocumentView()
 
         # Document
-        document_widget = Document(center_splitter)
-
-        # Console
-        console_widget = Console(center_splitter)
+        document = DocumentWithConsole()
+        document_view.add_document(document)
 
 
         ### Right Vertical Layout
@@ -95,16 +92,13 @@ class PythoncadQt(QtGui.QMainWindow):
         properties_widget.add_pane('Properties', properties_container)
 
         splitter.addWidget(left_sidebar)
-        splitter.addWidget(center_splitter)
+        splitter.addWidget(document_view)
         splitter.addWidget(properties_widget)
 
         # Set initial splitter proportions
         splitter.setStretchFactor(0, 2)
         splitter.setStretchFactor(1, 9)
         splitter.setStretchFactor(2, 2)
-
-        center_splitter.setStretchFactor(0, 9)
-        center_splitter.setStretchFactor(1, 2)
 
 
 if __name__ == '__main__':

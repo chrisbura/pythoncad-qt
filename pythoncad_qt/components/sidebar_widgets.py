@@ -65,6 +65,7 @@ class BoldParentDelegate(QtGui.QStyledItemDelegate):
 
 
 class FilterableTreeView(VerticalLayout, ComponentBase):
+    layout_spacing = 6
 
     def __init__(self, parent=None):
         super(FilterableTreeView, self).__init__(parent)

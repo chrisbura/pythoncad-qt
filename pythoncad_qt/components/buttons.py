@@ -11,3 +11,7 @@ class PrimaryButton(Button):
 
 class DangerButton(Button):
     pass
+
+
+class WarningButton(Button):
+    pass

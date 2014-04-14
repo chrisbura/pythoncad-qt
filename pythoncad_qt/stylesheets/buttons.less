@@ -4,7 +4,6 @@
 
 .DefaultButton() {
     .FlatButton;
-    background-color: #C1BEB6;
     padding: 7px;
     font-size: 14px;
     color: #FFF;
@@ -15,6 +14,7 @@
 
 Button {
     .DefaultButton;
+    background-color: #C1BEB6;
 }
 
 PrimaryButton {
@@ -37,5 +37,16 @@ DangerButton {
     }
     &:pressed {
         background-color: darken(@danger, 5%)
+    }
+}
+
+WarningButton {
+    .DefaultButton;
+    background-color: #ED9C28;
+    &:hover {
+        background-color: lighten(#ED9C28, 5%)
+    }
+    &:pressed {
+        background-color: darken(#ED9C28, 5%)
     }
 }

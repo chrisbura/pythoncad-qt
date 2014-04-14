@@ -33,12 +33,7 @@ class HorizontalLayout(Layout):
         super(HorizontalLayout, self).__init__(*args, **kwargs)
 
 
-class ComponentBase(QtGui.QWidget):
-    def __init__(self, *args, **kwargs):
-        super(ComponentBase, self).__init__(*args, **kwargs)
-        # TODO: Error checking
-        self.setLayout(self.layout)
-
+class StyleableWidget(QtGui.QWidget):
     def paintEvent(self, event):
         # Needed to allow styling subclassed QWidgets
         # See http://qt-project.org/wiki/How_to_Change_the_Background_Color_of_QWidget
@@ -47,3 +42,10 @@ class ComponentBase(QtGui.QWidget):
         painter = QtGui.QPainter()
         painter.begin(self)
         self.style().drawPrimitive(QtGui.QStyle.PE_Widget, option, painter, self)
+
+
+class ComponentBase(StyleableWidget):
+    def __init__(self, *args, **kwargs):
+        super(ComponentBase, self).__init__(*args, **kwargs)
+        # TODO: Error checking
+        self.setLayout(self.layout)

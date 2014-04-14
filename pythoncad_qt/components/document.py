@@ -7,6 +7,7 @@ from pythoncad.drawing import Drawing
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
 from components.buttons import Button
 from .console import Console
+from dialogs.document_properties import DocumentPropertiesDialog
 
 
 class DocumentStack(QtGui.QStackedWidget):
@@ -81,13 +82,15 @@ class TitleBar(HorizontalLayout, ComponentBase):
     def __init__(self, *args, **kwargs):
         super(TitleBar, self).__init__(*args, **kwargs)
 
+        # TODO: Double click to edit title
         self.title = DocumentTitleLabel('Untitled')
-        self.filename = QtGui.QLabel('filename.pdr')
+        self.filename = QtGui.QLabel()
 
         self.add_component(self.title)
         self.add_component(self.filename)
         self.add_component(Button('Save'))
         self.add_component(Button('Save As'))
+        self.add_component(Button('Properties', clicked=self.open_document_properties_dialog))
         self.add_component(Button('Close'))
 
         self.add_stretch()
@@ -98,6 +101,9 @@ class TitleBar(HorizontalLayout, ComponentBase):
     def set_filename(self, filename):
         self.filename.setText(filename)
 
+    def open_document_properties_dialog(self):
+        document_properties_dialog = DocumentPropertiesDialog(parent=self)
+        dialog_return = document_properties_dialog.exec_()
 
 class Document(VerticalLayout, ComponentBase):
     def __init__(self, drawing, *args, **kwargs):

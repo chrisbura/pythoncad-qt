@@ -295,7 +295,7 @@ Document TitleBar DocumentTitleLabel {
   padding: 11px;
   color: #fff;
 }
-Document TitleBar QLabel {
+Document TitleBar > QLabel {
   color: #fff;
 }
 Document TitleBar Button {

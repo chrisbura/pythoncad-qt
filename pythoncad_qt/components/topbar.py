@@ -15,4 +15,4 @@ class TopBar(HorizontalLayout, ComponentBase):
         self.add_component(Button('New File'))
         self.add_component(Button('Open File'))
         self.add_stretch()
-        self.add_component(Button('Exit PythonCAD'))
+        self.add_component(Button('Exit PythonCAD', clicked=QtGui.qApp.closeAllWindows))

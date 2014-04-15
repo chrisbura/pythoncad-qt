@@ -79,11 +79,13 @@ class TitleBar(HorizontalLayout, ComponentBase):
     layout_margins = QtCore.QMargins(0, 0, 11, 0)
     layout_spacing = 6
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, drawing, *args, **kwargs):
         super(TitleBar, self).__init__(*args, **kwargs)
 
+        self.drawing = drawing
+
         # TODO: Double click to edit title
-        self.title = DocumentTitleLabel('Untitled')
+        self.title = DocumentTitleLabel(self.drawing.get_property('drawing_title').value)
         self.filename = QtGui.QLabel()
 
         self.add_component(self.title)
@@ -101,9 +103,22 @@ class TitleBar(HorizontalLayout, ComponentBase):
     def set_filename(self, filename):
         self.filename.setText(filename)
 
+    def set_title(self, title):
+        self.title.setText(title)
+
     def open_document_properties_dialog(self):
-        document_properties_dialog = DocumentPropertiesDialog(parent=self)
+        document_properties_dialog = DocumentPropertiesDialog(drawing=self.drawing, parent=self)
         dialog_return = document_properties_dialog.exec_()
+
+        if dialog_return == QtGui.QDialog.Accepted:
+            # TODO: Error checking
+            # TODO: Auto update title using signal
+            drawing_title = str(document_properties_dialog.form.fields['title'].text())
+            self.drawing.set_property('drawing_title', drawing_title)
+            self.set_title(drawing_title)
+        else:
+            # TODO: Reset fields
+            print 'Rejected'
 
 class Document(VerticalLayout, ComponentBase):
     def __init__(self, drawing, *args, **kwargs):
@@ -111,8 +126,10 @@ class Document(VerticalLayout, ComponentBase):
 
         self.drawing = drawing
 
-        self.titlebar = TitleBar(self)
+        # TODO: Find better way to pass around drawing
+        self.titlebar = TitleBar(drawing=self.drawing)
         self.titlebar.set_filename(self.drawing.db_path)
+        self.titlebar.set_title('{title}'.format(title=self.drawing.get_property('drawing_title').value))
 
         self.graphicsview = QtGui.QGraphicsView(self)
 

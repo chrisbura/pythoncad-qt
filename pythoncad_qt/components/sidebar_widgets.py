@@ -63,7 +63,7 @@ class BoldParentDelegate(QtGui.QStyledItemDelegate):
             # font-weight cannot currently be set via stylesheet
             # investigate in the future if things have changed
             option.font.setWeight(QtGui.QFont.Bold)
-            painter.fillRect(option.rect, QtGui.QBrush(QtGui.QColor('#e6e6e6')))
+            option.palette.setColor(QtGui.QPalette.Text, QtGui.QColor('#566d7b'))
         super(BoldParentDelegate, self).paint(painter, option, index)
 
 
@@ -121,3 +121,6 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
     def filter_tree(self):
         self.proxy_model.setFilterWildcard(self.filter.text())
         self.tree.expandAll()
+
+    def get_item_from_proxy_index(self, index):
+        return self.model.itemFromIndex(self.proxy_model.mapToSource(index))

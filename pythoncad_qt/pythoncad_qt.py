@@ -62,6 +62,15 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Document Viewport
         document_view = DocumentView()
+        # Signals
+        document_view.document_stack.currentChanged.connect(self.update_panes)
+        document_view.document_opened.connect(document_pane.add_document)
+
+        document_pane.document_changed.connect(
+            document_view.document_stack.setCurrentIndex)
+
+        # Open initial blank drawing on component creation
+        document_view.open_document()
 
         ### Right Vertical Layout
         properties_widget = Sidebar()
@@ -95,6 +104,10 @@ class PythoncadQt(QtGui.QMainWindow):
         splitter.setStretchFactor(1, 9)
         splitter.setStretchFactor(2, 2)
 
+        # Signals
+        # New Drawing Buttons
+        topbar.new_file_button.clicked.connect(document_view.open_document)
+        document_pane.new_document_button.clicked.connect(document_view.open_document)
 
 if __name__ == '__main__':
     import sys

@@ -10,22 +10,44 @@ from .console import Console
 from dialogs.document_properties import DocumentPropertiesDialog
 
 
+class Drawing(Drawing, QtCore.QObject):
+    # Pass around drawing object, allows connecting signals
+    # So when title changes then everything that depends on title will also
+    # change
+
+    title_changed = QtCore.pyqtSignal(str)
+
+    def __init__(self, *args, **kwargs):
+        super(Drawing, self).__init__(*args, **kwargs)
+
+        # Index position of drawing in QStackWidget
+        self.index = None
+
+    def set_title(self, title):
+        self.title = title
+        self.title_changed.emit(self.title)
+
+
 class DocumentStack(QtGui.QStackedWidget):
     pass
 
 
 class DocumentView(VerticalLayout, ComponentBase):
+
+    document_opened = QtCore.pyqtSignal(object)
+
     def __init__(self, *args, **kwargs):
         super(DocumentView, self).__init__(*args, **kwargs)
 
         self.document_stack = DocumentStack()
         self.add_component(self.document_stack)
 
-        # Open initial blank drawing on component creation
-        self.open_document()
-
     def add_document(self, document):
-        self.document_stack.addWidget(document)
+        """
+        Adds document widget to DocumentStack
+        returns index position of new widget
+        """
+        return self.document_stack.addWidget(document)
 
     def open_document(self, filename=None):
         # TODO: check if document is open
@@ -42,8 +64,16 @@ class DocumentView(VerticalLayout, ComponentBase):
         drawing = Drawing(title='New Drawing {0}'.format(self.document_stack.count() + 1))
         document = DocumentWithConsole(drawing)
 
+        # TODO: Add default layer if drawing has no layers
+
         # Add document to document stack
-        self.add_document(document)
+        index = self.add_document(document)
+        drawing.index = index
+
+        # Activate new/opened document
+        self.document_stack.setCurrentIndex(index)
+
+        self.document_opened.emit(drawing)
 
 
 class ConsoleSplitter(QtGui.QSplitter):
@@ -93,7 +123,8 @@ class TitleBar(HorizontalLayout, ComponentBase):
         self.add_component(self.filename)
         self.add_component(Button('Save'))
         self.add_component(Button('Save As'))
-        self.add_component(Button('Properties', clicked=self.open_document_properties_dialog))
+        self.add_component(Button('Properties',
+            clicked=self.open_document_properties_dialog))
         self.add_component(Button('Close'))
 
         self.add_stretch()
@@ -108,7 +139,8 @@ class TitleBar(HorizontalLayout, ComponentBase):
         self.title.setText(title)
 
     def open_document_properties_dialog(self):
-        document_properties_dialog = DocumentPropertiesDialog(drawing=self.drawing, parent=self)
+        document_properties_dialog = DocumentPropertiesDialog(
+            drawing=self.drawing, parent=self)
         dialog_return = document_properties_dialog.exec_()
 
         if dialog_return == QtGui.QDialog.Accepted:

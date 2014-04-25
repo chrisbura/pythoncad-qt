@@ -2,7 +2,7 @@ from tempfile import NamedTemporaryFile
 
 from PyQt4 import QtCore, QtGui
 
-from pythoncad.drawing import Drawing
+from pythoncad.new_api import Drawing
 
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
 from components.buttons import Button
@@ -39,7 +39,7 @@ class DocumentView(VerticalLayout, ComponentBase):
             pass
 
         # Open drawing
-        drawing = Drawing(filename)
+        drawing = Drawing(title='New Drawing {0}'.format(self.document_stack.count() + 1))
         document = DocumentWithConsole(drawing)
 
         # Add document to document stack
@@ -86,7 +86,7 @@ class TitleBar(HorizontalLayout, ComponentBase):
         self.drawing = drawing
 
         # TODO: Double click to edit title
-        self.title = DocumentTitleLabel(self.drawing.get_property('drawing_title').value)
+        self.title = DocumentTitleLabel(self.drawing.title)
         self.filename = QtGui.QLabel()
 
         self.add_component(self.title)
@@ -115,7 +115,7 @@ class TitleBar(HorizontalLayout, ComponentBase):
             # TODO: Error checking
             # TODO: Auto update title using signal
             drawing_title = str(document_properties_dialog.form.fields['title'].text())
-            self.drawing.set_property('drawing_title', drawing_title)
+            self.drawing.set_title(drawing_title)
             self.set_title(drawing_title)
         else:
             # TODO: Reset fields
@@ -129,8 +129,8 @@ class Document(VerticalLayout, ComponentBase):
 
         # TODO: Find better way to pass around drawing
         self.titlebar = TitleBar(drawing=self.drawing)
-        self.titlebar.set_filename(self.drawing.db_path)
-        self.titlebar.set_title('{title}'.format(title=self.drawing.get_property('drawing_title').value))
+        self.titlebar.set_filename('')
+        self.titlebar.set_title('{title}'.format(title=self.drawing.title))
 
         self.graphicsview = QtGui.QGraphicsView(self)
 

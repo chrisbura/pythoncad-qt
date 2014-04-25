@@ -39,7 +39,7 @@ class DocumentPropertiesForm(FormBase):
         self.drawing = drawing
 
         # Fields
-        self.add_field('title', QtGui.QLineEdit(self.drawing.get_property('drawing_title').value))
+        self.add_field('title', QtGui.QLineEdit(self.drawing.title))
         self.add_stretch()
 
 

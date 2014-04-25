@@ -25,5 +25,4 @@ class LayerPane(SidebarPane):
         root_item = self.tree_widget.model.invisibleRootItem()
         for i in range(5):
             row = QtGui.QStandardItem('Layer {}'.format(i+1))
-            row.setEditable(False)
             root_item.appendRow(row)

@@ -24,12 +24,10 @@ class DocumentPane(SidebarPane):
         # Sample Data
         for item in ['Open Documents', 'Recent Documents']:
             root = QtGui.QStandardItem(item)
-            root.setEditable(False)
             self.tree_widget.model.appendRow(root)
 
             for i in range(5):
                 child = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'document{0}.pdr'.format(i+1))
-                child.setEditable(False)
                 root.appendRow(child)
 
         self.tree_widget.tree.expandAll()

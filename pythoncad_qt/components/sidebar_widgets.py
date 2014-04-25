@@ -102,6 +102,7 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         self.tree.setModel(self.proxy_model)
         self.tree.setIndentation(0)
         self.tree.setHeaderHidden(True)
+        self.tree.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.tree.setItemDelegate(BoldParentDelegate())
 
         # Button bar

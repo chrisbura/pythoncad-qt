@@ -33,9 +33,10 @@ class DocumentView(VerticalLayout, ComponentBase):
         if filename is None:
             # Create blank drawing in temporary location
             # TODO: Use sqlite memory database instead of temp file
-            temporary_file = NamedTemporaryFile(prefix='pycad_qt_', suffix='.pdr')
-            filename = temporary_file.name
-            temporary_file.close()
+            # temporary_file = NamedTemporaryFile(prefix='pycad_qt_', suffix='.pdr')
+            # filename = temporary_file.name
+            # temporary_file.close()
+            pass
 
         # Open drawing
         drawing = Drawing(filename)

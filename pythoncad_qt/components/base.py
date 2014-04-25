@@ -47,5 +47,5 @@ class StyleableWidget(QtGui.QWidget):
 class ComponentBase(StyleableWidget):
     def __init__(self, *args, **kwargs):
         super(ComponentBase, self).__init__(*args, **kwargs)
-        # TODO: Error checking
+        # TODO: Error checking, try/except
         self.setLayout(self.layout)

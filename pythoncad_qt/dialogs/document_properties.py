@@ -2,7 +2,6 @@ from PyQt4 import QtGui, QtCore
 
 from components.buttons import PrimaryButton, WarningButton
 from components.base import ComponentBase, VerticalLayout
-from components.constants import MARGINS_ZERO
 
 
 class FieldLayout(VerticalLayout, ComponentBase):
@@ -30,6 +29,7 @@ class FormBase(VerticalLayout, ComponentBase):
         field_layout.add_component(self.fields[title])
 
         self.add_component(field_layout)
+
 
 class DocumentPropertiesForm(FormBase):
 

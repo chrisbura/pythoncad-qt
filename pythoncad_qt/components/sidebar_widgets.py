@@ -43,6 +43,9 @@ class ClearableLineEdit(QtGui.QLineEdit):
 
 
 class CollapseExpandButtonBar(HorizontalLayout, ComponentBase):
+
+    layout_spacing = 6
+
     def __init__(self, *args, **kwargs):
         super(CollapseExpandButtonBar, self).__init__(*args, **kwargs)
 

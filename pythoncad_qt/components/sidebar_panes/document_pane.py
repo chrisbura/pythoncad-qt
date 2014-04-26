@@ -82,6 +82,14 @@ class DocumentPane(SidebarPane):
         # Add item to model
         self.open_document_root.appendRow(item)
 
+        # Set new row active
+        # TODO: Reselect active document after filtering
+        selection_model = self.tree_widget.tree.selectionModel()
+        selection_model.setCurrentIndex(
+            self.tree_widget.proxy_model.mapFromSource(item.index()),
+            QtGui.QItemSelectionModel.ClearAndSelect
+        )
+
     def handle_click(self, index):
         """
         Used for switching between open documents

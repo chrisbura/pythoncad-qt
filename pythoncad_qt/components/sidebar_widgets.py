@@ -93,6 +93,7 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         self.proxy_model.setSourceModel(self.model)
 
         # Tree
+        # TODO: Add collapse indicators
         self.tree = QtGui.QTreeView()
         self.tree.setRootIsDecorated(False)
         self.tree.setModel(self.proxy_model)

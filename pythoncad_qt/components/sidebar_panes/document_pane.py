@@ -23,6 +23,7 @@ class DocumentPane(SidebarPane):
         self.add_component(self.open_document_button)
 
         self.tree_widget = FilterableTreeView()
+        self.tree_widget.set_filter_placeholder('Filter Documents')
         self.add_component(self.tree_widget)
 
         # Root Elements

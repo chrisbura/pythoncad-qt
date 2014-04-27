@@ -11,8 +11,6 @@
     }
 }
 
-// sidebar_widgets.py
-
 ClearableLineEdit {
     .FlatLineEdit;
     padding: 5px;
@@ -107,112 +105,6 @@ FilterableTreeView {
             &:hover {
                 background-color: darken(#fff, 5%);
             }
-        }
-    }
-}
-
-CommandPane {
-    QLineEdit {
-        .FlatBorder;
-        margin: 10px;
-        margin-bottom: 0px;
-        padding: 5px;
-    }
-    CenteredButton {
-        background-color: darken(@sidebar_background, 2%);
-        color: #000;
-        border: 1px solid darken(@sidebar_background, 5%);
-        &:hover {
-            background-color: darken(@sidebar_background, 8%);
-        }
-        &:pressed {
-            background-color: darken(@sidebar_background, 12%);
-        }
-    }
-    CenteredLabel {
-        padding: 10px 5px;
-        qproperty-alignment: AlignCenter;
-        qproperty-wordWrap: true;
-    }
-    CategoryHeading {
-        color: darken(@sidebar_background, 50%);
-        font-weight: bold;
-        font-size: 12px;
-        padding: 10px 5px;
-        border: none;
-        border-bottom: 2px solid darken(@sidebar_background, 10%);
-    }
-}
-
-Section {
-    QLabel {
-        color: darken(@sidebar_background, 30%);
-        font-weight: bold;
-        font-size: 12px;
-        padding: 10px 5px;
-        border: none;
-    }
-    CommandButton {
-        .FlatButton;
-        padding: 5px 5px;
-        font-size: 12px;
-        padding-left: 20px;
-        background-color: transparent;
-        color: #000000;
-        text-align: left;
-        &:hover {
-            background-color: darken(@sidebar_background, 8%);
-        }
-        &:pressed {
-            background-color: darken(@sidebar_background, 12%);
-        }
-    }
-}
-
-CommandListContainer {
-    & > QFrame {
-        .FlatBorder;
-    }
-}
-
-CommandScrollArea {
-    border: none;
-    background: lighten(@sidebar_background, 3%);
-    SectionContainer {
-        background: transparent;
-    }
-    QScrollBar {
-        // Vertical
-        &:vertical {
-            border: none;
-            width: 5px;
-            background-color: lighten(@sidebar_background, 3%);
-        }
-        &::handle:vertical {
-            background-color: darken(@sidebar_background, 10%);
-        }
-        &::add-page:vertical, &::sub-page:vertical {
-            background: none;
-        }
-        &::add-line:vertical, &::sub-line:vertical {
-            height: 0px;
-            width: 0px;
-        }
-        // Horizontal
-        &:horizontal {
-            border: none;
-            height: 5px;
-            background-color: lighten(@sidebar_background, 3%);
-        }
-        &::handle:horizontal {
-            background-color: darken(@sidebar_background, 10%);
-        }
-        &::add-page:horizontal, &::sub-page:horizontal {
-            background: none;
-        }
-        &::add-line:horizontal, &::sub-line:horizontal {
-            height: 0px;
-            width: 0px;
         }
     }
 }

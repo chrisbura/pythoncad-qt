@@ -86,10 +86,6 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         # Filter (QLineEdit)
         self.filter = ClearableLineEdit(placeholder='Filter')
 
-        # Parent filter
-        self.parent_select = QtGui.QComboBox()
-        self.parent_select.setItemDelegate(QtGui.QStyledItemDelegate())
-
         # Setup Tree model and proxy model
         self.model = QtGui.QStandardItemModel(self)
         self.proxy_model = CommandFilterProxy(self)
@@ -112,7 +108,6 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
     def prepare_layout(self):
         # Add items to layout
         self.add_component(self.filter)
-        self.add_component(self.parent_select)
         self.add_component(self.tree)
         self.add_component(self.expand_collapse_bar)
 

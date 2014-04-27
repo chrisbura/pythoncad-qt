@@ -138,41 +138,6 @@ Sidebar SidebarPaneStack QGroupBox QLineEdit {
 Sidebar SidebarPaneStack QGroupBox QLineEdit:hover {
   background-color: #f2f2f2;
 }
-FilterableTreeView QComboBox {
-  border: none;
-  padding: 5px;
-  font-size: 12px;
-  background-color: #2daa6d;
-  color: #fff;
-}
-FilterableTreeView QComboBox:hover {
-  background-color: #289660;
-}
-FilterableTreeView QComboBox::drop-down {
-  subcontrol-origin: content;
-  subcontrol-position: right top;
-  border: none;
-}
-FilterableTreeView QComboBox::down-arrow {
-  image: url(images/down-arrow.png);
-  width: 12px;
-  height: 7px;
-}
-FilterableTreeView QComboBox QAbstractItemView {
-  background-color: #2daa6d;
-  border: none;
-  color: white;
-  outline: none;
-  font-size: 12px;
-}
-FilterableTreeView QComboBox QAbstractItemView::item {
-  padding: 5px;
-  background-color: #2daa6d;
-  color: white;
-}
-FilterableTreeView QComboBox QAbstractItemView::item:hover {
-  background-color: #3ecc87;
-}
 FilterableTreeView QTreeView {
   border: 1px solid #b7c4cc;
   outline: none;

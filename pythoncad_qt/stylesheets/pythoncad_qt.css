@@ -149,6 +149,9 @@ FilterableTreeView QTreeView::item {
 }
 FilterableTreeView QTreeView::item:selected {
   color: #000;
+  background-color: #e6e6e6;
+}
+FilterableTreeView QTreeView::item:hover {
   background-color: #f2f2f2;
 }
 CommandPane QLineEdit {

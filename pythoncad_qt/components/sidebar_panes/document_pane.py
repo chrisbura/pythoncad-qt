@@ -27,10 +27,12 @@ class DocumentPane(SidebarPane):
 
         # Root Elements
         self.open_document_root = QtGui.QStandardItem('Open Documents')
+        self.open_document_root.setFlags(QtCore.Qt.NoItemFlags)
         self.open_document_root.setSelectable(False)
         self.tree_widget.model.appendRow(self.open_document_root)
 
         self.recent_document_root = QtGui.QStandardItem('Recent Documents')
+        self.recent_document_root.setFlags(QtCore.Qt.NoItemFlags)
         self.recent_document_root.setSelectable(False)
         self.tree_widget.model.appendRow(self.recent_document_root)
 

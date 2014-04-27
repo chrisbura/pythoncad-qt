@@ -34,14 +34,6 @@ class DocumentPane(SidebarPane):
         self.recent_document_root.setSelectable(False)
         self.tree_widget.model.appendRow(self.recent_document_root)
 
-        # Add Tree Category Filters
-        self.tree_widget.parent_select.addItem('Show All')
-        self.tree_widget.parent_select.addItem('Open Documents')
-        self.tree_widget.parent_select.addItem('Recent Documents')
-
-        self.tree_widget.parent_select.currentIndexChanged.connect(
-            self.parent_select_index_changed)
-
         # TODO: Implement 'Recent Items'
         recent_placeholder = QtGui.QStandardItem('None')
         recent_placeholder.setFlags(QtCore.Qt.NoItemFlags)
@@ -53,24 +45,6 @@ class DocumentPane(SidebarPane):
         # Signals
         self.tree_widget.tree.clicked.connect(self.handle_click)
         self.tree_widget.tree.doubleClicked.connect(self.handle_double_click)
-
-    def parent_select_index_changed(self, row):
-        # TODO: Find more 'qt' way to do this, NoItemFlags prevents same model
-        # from being used in QComboBox and QTreeView
-        if row == 1:
-            self.tree_widget.tree.setRootIndex(
-                self.tree_widget.proxy_model.mapFromSource(
-                    self.open_document_root.index()
-                ))
-        elif row == 2:
-            self.tree_widget.tree.setRootIndex(
-                self.tree_widget.proxy_model.mapFromSource(
-                    self.recent_document_root.index()
-                ))
-        else:
-            self.tree_widget.tree.setRootIndex(
-                self.tree_widget.model.invisibleRootItem().index()
-                )
 
     def add_document(self, document):
         item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), document.title)

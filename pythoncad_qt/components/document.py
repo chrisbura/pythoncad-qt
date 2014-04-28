@@ -29,7 +29,8 @@ class Drawing(Drawing, QtCore.QObject):
 
 
 class DocumentStack(QtGui.QStackedWidget):
-    pass
+    def process_command(self, command):
+        print self.currentWidget().drawing.title, command
 
 
 class DocumentView(VerticalLayout, ComponentBase):

@@ -1,3 +1,5 @@
+from functools import partial
+
 from PyQt4 import QtGui, QtCore
 
 from .sidebar_pane import SidebarPane
@@ -5,12 +7,17 @@ from ..sidebar_widgets import FilterableTreeView
 
 
 class CommandPane(SidebarPane):
+
+    command_started = QtCore.pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(CommandPane, self).__init__(parent)
 
         self.command_list = FilterableTreeView()
         self.command_list.set_filter_placeholder('Filter Commands')
         self.add_component(self.command_list)
+
+        self.command_list.tree.clicked.connect(self.handle_click)
 
         # Setup Model Items
         # TODO: Find a cleaner way
@@ -19,10 +26,24 @@ class CommandPane(SidebarPane):
         self.drawing_label.setSelectable(False)
         self.command_list.model.appendRow(self.drawing_label)
 
+        # Command: Point
         point_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Point')
+        point_command.setData(
+            QtGui.QAction('Point', self.command_list,
+                triggered=partial(self._call_command, 'PointCommand')),
+            QtCore.Qt.UserRole,
+            )
         self.drawing_label.appendRow(point_command)
+
+        # Command: Segment
         segment_command = QtGui.QStandardItem(QtGui.QIcon('images/segment.png'), 'Segment')
+        segment_command.setData(
+            QtGui.QAction('Segment', self.command_list,
+                triggered=partial(self._call_command, 'SegmentCommand')),
+            QtCore.Qt.UserRole,
+            )
         self.drawing_label.appendRow(segment_command)
+
         circle_command = QtGui.QStandardItem(QtGui.QIcon('images/circle.png'), 'Circle')
         self.drawing_label.appendRow(circle_command)
         arc_command = QtGui.QStandardItem(QtGui.QIcon('images/arc.png'), 'Arc')
@@ -51,3 +72,18 @@ class CommandPane(SidebarPane):
         self.layer_label.appendRow(layer_manager_command)
 
         self.command_list.tree.expandAll()
+
+    def handle_click(self, index):
+        if index.isValid():
+            # TODO: Custom role type to prevent conflict?
+            action = index.data(QtCore.Qt.UserRole)
+            try:
+                # Action is a QVariant, need to convert it back to a QAction
+                # and then trigger it
+                action.toPyObject().trigger()
+            except AttributeError:
+                # No action is set on that index
+                pass
+
+    def _call_command(self, command):
+        self.command_started.emit(command)

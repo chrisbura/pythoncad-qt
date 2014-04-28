@@ -65,6 +65,7 @@ class PythoncadQt(QtGui.QMainWindow):
         # Signals
         document_view.document_stack.currentChanged.connect(self.update_panes)
         document_view.document_opened.connect(document_pane.add_document)
+        command_pane.command_started.connect(document_view.document_stack.process_command)
 
         document_pane.document_changed.connect(
             document_view.document_stack.setCurrentIndex)

@@ -14,6 +14,7 @@ class DocumentPane(SidebarPane):
 
         # Mapping of QStandardItems to QStackWidget indexes
         # TODO: Must be a more 'qt' way to do this
+        # TODO: ^^ Store index in QtCore.Qt.UserRole
         self.indexes = {}
 
         # Buttons

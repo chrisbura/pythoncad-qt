@@ -5,10 +5,16 @@ from PyQt4 import QtGui, QtCore
 from .sidebar_pane import SidebarPane
 from ..sidebar_widgets import FilterableTreeView
 
+# Commands
+from commands.point_command import PointCommand
+from commands.segment_command import SegmentCommand
+
+# TODO: Move QActions to pythoncad_qt.py
+# TODO: Deselect command on command_cancel (Esc) via signals
 
 class CommandPane(SidebarPane):
 
-    command_started = QtCore.pyqtSignal(str)
+    command_started = QtCore.pyqtSignal(object)
 
     def __init__(self, parent=None):
         super(CommandPane, self).__init__(parent)
@@ -30,7 +36,7 @@ class CommandPane(SidebarPane):
         point_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Point')
         point_command.setData(
             QtGui.QAction('Point', self.command_list,
-                triggered=partial(self._call_command, 'PointCommand')),
+                triggered=partial(self._call_command, PointCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(point_command)
@@ -39,7 +45,7 @@ class CommandPane(SidebarPane):
         segment_command = QtGui.QStandardItem(QtGui.QIcon('images/segment.png'), 'Segment')
         segment_command.setData(
             QtGui.QAction('Segment', self.command_list,
-                triggered=partial(self._call_command, 'SegmentCommand')),
+                triggered=partial(self._call_command, SegmentCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(segment_command)

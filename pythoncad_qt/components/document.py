@@ -30,7 +30,9 @@ class Drawing(Drawing, QtCore.QObject):
 
 class DocumentStack(QtGui.QStackedWidget):
     def process_command(self, command):
-        print self.currentWidget().drawing.title, command
+        current_widget = self.currentWidget()
+        # TODO: Decouple with signals
+        current_widget.document.scene.active_command = command()
 
 
 class DocumentView(VerticalLayout, ComponentBase):
@@ -154,6 +156,34 @@ class TitleBar(HorizontalLayout, ComponentBase):
             # TODO: Reset fields
             print 'Rejected'
 
+
+class DocumentScene(QtGui.QGraphicsScene):
+
+    active_command_click = QtCore.pyqtSignal(object)
+
+    def __init__(self, *args, **kwargs):
+        super(DocumentScene, self).__init__(*args, **kwargs)
+        self.active_command = None
+
+        self.active_command_click.connect(self.handle_click)
+
+    def mouseReleaseEvent(self, event):
+        # Split mouseReleaseEvent using signals to prevent large method
+        if event.button() == QtCore.Qt.LeftButton and self.active_command is not None:
+            self.active_command_click.emit(event)
+
+        super(DocumentScene, self).mouseReleaseEvent(event)
+
+    def keyReleaseEvent(self, event):
+        # Cancel active command on esc
+        if event.key() == QtCore.Qt.Key_Escape and self.active_command is not None:
+            # TODO: Emit command canceled signal
+            self.active_command = None
+
+    def handle_click(self, event):
+        print event
+
+
 class Document(VerticalLayout, ComponentBase):
     def __init__(self, drawing, *args, **kwargs):
         super(Document, self).__init__(*args, **kwargs)
@@ -165,7 +195,8 @@ class Document(VerticalLayout, ComponentBase):
         self.titlebar.set_filename('')
         self.titlebar.set_title('{title}'.format(title=self.drawing.title))
 
-        self.graphicsview = QtGui.QGraphicsView(self)
+        self.scene = DocumentScene(parent=self)
+        self.view = QtGui.QGraphicsView(self.scene, parent=self)
 
         self.add_component(self.titlebar)
-        self.add_component(self.graphicsview)
+        self.add_component(self.view)

@@ -12,11 +12,6 @@ class DocumentPane(SidebarPane):
     def __init__(self, parent=None):
         super(DocumentPane, self).__init__(parent)
 
-        # Mapping of QStandardItems to QStackWidget indexes
-        # TODO: Must be a more 'qt' way to do this
-        # TODO: ^^ Store index in QtCore.Qt.UserRole
-        self.indexes = {}
-
         # Buttons
         self.new_document_button = PrimaryButton('Create new document')
         self.open_document_button = PrimaryButton('Open existing document')
@@ -52,7 +47,7 @@ class DocumentPane(SidebarPane):
 
     def add_document(self, document):
         item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), document.title)
-        self.indexes[item] = document.index
+        item.setData(document.index, QtCore.Qt.UserRole)
 
         # Signals
         document.title_changed.connect(item.setText)
@@ -76,7 +71,9 @@ class DocumentPane(SidebarPane):
         # If the item is a child of 'Open Documents' then switch the StackWidget
         # to that document
         if item.parent() is self.open_document_root:
-            self.document_changed.emit(self.indexes[item])
+            document_id, ok = index.data(QtCore.Qt.UserRole).toInt()
+            if ok:
+                self.document_changed.emit(document_id)
 
     def handle_double_click(self, index):
         """

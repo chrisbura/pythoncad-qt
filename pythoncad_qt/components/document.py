@@ -2,12 +2,16 @@ from tempfile import NamedTemporaryFile
 
 from PyQt4 import QtCore, QtGui
 
-from pythoncad.new_api import Drawing
+from pythoncad.new_api import Drawing, Point, Layer
 
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
 from components.buttons import Button
 from .console import Console
 from dialogs.document_properties import DocumentPropertiesDialog
+from commands.inputs import PointInput
+from graphics_items.point_graphics_item import PointGraphicsItem
+
+# TODO: Split up file
 
 
 class Drawing(Drawing, QtCore.QObject):
@@ -37,6 +41,7 @@ class DocumentStack(QtGui.QStackedWidget):
 
 class DocumentView(VerticalLayout, ComponentBase):
 
+    # TODO: Move to Drawing.__init__
     document_opened = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
@@ -51,6 +56,9 @@ class DocumentView(VerticalLayout, ComponentBase):
         returns index position of new widget
         """
         return self.document_stack.addWidget(document)
+
+    def switch_document(self, document):
+        self.document_stack.setCurrentIndex(document.index)
 
     def open_document(self, filename=None):
         # TODO: check if document is open
@@ -67,7 +75,9 @@ class DocumentView(VerticalLayout, ComponentBase):
         drawing = Drawing(title='New Drawing {0}'.format(self.document_stack.count() + 1))
         document = DocumentWithConsole(drawing)
 
-        # TODO: Add default layer if drawing has no layers
+        # Add default layer if drawing has no layers
+        if drawing.layer_count == 0:
+            drawing.add_layer(Layer(title='Default Layer'))
 
         # Add document to document stack
         index = self.add_document(document)
@@ -77,6 +87,8 @@ class DocumentView(VerticalLayout, ComponentBase):
         self.document_stack.setCurrentIndex(index)
 
         self.document_opened.emit(drawing)
+
+        # document.scene.entity_added.connect(drawing.add_entity)
 
 
 class ConsoleSplitter(QtGui.QSplitter):
@@ -102,6 +114,10 @@ class DocumentWithConsole(VerticalLayout, ComponentBase):
         self.splitter.addWidget(self.console)
         self.splitter.setStretchFactor(0, 9)
         self.splitter.setStretchFactor(1, 2)
+
+    @property
+    def scene(self):
+        return self.document.scene
 
 
 class DocumentTitleLabel(QtGui.QLabel):
@@ -160,9 +176,15 @@ class TitleBar(HorizontalLayout, ComponentBase):
 class DocumentScene(QtGui.QGraphicsScene):
 
     active_command_click = QtCore.pyqtSignal(object)
+    entity_added = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
+
+        # Arguments are x, y, width, height
+        self.setSceneRect(-10000, -10000, 20000, 20000)
+
+        # Commands
         self.active_command = None
 
         self.active_command_click.connect(self.handle_click)
@@ -176,12 +198,30 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def keyReleaseEvent(self, event):
         # Cancel active command on esc
+        # TODO: Handle focus, click command and bring focus to QGraphicsScene
         if event.key() == QtCore.Qt.Key_Escape and self.active_command is not None:
             # TODO: Emit command canceled signal
+            # TODO: deselect command on cancel
             self.active_command = None
+            print 'Cancel'
 
     def handle_click(self, event):
-        print event
+        command = self.active_command
+        current_input = command.inputs[command.active_input]
+
+        if isinstance(current_input, PointInput):
+            current_input.value = Point(
+                event.scenePos().x(),
+                event.scenePos().y())
+
+        command.active_input = command.active_input + 1
+
+        if command.active_input == len(command.inputs):
+            # Get QGraphics*Item
+            graphics_item = command.apply_command()
+            self.entity_added.emit(graphics_item.entity)
+            self.addItem(graphics_item)
+            self.active_command = None
 
 
 class Document(VerticalLayout, ComponentBase):
@@ -197,6 +237,8 @@ class Document(VerticalLayout, ComponentBase):
 
         self.scene = DocumentScene(parent=self)
         self.view = QtGui.QGraphicsView(self.scene, parent=self)
+        # Flip Y axis
+        self.view.scale(1, -1)
 
         self.add_component(self.titlebar)
         self.add_component(self.view)

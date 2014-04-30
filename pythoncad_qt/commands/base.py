@@ -1,3 +1,5 @@
 
 class Command(object):
-    pass
+    def __init__(self):
+        self.values = []
+        self.active_input = 0

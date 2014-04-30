@@ -53,8 +53,8 @@ class PythoncadQt(QtGui.QMainWindow):
         left_sidebar.add_pane('Documents', document_pane)
 
         # Outline Pane
-        outline_pane = OutlinePane()
-        left_sidebar.add_pane('Outline', outline_pane)
+        # outline_pane = OutlinePane()
+        # left_sidebar.add_pane('Outline', outline_pane)
 
         # Layer Pane
         layer_pane = LayerPane()

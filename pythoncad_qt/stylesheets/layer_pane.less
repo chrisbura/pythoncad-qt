@@ -1,0 +1,20 @@
+LayerPane {
+    LayerPaneWidget {
+        LayerTreeView {
+            .FlatBorder;
+            outline: none;
+            &::item {
+                border: none;
+                font-size: 12px;
+                padding: 10px;
+                &:selected {
+                    color: #000;
+                    background-color: darken(#fff, 10%);
+                }
+                &:hover {
+                    background-color: darken(#fff, 5%);
+                }
+            }
+        }
+    }
+}

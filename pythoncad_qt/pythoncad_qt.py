@@ -57,18 +57,23 @@ class PythoncadQt(QtGui.QMainWindow):
         # left_sidebar.add_pane('Outline', outline_pane)
 
         # Layer Pane
+        # TODO: Move layers to right hand sidebar
         layer_pane = LayerPane()
         left_sidebar.add_pane('Layers', layer_pane)
 
         # Document Viewport
         document_view = DocumentView()
+
         # Signals
         command_pane.command_started.connect(document_view.document_stack.process_command)
 
         document_view.document_stack.currentChanged.connect(self.update_panes)
+        document_view.document_opened.connect(layer_pane.add_document)
         document_view.document_opened.connect(document_pane.add_document)
 
         document_pane.document_changed.connect(document_view.switch_document)
+        document_pane.document_changed.connect(layer_pane.switch_document)
+        document_pane.document_changed.connect(layer_pane.update)
 
         # Open initial blank drawing on component creation
         document_view.open_document()

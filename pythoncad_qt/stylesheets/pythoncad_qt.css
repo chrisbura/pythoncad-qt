@@ -229,3 +229,19 @@ DialogLabel {
 DocumentPropertiesDialog {
   min-width: 250px;
 }
+LayerPane LayerPaneWidget LayerTreeView {
+  border: 1px solid #b7c4cc;
+  outline: none;
+}
+LayerPane LayerPaneWidget LayerTreeView::item {
+  border: none;
+  font-size: 12px;
+  padding: 10px;
+}
+LayerPane LayerPaneWidget LayerTreeView::item:selected {
+  color: #000;
+  background-color: #e6e6e6;
+}
+LayerPane LayerPaneWidget LayerTreeView::item:hover {
+  background-color: #f2f2f2;
+}

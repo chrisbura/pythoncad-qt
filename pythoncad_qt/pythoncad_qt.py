@@ -63,12 +63,12 @@ class PythoncadQt(QtGui.QMainWindow):
         # Document Viewport
         document_view = DocumentView()
         # Signals
-        document_view.document_stack.currentChanged.connect(self.update_panes)
-        document_view.document_opened.connect(document_pane.add_document)
         command_pane.command_started.connect(document_view.document_stack.process_command)
 
-        document_pane.document_changed.connect(
-            document_view.document_stack.setCurrentIndex)
+        document_view.document_stack.currentChanged.connect(self.update_panes)
+        document_view.document_opened.connect(document_pane.add_document)
+
+        document_pane.document_changed.connect(document_view.switch_document)
 
         # Open initial blank drawing on component creation
         document_view.open_document()

@@ -7,7 +7,7 @@ from ..sidebar_widgets import FilterableTreeView
 
 class DocumentPane(SidebarPane):
 
-    document_changed = QtCore.pyqtSignal(int)
+    document_changed = QtCore.pyqtSignal(object)
 
     def __init__(self, parent=None):
         super(DocumentPane, self).__init__(parent)
@@ -47,7 +47,7 @@ class DocumentPane(SidebarPane):
 
     def add_document(self, document):
         item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), document.title)
-        item.setData(document.index, QtCore.Qt.UserRole)
+        item.setData(document, QtCore.Qt.UserRole)
 
         # Signals
         document.title_changed.connect(item.setText)
@@ -57,11 +57,14 @@ class DocumentPane(SidebarPane):
 
         # Set new row active
         # TODO: Reselect active document after filtering
+        # TODO: Do it on document_changed signal?
         selection_model = self.tree_widget.tree.selectionModel()
         selection_model.setCurrentIndex(
             self.tree_widget.proxy_model.mapFromSource(item.index()),
             QtGui.QItemSelectionModel.ClearAndSelect
         )
+
+        self.document_changed.emit(document)
 
     def handle_click(self, index):
         """
@@ -71,9 +74,8 @@ class DocumentPane(SidebarPane):
         # If the item is a child of 'Open Documents' then switch the StackWidget
         # to that document
         if item.parent() is self.open_document_root:
-            document_id, ok = index.data(QtCore.Qt.UserRole).toInt()
-            if ok:
-                self.document_changed.emit(document_id)
+            document = index.data(QtCore.Qt.UserRole).toPyObject()
+            self.document_changed.emit(document)
 
     def handle_double_click(self, index):
         """

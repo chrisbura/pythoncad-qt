@@ -35,8 +35,22 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
         self.layer_tree.setModel(self.layer_model)
         self.add_component(self.layer_tree)
 
+        self.layer_model.itemChanged.connect(self.update_layer)
+
+    def update_layer(self, item):
+        # TODO: Must be a better way to do this
+        layer = item.data(QtCore.Qt.UserRole).toPyObject()
+        layer.set_title(item.text())
+
+        # checkState can be 0, 1 (partially) or 2
+        if item.checkState() == QtCore.Qt.Checked:
+            layer.set_visibility(True)
+        else:
+            layer.set_visibility(False)
+
 
 class LayerPane(SidebarPane):
+
     def __init__(self, parent=None):
         super(LayerPane, self).__init__(parent)
 
@@ -52,6 +66,8 @@ class LayerPane(SidebarPane):
 
         for layer in document.layers:
             item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), layer.title)
+            item.setCheckable(True)
+            item.setCheckState(QtCore.Qt.Checked)
             item.setData(layer, QtCore.Qt.UserRole)
             root_item.appendRow(item)
 

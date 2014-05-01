@@ -19,17 +19,45 @@ class Drawing(Drawing, QtCore.QObject):
     # So when title changes then everything that depends on title will also
     # change
 
+    # TODO: Generalize to attribute change
     title_changed = QtCore.pyqtSignal(str)
+    layer_added = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(Drawing, self).__init__(*args, **kwargs)
 
         # Index position of drawing in QStackWidget
         self.index = None
+        self.active_layer = None
+        self.layer_pane_index = None
 
     def set_title(self, title):
         self.title = title
         self.title_changed.emit(self.title)
+
+    def add_layer(self, layer):
+        super(Drawing, self).add_layer(layer)
+        self.layer_added.emit(layer)
+
+    def add_entity(self, entity):
+        self.active_layer.add_entity(entity)
+
+
+class Layer(Layer, QtCore.QObject):
+
+    title_changed = QtCore.pyqtSignal(str)
+    visibility_changed = QtCore.pyqtSignal(bool)
+
+    def __init__(self, *args, **kwargs):
+        super(Layer, self).__init__(*args, **kwargs)
+
+    def set_title(self, title):
+        self.title = title
+        self.title_changed.emit(self.title)
+
+    def set_visibility(self, visibility):
+        self.visible = visibility
+        self.visibility_changed.emit(self.visible)
 
 
 class DocumentStack(QtGui.QStackedWidget):

@@ -57,9 +57,7 @@ class PythoncadQt(QtGui.QMainWindow):
         # left_sidebar.add_pane('Outline', outline_pane)
 
         # Layer Pane
-        # TODO: Move layers to right hand sidebar
         layer_pane = LayerPane()
-        left_sidebar.add_pane('Layers', layer_pane)
 
         # Document Viewport
         document_view = DocumentView()
@@ -79,31 +77,13 @@ class PythoncadQt(QtGui.QMainWindow):
         document_view.open_document()
 
         ### Right Vertical Layout
-        properties_widget = Sidebar()
+        right_sidebar = Sidebar()
+        right_sidebar.add_pane('Layers', layer_pane)
 
-        properties_container = QtGui.QWidget()
-        properties_container_layout = QtGui.QVBoxLayout(properties_container)
-        # Note: Layout can't be styled via stylesheets
-        properties_container_layout.setAlignment(QtCore.Qt.AlignTop)
-        for i in range(3):
-            group_box = QtGui.QGroupBox('Point {} Position'.format(i+1))
-            group_box_layout = QtGui.QFormLayout(group_box)
-            x_label = QtGui.QLabel('X')
-            x_input = QtGui.QLineEdit()
-            y_label = QtGui.QLabel('Y')
-            y_input = QtGui.QLineEdit()
-            group_box_layout.addRow(x_label, x_input)
-            group_box_layout.addRow(y_label, y_input)
-            properties_container_layout.addWidget(group_box)
-
-        properties_container_layout.addWidget(PrimaryButton('Apply Changes'))
-        properties_container_layout.addWidget(DangerButton('Reset'))
-
-        properties_widget.add_pane('Properties', properties_container)
 
         splitter.addWidget(left_sidebar)
         splitter.addWidget(document_view)
-        splitter.addWidget(properties_widget)
+        splitter.addWidget(right_sidebar)
 
         # Set initial splitter proportions
         splitter.setStretchFactor(0, 2)

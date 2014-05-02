@@ -22,9 +22,7 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
         super(LayerPaneWidget, self).__init__(*args, **kwargs)
 
         # Buttons
-        self.manage_layer_button = PrimaryButton('Open layer Manager')
         self.create_layer_button = PrimaryButton('Create new layer')
-        self.add_component(self.manage_layer_button)
         self.add_component(self.create_layer_button)
 
         # Model
@@ -35,7 +33,24 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
         self.layer_tree.setModel(self.layer_model)
         self.add_component(self.layer_tree)
 
+        # Signals
         self.layer_model.itemChanged.connect(self.update_layer)
+
+    def add_layer(self, layer):
+        # TODO: Cache for lots of layers
+        root_item = self.layer_model.invisibleRootItem()
+        root_item.appendRow(self._get_item(layer))
+
+    def add_layers(self, layers):
+        for layer in layers:
+            self.add_layer(layer)
+
+    def _get_item(self, layer):
+        item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), layer.title)
+        item.setCheckable(True)
+        item.setCheckState(QtCore.Qt.Checked)
+        item.setData(layer, QtCore.Qt.UserRole)
+        return item
 
     def update_layer(self, item):
         # TODO: Must be a better way to do this
@@ -62,14 +77,12 @@ class LayerPane(SidebarPane):
         index = self.stack.addWidget(layer_view)
         document.layer_pane_index = index
 
-        root_item = layer_view.layer_model.invisibleRootItem()
+        # TODO: Set selection on add
+        layer_view.add_layers(document.layers)
 
-        for layer in document.layers:
-            item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), layer.title)
-            item.setCheckable(True)
-            item.setCheckState(QtCore.Qt.Checked)
-            item.setData(layer, QtCore.Qt.UserRole)
-            root_item.appendRow(item)
+        # Signals
+        layer_view.create_layer_button.clicked.connect(document.create_layer)
+        document.layer_added.connect(layer_view.add_layer)
 
     def switch_document(self, document):
         self.stack.setCurrentIndex(document.layer_pane_index)

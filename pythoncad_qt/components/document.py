@@ -35,6 +35,10 @@ class Drawing(Drawing, QtCore.QObject):
         self.title = title
         self.title_changed.emit(self.title)
 
+    def create_layer(self):
+        layer = Layer(title='New Layer')
+        self.add_layer(layer)
+
     def add_layer(self, layer):
         super(Drawing, self).add_layer(layer)
         self.layer_added.emit(layer)

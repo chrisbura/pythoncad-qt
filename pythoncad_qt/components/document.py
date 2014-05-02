@@ -22,6 +22,7 @@ class Drawing(Drawing, QtCore.QObject):
     # TODO: Generalize to attribute change
     title_changed = QtCore.pyqtSignal(str)
     layer_added = QtCore.pyqtSignal(object)
+    active_layer_changed = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(Drawing, self).__init__(*args, **kwargs)
@@ -45,6 +46,10 @@ class Drawing(Drawing, QtCore.QObject):
 
     def add_entity(self, entity):
         self.active_layer.add_entity(entity)
+
+    def set_active_layer(self, layer):
+        self.active_layer = layer
+        self.active_layer_changed.emit(layer)
 
 
 class Layer(Layer, QtCore.QObject):

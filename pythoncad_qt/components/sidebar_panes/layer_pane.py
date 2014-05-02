@@ -17,6 +17,7 @@ class LayerTreeView(QtGui.QTreeView):
 class LayerPaneWidget(VerticalLayout, ComponentBase):
 
     layout_spacing = 6
+    layer_changed = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(LayerPaneWidget, self).__init__(*args, **kwargs)
@@ -35,11 +36,20 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
 
         # Signals
         self.layer_model.itemChanged.connect(self.update_layer)
+        self.layer_tree.clicked.connect(self.handle_click)
 
     def add_layer(self, layer):
         # TODO: Cache for lots of layers
+        layer_item = self._get_item(layer)
         root_item = self.layer_model.invisibleRootItem()
-        root_item.appendRow(self._get_item(layer))
+        root_item.appendRow(layer_item)
+
+        selection_model = self.layer_tree.selectionModel()
+        selection_model.setCurrentIndex(layer_item.index(),
+            QtGui.QItemSelectionModel.ClearAndSelect
+        )
+
+        self.layer_changed.emit(layer)
 
     def add_layers(self, layers):
         for layer in layers:
@@ -63,6 +73,11 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
         else:
             layer.set_visibility(False)
 
+    def handle_click(self, index):
+        item = self.layer_model.itemFromIndex(index)
+        layer = index.data(QtCore.Qt.UserRole).toPyObject()
+        self.layer_changed.emit(layer)
+
 
 class LayerPane(SidebarPane):
 
@@ -77,12 +92,12 @@ class LayerPane(SidebarPane):
         index = self.stack.addWidget(layer_view)
         document.layer_pane_index = index
 
-        # TODO: Set selection on add
-        layer_view.add_layers(document.layers)
-
         # Signals
+        layer_view.layer_changed.connect(document.set_active_layer)
         layer_view.create_layer_button.clicked.connect(document.create_layer)
         document.layer_added.connect(layer_view.add_layer)
+
+        layer_view.add_layers(document.layers)
 
     def switch_document(self, document):
         self.stack.setCurrentIndex(document.layer_pane_index)

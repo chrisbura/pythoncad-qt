@@ -198,17 +198,6 @@ Document TitleBar > Button:pressed {
 Document QGraphicsView {
   border: none;
 }
-Console ConsoleTitle {
-  background-color: #2682C2;
-}
-Console ConsoleTitle QLabel {
-  font-size: 14px;
-  padding: 5px;
-  color: #fff;
-}
-Console QListWidget {
-  border: none;
-}
 FieldLayout > QLabel {
   font-size: 12px;
   color: #262626;
@@ -244,4 +233,7 @@ LayerPane LayerPaneWidget LayerTreeView::item:selected {
 }
 LayerPane LayerPaneWidget LayerTreeView::item:hover {
   background-color: #f2f2f2;
+}
+ConsolePaneWidget > QListWidget {
+  border: 1px solid #b7c4cc;
 }

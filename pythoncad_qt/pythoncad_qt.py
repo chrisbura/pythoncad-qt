@@ -6,8 +6,7 @@ from components.sidebar import Sidebar
 from components.buttons import PrimaryButton, DangerButton
 from components.topbar import TopBar
 from components.viewport import Viewport
-from components.console import Console
-from components.document import Document, DocumentView, DocumentWithConsole
+from components.document import Document, DocumentView
 from components.sidebar_panes import *
 
 sip.setdestroyonexit(False)
@@ -62,15 +61,20 @@ class PythoncadQt(QtGui.QMainWindow):
         # Document Viewport
         document_view = DocumentView()
 
+        console_pane = ConsolePane()
+
         # Signals
         command_pane.command_started.connect(document_view.document_stack.process_command)
 
         document_view.document_stack.currentChanged.connect(self.update_panes)
         document_view.document_opened.connect(layer_pane.add_document)
+        document_view.document_opened.connect(console_pane.add_document)
         document_view.document_opened.connect(document_pane.add_document)
+        document_view.document_opened.connect(self.update_panes)
 
         document_pane.document_changed.connect(document_view.switch_document)
         document_pane.document_changed.connect(layer_pane.switch_document)
+        document_pane.document_changed.connect(console_pane.switch_document)
         document_pane.document_changed.connect(layer_pane.update)
 
         # Open initial blank drawing on component creation
@@ -79,6 +83,8 @@ class PythoncadQt(QtGui.QMainWindow):
         ### Right Vertical Layout
         right_sidebar = Sidebar()
         right_sidebar.add_pane('Layers', layer_pane)
+
+        right_sidebar.add_pane('Console', console_pane)
 
 
         splitter.addWidget(left_sidebar)

@@ -6,7 +6,6 @@ from pythoncad.new_api import Drawing, Point, Layer
 
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
 from components.buttons import Button
-from .console import Console
 from dialogs.document_properties import DocumentPropertiesDialog
 from commands.inputs import PointInput
 from graphics_items.point_graphics_item import PointGraphicsItem
@@ -31,6 +30,7 @@ class Drawing(Drawing, QtCore.QObject):
         self.index = None
         self.active_layer = None
         self.layer_pane_index = None
+        self.console_pane_index = None
 
     def set_title(self, title):
         self.title = title
@@ -110,7 +110,7 @@ class DocumentView(VerticalLayout, ComponentBase):
 
         # Open drawing
         drawing = Drawing(title='New Drawing {0}'.format(self.document_stack.count() + 1))
-        document = DocumentWithConsole(drawing)
+        document = Document(drawing)
 
         # Add default layer if drawing has no layers
         if drawing.layer_count == 0:
@@ -126,35 +126,6 @@ class DocumentView(VerticalLayout, ComponentBase):
         self.document_opened.emit(drawing)
 
         # document.scene.entity_added.connect(drawing.add_entity)
-
-
-class ConsoleSplitter(QtGui.QSplitter):
-    def __init__(self, *args, **kwargs):
-        super(ConsoleSplitter, self).__init__(*args, **kwargs)
-        self.setChildrenCollapsible(False)
-
-
-class DocumentWithConsole(VerticalLayout, ComponentBase):
-    def __init__(self, drawing, *args, **kwargs):
-        super(DocumentWithConsole, self).__init__(*args, **kwargs)
-        self.drawing = drawing
-        self.setup_ui()
-
-    def setup_ui(self):
-        self.splitter = ConsoleSplitter(QtCore.Qt.Vertical)
-        self.add_component(self.splitter)
-
-        self.document = Document(self.drawing)
-        self.console = Console(self.drawing)
-
-        self.splitter.addWidget(self.document)
-        self.splitter.addWidget(self.console)
-        self.splitter.setStretchFactor(0, 9)
-        self.splitter.setStretchFactor(1, 2)
-
-    @property
-    def scene(self):
-        return self.document.scene
 
 
 class DocumentTitleLabel(QtGui.QLabel):

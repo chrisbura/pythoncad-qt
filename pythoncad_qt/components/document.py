@@ -180,9 +180,22 @@ class TitleBar(HorizontalLayout, ComponentBase):
             # TODO: Reset fields
             print 'Rejected'
 
+class DocumentGraphicsView(QtGui.QGraphicsView):
+
+    mouse_exit = QtCore.pyqtSignal(QtCore.QEvent)
+
+    def __init__(self, *args, **kwargs):
+        super(DocumentGraphicsView, self).__init__(*args, **kwargs)
+        self.setMouseTracking(True)
+
+    def leaveEvent(self, event):
+        self.mouse_exit.emit(event)
+        super(DocumentGraphicsView, self).leaveEvent(event)
+
 
 class DocumentScene(QtGui.QGraphicsScene):
 
+    mouse_move = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     active_command_click = QtCore.pyqtSignal(object)
     entity_added = QtCore.pyqtSignal(object)
 
@@ -231,6 +244,11 @@ class DocumentScene(QtGui.QGraphicsScene):
             self.addItem(graphics_item)
             self.active_command = None
 
+    def mouseMoveEvent(self, event):
+        super(DocumentScene, self).mouseMoveEvent(event)
+        self.mouse_move.emit(event)
+
+
 class SceneCoordinates(QtGui.QLabel):
     pass
 
@@ -245,6 +263,15 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
         self.scene_coordinates = SceneCoordinates('X: 0.000 Y: 0.000')
         self.add_component(self.scene_coordinates)
 
+    def update_coordinates(self, event):
+        self.scene_coordinates.setText('X: {0} Y: {1}'.format(
+            event.scenePos().x(),
+            event.scenePos().y())
+        )
+
+    def reset_coordinates(self, event):
+        self.scene_coordinates.setText('X: ----- Y: -----')
+
 
 class Document(VerticalLayout, ComponentBase):
     def __init__(self, drawing, *args, **kwargs):
@@ -258,11 +285,15 @@ class Document(VerticalLayout, ComponentBase):
         self.titlebar.set_title('{title}'.format(title=self.drawing.title))
 
         self.scene = DocumentScene(parent=self)
-        self.view = QtGui.QGraphicsView(self.scene, parent=self)
+        self.view = DocumentGraphicsView(self.scene, parent=self)
         # Flip Y axis
         self.view.scale(1, -1)
 
         self.status_bar = GraphicsStatusBar()
+
+        # Signals
+        self.scene.mouse_move.connect(self.status_bar.update_coordinates)
+        self.view.mouse_exit.connect(self.status_bar.reset_coordinates)
 
         self.add_component(self.titlebar)
         self.add_component(self.view)

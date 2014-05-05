@@ -231,6 +231,20 @@ class DocumentScene(QtGui.QGraphicsScene):
             self.addItem(graphics_item)
             self.active_command = None
 
+class SceneCoordinates(QtGui.QLabel):
+    pass
+
+
+class GraphicsStatusBar(HorizontalLayout, ComponentBase):
+    layout_margins = QtCore.QMargins(5, 5, 5, 5)
+
+    def __init__(self, *args, **kwargs):
+        super(GraphicsStatusBar, self).__init__(*args, **kwargs)
+
+        self.add_stretch()
+        self.scene_coordinates = SceneCoordinates('X: 0.000 Y: 0.000')
+        self.add_component(self.scene_coordinates)
+
 
 class Document(VerticalLayout, ComponentBase):
     def __init__(self, drawing, *args, **kwargs):
@@ -248,5 +262,8 @@ class Document(VerticalLayout, ComponentBase):
         # Flip Y axis
         self.view.scale(1, -1)
 
+        self.status_bar = GraphicsStatusBar()
+
         self.add_component(self.titlebar)
         self.add_component(self.view)
+        self.add_component(self.status_bar)

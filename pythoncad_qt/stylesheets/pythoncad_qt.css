@@ -234,6 +234,18 @@ LayerPane LayerPaneWidget LayerTreeView::item:selected {
 LayerPane LayerPaneWidget LayerTreeView::item:hover {
   background-color: #f2f2f2;
 }
+GraphicsStatusBar {
+  background-color: #dee4e8;
+}
+GraphicsStatusBar SceneCoordinates {
+  border: 1px solid #b7c4cc;
+  color: #262626;
+  background-color: white;
+  padding: 5px;
+}
+QSplitterHandle {
+  background-color: #c6d1d7;
+}
 ConsolePaneWidget > QListWidget {
   border: 1px solid #b7c4cc;
 }

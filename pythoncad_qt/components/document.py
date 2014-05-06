@@ -188,9 +188,27 @@ class DocumentGraphicsView(QtGui.QGraphicsView):
         super(DocumentGraphicsView, self).__init__(*args, **kwargs)
         self.setMouseTracking(True)
 
+        self.scaling = 1.0
+
+        # Flip Y axis
+        self.scale(self.scaling, -self.scaling)
+
     def leaveEvent(self, event):
         self.mouse_exit.emit(event)
         super(DocumentGraphicsView, self).leaveEvent(event)
+
+    def wheelEvent(self, event):
+        wheel_steps = event.delta() / 8 / 15
+
+        self.scaling = self.scaling + 0.25 * wheel_steps
+
+        if self.scaling < 0.25:
+            self.scaling = 0.25
+
+        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+        transform = QtGui.QTransform()
+        transform.scale(self.scaling, -self.scaling)
+        self.setTransform(transform)
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -286,8 +304,6 @@ class Document(VerticalLayout, ComponentBase):
 
         self.scene = DocumentScene(parent=self)
         self.view = DocumentGraphicsView(self.scene, parent=self)
-        # Flip Y axis
-        self.view.scale(1, -1)
 
         self.status_bar = GraphicsStatusBar()
 

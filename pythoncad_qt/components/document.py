@@ -188,27 +188,29 @@ class DocumentGraphicsView(QtGui.QGraphicsView):
         super(DocumentGraphicsView, self).__init__(*args, **kwargs)
         self.setMouseTracking(True)
 
-        self.scaling = 1.0
-
         # Flip Y axis
-        self.scale(self.scaling, -self.scaling)
+        self.scale(1, -1)
+
+        # Save default scale so that any zooming can be reset
+        self.default_scale = self.transform()
 
     def leaveEvent(self, event):
         self.mouse_exit.emit(event)
         super(DocumentGraphicsView, self).leaveEvent(event)
 
     def wheelEvent(self, event):
-        wheel_steps = event.delta() / 8 / 15
-
-        self.scaling = self.scaling + 0.25 * wheel_steps
-
-        if self.scaling < 0.25:
-            self.scaling = 0.25
-
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        transform = QtGui.QTransform()
-        transform.scale(self.scaling, -self.scaling)
-        self.setTransform(transform)
+
+        scaling_factor = 1.15
+
+        if event.delta() > 0:
+            transform = QtGui.QTransform()
+            transform.scale(scaling_factor, scaling_factor)
+        else:
+            transform = QtGui.QTransform()
+            transform.scale(1.0 / scaling_factor, 1.0 / scaling_factor)
+
+        self.setTransform(transform * self.transform())
 
 
 class DocumentScene(QtGui.QGraphicsScene):

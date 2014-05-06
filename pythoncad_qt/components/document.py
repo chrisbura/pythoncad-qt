@@ -234,6 +234,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Arguments are x, y, width, height
         self.setSceneRect(-10000, -10000, 20000, 20000)
+        self.grid_spacing = 20
 
         # Commands
         self.active_command = None
@@ -273,6 +274,49 @@ class DocumentScene(QtGui.QGraphicsScene):
             self.entity_added.emit(graphics_item.entity)
             self.addItem(graphics_item)
             self.active_command = None
+
+    def drawBackground(self, painter, rect):
+        painter.save()
+
+        # Grid Colours
+        # TODO: Move to settings
+        painter.setPen(QtGui.QPen(QtGui.QColor(200, 200, 200, 100)))
+
+        # TODO: Allow toggling
+
+        # Horizontal Grid
+        top_count = -1 * int(math.floor(rect.top() / self.grid_spacing))
+        bottom_count = int(math.ceil(rect.bottom() / self.grid_spacing))
+
+        for i in xrange(bottom_count):
+            y = i * self.grid_spacing
+            painter.drawLine(rect.left(), y, rect.right(), y)
+
+        for i in xrange(top_count):
+            y = i * -self.grid_spacing
+            painter.drawLine(rect.left(), y, rect.right(), y)
+
+        # Vertical Grid
+        left_count = -1 * int(math.floor(rect.left() / self.grid_spacing))
+        right_count = int(math.ceil(rect.right() / self.grid_spacing))
+
+        for i in xrange(left_count):
+            x = i * -self.grid_spacing
+            painter.drawLine(x, rect.top(), x, rect.bottom())
+
+        for i in xrange(right_count):
+            x = i * self.grid_spacing
+            painter.drawLine(x, rect.top(), x, rect.bottom())
+
+        # Axis
+        # TODO: Allow toggling
+        pen = QtGui.QPen(QtGui.QColor(200, 200, 200))
+        pen.setWidth(2)
+        painter.setPen(pen)
+        painter.drawLine(rect.left(), 0, rect.right(), 0)
+        painter.drawLine(0, rect.top(), 0, rect.bottom())
+
+        painter.restore()
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)

@@ -198,6 +198,16 @@ class DocumentGraphicsView(QtGui.QGraphicsView):
         self.mouse_exit.emit(event)
         super(DocumentGraphicsView, self).leaveEvent(event)
 
+    def mousePressEvent(self, event):
+        keyboard_modifiers = QtGui.QApplication.keyboardModifiers()
+        if keyboard_modifiers == QtCore.Qt.ControlModifier and event.button() == QtCore.Qt.LeftButton:
+            self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+        super(DocumentGraphicsView, self).mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self.setDragMode(QtGui.QGraphicsView.NoDrag)
+        super(DocumentGraphicsView, self).mouseReleaseEvent(event)
+
     def wheelEvent(self, event):
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
 

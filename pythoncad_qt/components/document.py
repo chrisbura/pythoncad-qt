@@ -1,3 +1,4 @@
+import math
 from tempfile import NamedTemporaryFile
 
 from PyQt4 import QtCore, QtGui

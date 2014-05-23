@@ -12,6 +12,7 @@ class Layout(object):
         # TODO: Error checking
         self.layout.setContentsMargins(self.layout_margins)
         self.layout.setSpacing(self.layout_spacing)
+        self.setLayout(self.layout)
 
     def add_component(self, *args, **kwargs):
         # TODO: Error checking
@@ -25,7 +26,6 @@ class VerticalLayout(Layout):
     def __init__(self, *args, **kwargs):
         self.layout = QtGui.QVBoxLayout()
         super(VerticalLayout, self).__init__(*args, **kwargs)
-
 
 class HorizontalLayout(Layout):
     def __init__(self, *args, **kwargs):
@@ -47,5 +47,3 @@ class StyleableWidget(QtGui.QWidget):
 class ComponentBase(StyleableWidget):
     def __init__(self, *args, **kwargs):
         super(ComponentBase, self).__init__(*args, **kwargs)
-        # TODO: Error checking, try/except
-        self.setLayout(self.layout)

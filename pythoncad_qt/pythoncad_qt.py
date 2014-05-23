@@ -1,6 +1,7 @@
 import sip
 from PyQt4 import QtGui, QtCore
 
+import settings
 from components.central_widget import CentralWidget
 from components.sidebar import Sidebar
 from components.buttons import PrimaryButton, DangerButton
@@ -18,9 +19,8 @@ class PythoncadQt(QtGui.QMainWindow):
 
         self.setWindowTitle('PythonCAD')
 
-        # TODO: Proper loading of resources
-        stylesheet = open('stylesheets/pythoncad_qt.css', 'r')
-        self.setStyleSheet(stylesheet.read())
+        with open(settings.STYLESHEET, 'r') as stylesheet:
+            self.setStyleSheet(stylesheet.read())
 
         # Central Widget
         self.central_widget = CentralWidget()

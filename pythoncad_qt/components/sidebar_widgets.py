@@ -101,7 +101,8 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         self.tree.setHeaderHidden(True)
         self.tree.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.tree.setItemDelegate(BoldParentDelegate())
-        self.tree.setSelectionBehavior(QtGui.QTreeView.SelectItems)
+        self.tree.setSelectionBehavior(QtGui.QAbstractItemView.SelectItems)
+        self.tree.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
         # Button bar
         self.expand_collapse_bar = CollapseExpandButtonBar()

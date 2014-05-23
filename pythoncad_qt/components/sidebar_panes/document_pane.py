@@ -42,8 +42,10 @@ class DocumentPane(SidebarPane):
         self.tree_widget.tree.expandAll()
 
         # Signals
-        self.tree_widget.tree.clicked.connect(self.handle_click)
         self.tree_widget.tree.doubleClicked.connect(self.handle_double_click)
+
+        selection_model = self.tree_widget.tree.selectionModel()
+        selection_model.currentChanged.connect(self._activate_document)
 
     def add_document(self, document):
         item = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), document.title)
@@ -66,7 +68,7 @@ class DocumentPane(SidebarPane):
 
         self.document_changed.emit(document)
 
-    def handle_click(self, index):
+    def _activate_document(self, index):
         """
         Used for switching between open documents
         """

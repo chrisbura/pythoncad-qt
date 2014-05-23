@@ -13,7 +13,7 @@ class LayerTreeView(QtGui.QTreeView):
         self.setRootIsDecorated(False)
         self.setHeaderHidden(True)
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
-
+        self.setSelectionBehavior(QtGui.QAbstractItemView.SelectItems)
 
 class LayerPaneWidget(VerticalLayout, ComponentBase):
 

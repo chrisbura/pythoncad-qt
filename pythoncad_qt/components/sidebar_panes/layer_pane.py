@@ -12,6 +12,7 @@ class LayerTreeView(QtGui.QTreeView):
         super(LayerTreeView, self).__init__(*args, **kwargs)
         self.setRootIsDecorated(False)
         self.setHeaderHidden(True)
+        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 
 
 class LayerPaneWidget(VerticalLayout, ComponentBase):
@@ -36,7 +37,10 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
 
         # Signals
         self.layer_model.itemChanged.connect(self.update_layer)
-        self.layer_tree.clicked.connect(self.handle_click)
+
+        # Handle active layer selection
+        selection_model = self.layer_tree.selectionModel()
+        selection_model.currentChanged.connect(self._activate_layer)
 
     def add_layer(self, layer):
         # TODO: Cache for lots of layers
@@ -73,7 +77,7 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
         else:
             layer.set_visibility(False)
 
-    def handle_click(self, index):
+    def _activate_layer(self, index):
         item = self.layer_model.itemFromIndex(index)
         layer = index.data(QtCore.Qt.UserRole)
         self.layer_changed.emit(layer)

@@ -74,7 +74,7 @@ class DocumentPane(SidebarPane):
         # If the item is a child of 'Open Documents' then switch the StackWidget
         # to that document
         if item.parent() is self.open_document_root:
-            document = index.data(QtCore.Qt.UserRole).toPyObject()
+            document = index.data(QtCore.Qt.UserRole)
             self.document_changed.emit(document)
 
     def handle_double_click(self, index):

@@ -64,7 +64,7 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
 
     def update_layer(self, item):
         # TODO: Must be a better way to do this
-        layer = item.data(QtCore.Qt.UserRole).toPyObject()
+        layer = item.data(QtCore.Qt.UserRole)
         layer.set_title(item.text())
 
         # checkState can be 0, 1 (partially) or 2
@@ -75,7 +75,7 @@ class LayerPaneWidget(VerticalLayout, ComponentBase):
 
     def handle_click(self, index):
         item = self.layer_model.itemFromIndex(index)
-        layer = index.data(QtCore.Qt.UserRole).toPyObject()
+        layer = index.data(QtCore.Qt.UserRole)
         self.layer_changed.emit(layer)
 
 

@@ -86,7 +86,7 @@ class CommandPane(SidebarPane):
             try:
                 # Action is a QVariant, need to convert it back to a QAction
                 # and then trigger it
-                action.toPyObject().trigger()
+                action.trigger()
             except AttributeError:
                 # No action is set on that index
                 pass

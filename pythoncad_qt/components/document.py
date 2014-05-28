@@ -239,6 +239,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Commands
         self.active_command = None
+        self.preview_item = None
 
         self.active_command_click.connect(self.handle_click)
 
@@ -282,8 +283,9 @@ class DocumentScene(QtGui.QGraphicsScene):
             self.active_command = None
 
             # Remove the preview item from the scene
-            self.removeItem(self.preview_item)
-            self.preview_item = None
+            if self.preview_item is not None:
+                self.removeItem(self.preview_item)
+                self.preview_item = None
 
     def drawBackground(self, painter, rect):
         painter.save()

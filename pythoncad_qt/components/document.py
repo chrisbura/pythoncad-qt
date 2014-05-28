@@ -267,6 +267,11 @@ class DocumentScene(QtGui.QGraphicsScene):
                 event.scenePos().x(),
                 event.scenePos().y())
 
+        if command.has_preview and (command.active_input == command.preview_start):
+            self.preview_item = command.preview_item()
+            self.mouse_move.connect(self.preview_item.update)
+            self.addItem(self.preview_item)
+
         command.active_input = command.active_input + 1
 
         if command.active_input == len(command.inputs):
@@ -275,6 +280,10 @@ class DocumentScene(QtGui.QGraphicsScene):
             self.entity_added.emit(graphics_item.entity)
             self.addItem(graphics_item)
             self.active_command = None
+
+            # Remove the preview item from the scene
+            self.removeItem(self.preview_item)
+            self.preview_item = None
 
     def drawBackground(self, painter, rect):
         painter.save()

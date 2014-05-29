@@ -37,7 +37,7 @@ class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
         return path
 
     def paint(self, painter, option, widget):
-        if settings.DEBUG:
+        if settings.DEBUG_SHAPES:
             painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
             painter.drawPath(self.shape())
         super(PointGraphicsItem, self).paint(painter, option, widget)

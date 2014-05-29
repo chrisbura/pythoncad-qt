@@ -195,6 +195,8 @@ class DocumentGraphicsView(QtGui.QGraphicsView):
         # Save default scale so that any zooming can be reset
         self.default_scale = self.transform()
 
+        self.setRenderHint(QtGui.QPainter.Antialiasing)
+
     def leaveEvent(self, event):
         self.mouse_exit.emit(event)
         super(DocumentGraphicsView, self).leaveEvent(event)

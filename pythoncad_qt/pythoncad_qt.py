@@ -10,6 +10,7 @@ from components.buttons import PrimaryButton, DangerButton
 from components.topbar import TopBar
 from components.viewport import Viewport
 from components.document import Document, DocumentView
+from components.document_control import DocumentControl
 from components.sidebar_panes import *
 
 sip.setdestroyonexit(False)
@@ -61,7 +62,7 @@ class PythoncadQt(QtGui.QMainWindow):
         layer_pane = LayerPane()
 
         # Document Viewport
-        document_view = DocumentView()
+        document_view = DocumentControl()
 
         console_pane = ConsolePane()
 

@@ -32,7 +32,7 @@ class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
     def shape(self):
         shape = super(PointGraphicsItem, self).shape()
         path = QtGui.QPainterPath()
-        width = 10.0
+        width = 20.0
         path.addEllipse(self.entity.x - width / 2.0, self.entity.y - width / 2.0, width, width)
         return path
 
@@ -41,3 +41,21 @@ class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
             painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
             painter.drawPath(self.shape())
         super(PointGraphicsItem, self).paint(painter, option, widget)
+
+
+class MidPoint(PointGraphicsItem):
+
+    def __init__(self, *args, **kwargs):
+        super(MidPoint, self).__init__(*args, **kwargs)
+        self.setPen(QtGui.QPen(QtCore.Qt.transparent, self.pen_thickness, QtCore.Qt.SolidLine))
+        self.setBrush(QtCore.Qt.transparent)
+
+    def hoverEnterEvent(self, event):
+        super(MidPoint, self).hoverEnterEvent(event)
+        self.setBrush(QtCore.Qt.black)
+        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
+
+    def hoverLeaveEvent(self, event):
+        super(MidPoint, self).hoverLeaveEvent(event)
+        self.setBrush(QtCore.Qt.transparent)
+        self.setPen(QtGui.QPen(QtCore.Qt.transparent, self.pen_thickness))

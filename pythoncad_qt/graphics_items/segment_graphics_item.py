@@ -1,7 +1,9 @@
 from PyQt4 import QtGui, QtCore
 
+from sympy.geometry import Segment
+
 import settings
-from graphics_items.point_graphics_item import PointGraphicsItem
+from graphics_items.point_graphics_item import PointGraphicsItem, MidPoint
 
 
 class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
@@ -54,6 +56,10 @@ class SegmentGraphicsGroup(QtGui.QGraphicsItemGroup):
         self.point2 = PointGraphicsItem(point2)
         self.segment = SegmentGraphicsItem(point1, point2)
 
+        segment = Segment(point1, point2)
+        self.midpoint = MidPoint(segment.midpoint)
+
         self.addToGroup(self.segment)
         self.addToGroup(self.point1)
         self.addToGroup(self.point2)
+        self.addToGroup(self.midpoint)

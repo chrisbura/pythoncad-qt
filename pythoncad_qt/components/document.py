@@ -266,9 +266,11 @@ class DocumentScene(QtGui.QGraphicsScene):
         current_input = command.inputs[command.active_input]
 
         if isinstance(current_input, PointInput):
-            current_input.value = Point(
-                event.scenePos().x(),
-                event.scenePos().y())
+            item = self.itemAt(event.scenePos())
+            if item is not None and isinstance(item, PointGraphicsItem):
+                current_input.value = Point(item.entity.x, item.entity.y)
+            else:
+                current_input.value = Point(event.scenePos().x(), event.scenePos().y())
 
         if command.has_preview and (command.active_input == command.preview_start):
             self.preview_item = command.preview_item()

@@ -1,18 +1,19 @@
 from PyQt4 import QtGui, QtCore
 
 import settings
+from graphics_items.base_item import BaseItem
+from graphics_items.base_graphics_item import BaseGraphicsItem
 
 
-class PointItem(QtCore.QObject):
+class PointItem(BaseItem):
     def __init__(self, point, *args, **kwargs):
         super(PointItem, self).__init__(*args, **kwargs)
-        self.items = []
 
         self.point_item = PointGraphicsItem(point)
-        self.items.append(self.point_item)
+        self.add_child(self.point_item)
 
 
-class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
+class PointGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, point):
         self.entity = point
         self.radius = 2.0
@@ -23,34 +24,12 @@ class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
             self.radius * 2.0,
             self.radius * 2.0)
 
-        self.pen_thickness = 1
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness, QtCore.Qt.SolidLine))
-        self.setBrush(QtCore.Qt.black)
-        self.setAcceptHoverEvents(True)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
-
-    def hoverEnterEvent(self, event):
-        super(PointGraphicsItem, self).hoverEnterEvent(event)
-        self.setBrush(QtCore.Qt.red)
-        self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
-
-    def hoverLeaveEvent(self, event):
-        super(PointGraphicsItem, self).hoverLeaveEvent(event)
-        self.setBrush(QtCore.Qt.black)
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
-
     def shape(self):
         shape = super(PointGraphicsItem, self).shape()
         path = QtGui.QPainterPath()
         width = 20.0
         path.addEllipse(self.entity.x - width / 2.0, self.entity.y - width / 2.0, width, width)
         return path
-
-    def paint(self, painter, option, widget):
-        if settings.DEBUG_SHAPES:
-            painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
-            painter.drawPath(self.shape())
-        super(PointGraphicsItem, self).paint(painter, option, widget)
 
 
 class MidPoint(PointGraphicsItem):

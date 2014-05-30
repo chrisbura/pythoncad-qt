@@ -12,15 +12,20 @@ class BaseGraphicsItem(object):
         self.setAcceptHoverEvents(True)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
+        # setBrush comes from QAbstractGraphicsShapeItem, as a result
+        # QGraphicsLineItem won't have it
+        try:
+            self.setBrush(QtCore.Qt.black)
+        except AttributeError:
+            pass
+
     def hoverEnterEvent(self, event):
         super(BaseGraphicsItem, self).hoverEnterEvent(event)
         self.hover = True
-        self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
 
     def hoverLeaveEvent(self, event):
         super(BaseGraphicsItem, self).hoverLeaveEvent(event)
         self.hover = False
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
 
     def paint(self, painter, option, widget):
         # Disable dotted selection rectangle
@@ -28,12 +33,24 @@ class BaseGraphicsItem(object):
         option.state &= ~ QtGui.QStyle.State_Selected
 
         if self.hover:
-            self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
+            pen_colour = QtCore.Qt.red
         else:
-            self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
+            pen_colour = QtCore.Qt.black
+
+        self.setPen(QtGui.QPen(pen_colour, self.pen_thickness))
+
+        # See note about QAbstractGraphicsShapeItem above
+        try:
+            self.setBrush(pen_colour)
+        except AttributeError:
+            pass
 
         if self.isSelected():
             self.setPen(QtGui.QPen(QtCore.Qt.green, self.pen_thickness))
+            try:
+                self.setBrush(QtCore.Qt.green)
+            except AttributeError:
+                pass
 
         if settings.DEBUG_SHAPES:
             painter.setPen(QtGui.QPen(QtCore.Qt.cyan))

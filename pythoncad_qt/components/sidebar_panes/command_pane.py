@@ -33,7 +33,7 @@ class CommandPane(SidebarPane):
         self.command_list.model.appendRow(self.drawing_label)
 
         # Command: Point
-        point_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Point')
+        point_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Point')
         point_command.setData(
             QtGui.QAction('Point', self.command_list,
                 triggered=partial(self._call_command, PointCommand)),
@@ -42,7 +42,7 @@ class CommandPane(SidebarPane):
         self.drawing_label.appendRow(point_command)
 
         # Command: Segment
-        segment_command = QtGui.QStandardItem(QtGui.QIcon('images/segment.png'), 'Segment')
+        segment_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/segment.png'), 'Segment')
         segment_command.setData(
             QtGui.QAction('Segment', self.command_list,
                 triggered=partial(self._call_command, SegmentCommand)),
@@ -50,17 +50,17 @@ class CommandPane(SidebarPane):
             )
         self.drawing_label.appendRow(segment_command)
 
-        circle_command = QtGui.QStandardItem(QtGui.QIcon('images/circle.png'), 'Circle')
+        circle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/circle.png'), 'Circle')
         self.drawing_label.appendRow(circle_command)
-        arc_command = QtGui.QStandardItem(QtGui.QIcon('images/arc.png'), 'Arc')
+        arc_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/arc.png'), 'Arc')
         self.drawing_label.appendRow(arc_command)
-        ellipse_command = QtGui.QStandardItem(QtGui.QIcon('images/ellipse.png'), 'Ellipse')
+        ellipse_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/ellipse.png'), 'Ellipse')
         self.drawing_label.appendRow(ellipse_command)
-        polygon_command = QtGui.QStandardItem(QtGui.QIcon('images/polygon.png'), 'Polygon')
+        polygon_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/polygon.png'), 'Polygon')
         self.drawing_label.appendRow(polygon_command)
-        polyline_command = QtGui.QStandardItem(QtGui.QIcon('images/polyline.png'), 'Polyline')
+        polyline_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/polyline.png'), 'Polyline')
         self.drawing_label.appendRow(polyline_command)
-        rectangle_command = QtGui.QStandardItem(QtGui.QIcon('images/rectangle.png'), 'Rectangle')
+        rectangle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/rectangle.png'), 'Rectangle')
         self.drawing_label.appendRow(rectangle_command)
 
         self.layer_label = QtGui.QStandardItem('Layers')
@@ -68,13 +68,13 @@ class CommandPane(SidebarPane):
         self.layer_label.setSelectable(False)
         self.command_list.model.appendRow(self.layer_label)
 
-        new_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Create new layer')
+        new_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Create new layer')
         self.layer_label.appendRow(new_layer_command)
-        rename_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Rename existing layer')
+        rename_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Rename existing layer')
         self.layer_label.appendRow(rename_layer_command)
-        delete_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Delete existing layer')
+        delete_layer_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Delete existing layer')
         self.layer_label.appendRow(delete_layer_command)
-        layer_manager_command = QtGui.QStandardItem(QtGui.QIcon('images/new.png'), 'Open layer manager')
+        layer_manager_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Open layer manager')
         self.layer_label.appendRow(layer_manager_command)
 
         self.command_list.tree.expandAll()
@@ -93,3 +93,6 @@ class CommandPane(SidebarPane):
 
     def _call_command(self, command):
         self.command_started.emit(command)
+
+    def cancel(self):
+        self.command_list.tree.clearSelection()

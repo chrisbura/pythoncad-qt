@@ -29,8 +29,8 @@ class DocumentView(QtGui.QGraphicsView):
         super(DocumentView, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
-        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
         super(DocumentView, self).mouseReleaseEvent(event)
+        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 
     def wheelEvent(self, event):
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)

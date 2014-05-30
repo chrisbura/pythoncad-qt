@@ -26,13 +26,16 @@ class SegmentItem(QtCore.QObject):
 
         # Start Point
         self.point1_item = PointGraphicsItem(self.point1)
+        self.point1_item.parent = self
         self.items.append(self.point1_item)
 
         # End Point
         self.point2_item = PointGraphicsItem(self.point2)
+        self.point2_item.parent = self
         self.items.append(self.point2_item)
 
         # Mid Point
+        # TODO: Set deleteable = false
         self.midpoint_item = MidPoint(self.segment.midpoint)
         self.items.append(self.midpoint_item)
 

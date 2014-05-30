@@ -42,6 +42,22 @@ class DocumentScene(QtGui.QGraphicsScene):
         if event.key() == QtCore.Qt.Key_Escape and self.active_command is not None:
             self.cancel_command()
             # TODO: deselect command on cancel
+
+        # Delete Selected Items
+        selected_items = self.selectedItems()
+        if event.key() == QtCore.Qt.Key_Delete and len(selected_items) > 0:
+            for item in selected_items:
+                # Remove siblings from selected_items so that we don't
+                # attempt to remove them twice
+                for sibling in item.parent.items:
+                    try:
+                        selected_items.remove(sibling)
+                    except ValueError:
+                        # Sibling item isn't selected
+                        pass
+                    # Remove sibling
+                    self.removeItem(sibling)
+
         super(DocumentScene, self).keyReleaseEvent(event)
 
     def start_commmand(self, command):

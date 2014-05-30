@@ -4,6 +4,7 @@ from sympy.geometry import Segment
 
 import settings
 from graphics_items.base_item import BaseItem
+from graphics_items.base_graphics_item import BaseGraphicsItem
 from graphics_items.point_graphics_item import PointGraphicsItem, MidPoint
 
 
@@ -35,10 +36,8 @@ class SegmentItem(BaseItem):
         self.add_child(self.midpoint_item)
 
 
-class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
+class SegmentGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsLineItem):
     def __init__(self, point1, point2):
-
-        self.hover = False
 
         self.point1 = point1
         self.point2 = point2
@@ -47,22 +46,8 @@ class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
             self.point1.x,
             self.point1.y,
             self.point2.x,
-            self.point2.y)
-
-        self.pen_thickness = 1
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness, QtCore.Qt.SolidLine))
-        self.setAcceptHoverEvents(True)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
-
-    def hoverEnterEvent(self, event):
-        super(SegmentGraphicsItem, self).hoverEnterEvent(event)
-        self.hover = True
-        self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
-
-    def hoverLeaveEvent(self, event):
-        super(SegmentGraphicsItem, self).hoverLeaveEvent(event)
-        self.hover = False
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
+            self.point2.y
+        )
 
     def shape(self):
         p = QtGui.QPainterPath(QtCore.QPointF(self.point1.x, self.point1.y))
@@ -73,22 +58,3 @@ class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
         path = stroker.createStroke(p)
 
         return path
-
-    def paint(self, painter, option, widget):
-        # Disable dotted selection rectangle
-        option = QtGui.QStyleOptionGraphicsItem(option)
-        option.state &= ~ QtGui.QStyle.State_Selected
-
-        if self.hover:
-            self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
-        else:
-            self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
-
-        if self.isSelected():
-            self.setPen(QtGui.QPen(QtCore.Qt.green, self.pen_thickness))
-
-        if settings.DEBUG_SHAPES:
-            painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
-            painter.drawPath(self.shape())
-
-        super(SegmentGraphicsItem, self).paint(painter, option, widget)

@@ -3,13 +3,13 @@ from PyQt4 import QtGui, QtCore
 from sympy.geometry import Segment
 
 import settings
+from graphics_items.base_item import BaseItem
 from graphics_items.point_graphics_item import PointGraphicsItem, MidPoint
 
 
-class SegmentItem(QtCore.QObject):
+class SegmentItem(BaseItem):
     def __init__(self, point1, point2, *args, **kwargs):
         super(SegmentItem, self).__init__(*args, **kwargs)
-        self.items = []
 
         self.point1 = point1
         self.point2 = point2
@@ -17,27 +17,22 @@ class SegmentItem(QtCore.QObject):
         self.segment = Segment(self.point1, self.point2)
 
         # Segment
-        self.segment_item = SegmentGraphicsItem(
-            self.point1,
-            self.point2,
-        )
-        self.segment_item.parent = self
-        self.items.append(self.segment_item)
+        self.segment_item = SegmentGraphicsItem(self.point1, self.point2)
+        self.add_child(self.segment_item)
 
         # Start Point
         self.point1_item = PointGraphicsItem(self.point1)
-        self.point1_item.parent = self
-        self.items.append(self.point1_item)
+        self.add_child(self.point1_item)
 
         # End Point
         self.point2_item = PointGraphicsItem(self.point2)
-        self.point2_item.parent = self
-        self.items.append(self.point2_item)
+        self.add_child(self.point2_item)
 
         # Mid Point
         # TODO: Set deleteable = false
+        # TODO: Set only visible on PointInput
         self.midpoint_item = MidPoint(self.segment.midpoint)
-        self.items.append(self.midpoint_item)
+        self.add_child(self.midpoint_item)
 
 
 class SegmentGraphicsItem(QtGui.QGraphicsLineItem):

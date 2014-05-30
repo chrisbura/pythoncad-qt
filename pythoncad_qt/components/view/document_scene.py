@@ -51,7 +51,7 @@ class DocumentScene(QtGui.QGraphicsScene):
                 # Create list of unique items to remove using set.union
                 # items_to_remove ends up being made up of selectedItems and all
                 # the siblings of those items
-                items_to_remove = items_to_remove | set(item.parent.items)
+                items_to_remove = items_to_remove | set(item.parent.children)
 
             # Remove items
             for item in items_to_remove:
@@ -90,7 +90,7 @@ class DocumentScene(QtGui.QGraphicsScene):
             # Get QGraphics*Item
             graphics_item = command.apply_command()
             # self.entity_added.emit(graphics_item.entity)
-            for item in graphics_item.items:
+            for item in graphics_item.children:
                 self.addItem(item)
             self.active_command = None
             self.clear_preview()

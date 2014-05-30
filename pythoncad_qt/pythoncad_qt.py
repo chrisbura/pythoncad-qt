@@ -62,26 +62,27 @@ class PythoncadQt(QtGui.QMainWindow):
         layer_pane = LayerPane()
 
         # Document Viewport
-        document_view = DocumentControl()
+        document_control = DocumentControl()
 
         console_pane = ConsolePane()
 
         # Signals
-        command_pane.command_started.connect(document_view.document_stack.process_command)
+        command_pane.command_started.connect(document_control.document_stack.process_command)
 
-        document_view.document_stack.currentChanged.connect(self.update_panes)
-        document_view.document_opened.connect(layer_pane.add_document)
-        document_view.document_opened.connect(console_pane.add_document)
-        document_view.document_opened.connect(document_pane.add_document)
-        document_view.document_opened.connect(self.update_panes)
+        document_control.document_stack.currentChanged.connect(self.update_panes)
+        document_control.document_opened.connect(layer_pane.add_document)
+        document_control.document_opened.connect(console_pane.add_document)
+        document_control.document_opened.connect(document_pane.add_document)
+        document_control.document_opened.connect(self.update_panes)
+        document_control.command_canceled.connect(command_pane.cancel)
 
-        document_pane.document_changed.connect(document_view.switch_document)
+        document_pane.document_changed.connect(document_control.switch_document)
         document_pane.document_changed.connect(layer_pane.switch_document)
         document_pane.document_changed.connect(console_pane.switch_document)
         document_pane.document_changed.connect(layer_pane.update)
 
         # Open initial blank drawing on component creation
-        document_view.open_document()
+        document_control.open_document()
 
         ### Right Vertical Layout
         right_sidebar = Sidebar()
@@ -91,7 +92,7 @@ class PythoncadQt(QtGui.QMainWindow):
 
 
         splitter.addWidget(left_sidebar)
-        splitter.addWidget(document_view)
+        splitter.addWidget(document_control)
         splitter.addWidget(right_sidebar)
 
         # Set initial splitter proportions
@@ -101,8 +102,8 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Signals
         # New Drawing Buttons
-        topbar.new_file_button.clicked.connect(document_view.open_document)
-        document_pane.new_document_button.clicked.connect(document_view.open_document)
+        topbar.new_file_button.clicked.connect(document_control.open_document)
+        document_pane.new_document_button.clicked.connect(document_control.open_document)
 
 if __name__ == '__main__':
     import sys

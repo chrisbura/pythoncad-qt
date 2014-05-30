@@ -42,6 +42,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         if event.key() == QtCore.Qt.Key_Escape and self.active_command is not None:
             self.cancel_command()
             # TODO: deselect command on cancel
+        super(DocumentScene, self).keyReleaseEvent(event)
 
     def start_commmand(self, command):
         self.last_command = command
@@ -74,7 +75,8 @@ class DocumentScene(QtGui.QGraphicsScene):
             # Get QGraphics*Item
             graphics_item = command.apply_command()
             # self.entity_added.emit(graphics_item.entity)
-            self.addItem(graphics_item)
+            for item in graphics_item.items:
+                self.addItem(item)
             self.active_command = None
             self.clear_preview()
 

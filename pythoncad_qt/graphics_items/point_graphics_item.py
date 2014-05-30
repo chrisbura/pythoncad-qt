@@ -3,6 +3,15 @@ from PyQt4 import QtGui, QtCore
 import settings
 
 
+class PointItem(QtCore.QObject):
+    def __init__(self, point, *args, **kwargs):
+        super(PointItem, self).__init__(*args, **kwargs)
+        self.items = []
+
+        self.point_item = PointGraphicsItem(point)
+        self.items.append(self.point_item)
+
+
 class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
     def __init__(self, point):
         self.entity = point
@@ -18,6 +27,7 @@ class PointGraphicsItem(QtGui.QGraphicsEllipseItem):
         self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness, QtCore.Qt.SolidLine))
         self.setBrush(QtCore.Qt.black)
         self.setAcceptHoverEvents(True)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
     def hoverEnterEvent(self, event):
         super(PointGraphicsItem, self).hoverEnterEvent(event)

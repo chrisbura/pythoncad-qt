@@ -6,6 +6,37 @@ import settings
 from graphics_items.point_graphics_item import PointGraphicsItem, MidPoint
 
 
+class SegmentItem(QtCore.QObject):
+    def __init__(self, point1, point2, *args, **kwargs):
+        super(SegmentItem, self).__init__(*args, **kwargs)
+        self.items = []
+
+        self.point1 = point1
+        self.point2 = point2
+
+        self.segment = Segment(self.point1, self.point2)
+
+        # Segment
+        self.segment_item = SegmentGraphicsItem(
+            self.point1,
+            self.point2,
+        )
+        self.segment_item.parent = self
+        self.items.append(self.segment_item)
+
+        # Start Point
+        self.point1_item = PointGraphicsItem(self.point1)
+        self.items.append(self.point1_item)
+
+        # End Point
+        self.point2_item = PointGraphicsItem(self.point2)
+        self.items.append(self.point2_item)
+
+        # Mid Point
+        self.midpoint_item = MidPoint(self.segment.midpoint)
+        self.items.append(self.midpoint_item)
+
+
 class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
     def __init__(self, point1, point2):
         self.point1 = point1
@@ -20,6 +51,7 @@ class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
         self.pen_thickness = 1
         self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness, QtCore.Qt.SolidLine))
         self.setAcceptHoverEvents(True)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
     def hoverEnterEvent(self, event):
         super(SegmentGraphicsItem, self).hoverEnterEvent(event)
@@ -51,7 +83,7 @@ class SegmentGraphicsGroup(QtGui.QGraphicsItemGroup):
         super(SegmentGraphicsGroup, self).__init__()
 
         self.setHandlesChildEvents(False)
-
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
         self.point1 = PointGraphicsItem(point1)
         self.point2 = PointGraphicsItem(point2)
         self.segment = SegmentGraphicsItem(point1, point2)

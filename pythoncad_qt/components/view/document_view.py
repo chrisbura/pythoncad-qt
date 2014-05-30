@@ -16,6 +16,7 @@ class DocumentView(QtGui.QGraphicsView):
         self.default_scale = self.transform()
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
 
     def leaveEvent(self, event):
         self.mouse_exit.emit(event)
@@ -28,7 +29,7 @@ class DocumentView(QtGui.QGraphicsView):
         super(DocumentView, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
-        self.setDragMode(QtGui.QGraphicsView.NoDrag)
+        self.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
         super(DocumentView, self).mouseReleaseEvent(event)
 
     def wheelEvent(self, event):

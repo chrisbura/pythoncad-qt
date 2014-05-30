@@ -1,7 +1,7 @@
 
 from commands.base import Command
 from commands.inputs import PointInput
-from graphics_items.point_graphics_item import PointGraphicsItem
+from graphics_items.point_graphics_item import PointItem
 
 
 class PointCommand(Command):
@@ -13,4 +13,4 @@ class PointCommand(Command):
         ]
 
     def apply_command(self):
-        return PointGraphicsItem(self.inputs[0].value)
+        return PointItem(self.inputs[0].value)

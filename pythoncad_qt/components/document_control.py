@@ -11,13 +11,14 @@ class DocumentStack(QtGui.QStackedWidget):
     def process_command(self, command):
         current_widget = self.currentWidget()
         # TODO: Decouple with signals
-        current_widget.scene.active_command = command()
+        current_widget.scene.start_commmand(command)
 
 
 class DocumentControl(VerticalLayout, ComponentBase):
 
     # TODO: Move to Drawing.__init__
     document_opened = QtCore.pyqtSignal(object)
+    command_canceled = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentControl, self).__init__(*args, **kwargs)
@@ -63,4 +64,8 @@ class DocumentControl(VerticalLayout, ComponentBase):
 
         self.document_opened.emit(drawing)
 
+        document.scene.command_canceled.connect(self._command_cancelled)
         # document.scene.entity_added.connect(drawing.add_entity)
+
+    def _command_cancelled(self):
+        self.command_canceled.emit()

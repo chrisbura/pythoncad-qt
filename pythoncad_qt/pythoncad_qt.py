@@ -69,11 +69,9 @@ class PythoncadQt(QtGui.QMainWindow):
         # Signals
         command_pane.command_started.connect(document_control.document_stack.process_command)
 
-        document_control.document_stack.currentChanged.connect(self.update_panes)
         document_control.document_opened.connect(layer_pane.add_document)
         document_control.document_opened.connect(console_pane.add_document)
         document_control.document_opened.connect(document_pane.add_document)
-        document_control.document_opened.connect(self.update_panes)
         document_control.command_canceled.connect(command_pane.cancel)
 
         document_pane.document_changed.connect(document_control.switch_document)
@@ -104,6 +102,7 @@ class PythoncadQt(QtGui.QMainWindow):
         # New Drawing Buttons
         topbar.new_file_button.clicked.connect(document_control.open_document)
         document_pane.new_document_button.clicked.connect(document_control.open_document)
+
 
 if __name__ == '__main__':
     import sys

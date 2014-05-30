@@ -13,6 +13,7 @@ class DocumentScene(QtGui.QGraphicsScene):
     mouse_move = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     active_command_click = QtCore.pyqtSignal(object)
     entity_added = QtCore.pyqtSignal(object)
+    command_canceled = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
@@ -22,6 +23,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         self.grid_spacing = 20
 
         # Commands
+        self.last_command = None
         self.active_command = None
         self.preview_item = None
 
@@ -38,10 +40,17 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Cancel active command on esc
         # TODO: Handle focus, click command and bring focus to QGraphicsScene
         if event.key() == QtCore.Qt.Key_Escape and self.active_command is not None:
-            # TODO: Emit command canceled signal
+            self.cancel_command()
             # TODO: deselect command on cancel
-            self.active_command = None
-            print 'Cancel'
+
+    def start_commmand(self, command):
+        self.last_command = command
+        self.active_command = command()
+
+    def cancel_command(self):
+        self.command_canceled.emit()
+        self.active_command = None
+        self.clear_preview()
 
     def handle_click(self, event):
         command = self.active_command
@@ -67,11 +76,13 @@ class DocumentScene(QtGui.QGraphicsScene):
             # self.entity_added.emit(graphics_item.entity)
             self.addItem(graphics_item)
             self.active_command = None
+            self.clear_preview()
 
-            # Remove the preview item from the scene
-            if self.preview_item is not None:
-                self.removeItem(self.preview_item)
-                self.preview_item = None
+    def clear_preview(self):
+        # Remove the preview item from the scene
+        if self.preview_item is not None:
+            self.removeItem(self.preview_item)
+            self.preview_item = None
 
     def drawBackground(self, painter, rect):
         painter.save()

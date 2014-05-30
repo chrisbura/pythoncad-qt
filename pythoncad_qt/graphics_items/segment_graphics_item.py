@@ -37,6 +37,9 @@ class SegmentItem(BaseItem):
 
 class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
     def __init__(self, point1, point2):
+
+        self.hover = False
+
         self.point1 = point1
         self.point2 = point2
 
@@ -53,10 +56,12 @@ class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
 
     def hoverEnterEvent(self, event):
         super(SegmentGraphicsItem, self).hoverEnterEvent(event)
+        self.hover = True
         self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
 
     def hoverLeaveEvent(self, event):
         super(SegmentGraphicsItem, self).hoverLeaveEvent(event)
+        self.hover = False
         self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
 
     def shape(self):
@@ -70,26 +75,20 @@ class SegmentGraphicsItem(QtGui.QGraphicsLineItem):
         return path
 
     def paint(self, painter, option, widget):
+        # Disable dotted selection rectangle
+        option = QtGui.QStyleOptionGraphicsItem(option)
+        option.state &= ~ QtGui.QStyle.State_Selected
+
+        if self.hover:
+            self.setPen(QtGui.QPen(QtCore.Qt.red, self.pen_thickness))
+        else:
+            self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
+
+        if self.isSelected():
+            self.setPen(QtGui.QPen(QtCore.Qt.green, self.pen_thickness))
+
         if settings.DEBUG_SHAPES:
             painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
             painter.drawPath(self.shape())
+
         super(SegmentGraphicsItem, self).paint(painter, option, widget)
-
-
-class SegmentGraphicsGroup(QtGui.QGraphicsItemGroup):
-    def __init__(self, point1, point2):
-        super(SegmentGraphicsGroup, self).__init__()
-
-        self.setHandlesChildEvents(False)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
-        self.point1 = PointGraphicsItem(point1)
-        self.point2 = PointGraphicsItem(point2)
-        self.segment = SegmentGraphicsItem(point1, point2)
-
-        segment = Segment(point1, point2)
-        self.midpoint = MidPoint(segment.midpoint)
-
-        self.addToGroup(self.segment)
-        self.addToGroup(self.point1)
-        self.addToGroup(self.point2)
-        self.addToGroup(self.midpoint)

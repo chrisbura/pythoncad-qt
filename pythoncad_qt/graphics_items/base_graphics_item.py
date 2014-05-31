@@ -7,15 +7,14 @@ class BaseGraphicsItem(object):
     def __init__(self, *args, **kwargs):
         super(BaseGraphicsItem, self).__init__(*args, **kwargs)
         self.hover = False
-        self.pen_thickness = 1
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness, QtCore.Qt.SolidLine))
+        self.setPen(QtGui.QPen(settings.ITEM_COLOUR, settings.ITEM_PEN_THICKNESS, QtCore.Qt.SolidLine))
         self.setAcceptHoverEvents(True)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
         # setBrush comes from QAbstractGraphicsShapeItem, as a result
         # QGraphicsLineItem won't have it
         try:
-            self.setBrush(QtCore.Qt.black)
+            self.setBrush(settings.ITEM_COLOUR)
         except AttributeError:
             pass
 
@@ -33,11 +32,11 @@ class BaseGraphicsItem(object):
         option.state &= ~ QtGui.QStyle.State_Selected
 
         if self.hover:
-            pen_colour = QtCore.Qt.red
+            pen_colour = settings.HIGHLIGHT_COLOUR
         else:
-            pen_colour = QtCore.Qt.black
+            pen_colour = settings.ITEM_COLOUR
 
-        self.setPen(QtGui.QPen(pen_colour, self.pen_thickness))
+        self.setPen(QtGui.QPen(pen_colour, settings.ITEM_PEN_THICKNESS))
 
         # See note about QAbstractGraphicsShapeItem above
         try:
@@ -46,14 +45,14 @@ class BaseGraphicsItem(object):
             pass
 
         if self.isSelected():
-            self.setPen(QtGui.QPen(QtCore.Qt.green, self.pen_thickness))
+            self.setPen(QtGui.QPen(settings.SELECTED_COLOUR, settings.ITEM_PEN_THICKNESS))
             try:
-                self.setBrush(QtCore.Qt.green)
+                self.setBrush(settings.SELECTED_COLOUR)
             except AttributeError:
                 pass
 
         if settings.DEBUG_SHAPES:
-            painter.setPen(QtGui.QPen(QtCore.Qt.cyan))
+            painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
             painter.drawPath(self.shape())
 
         super(BaseGraphicsItem, self).paint(painter, option, widget)

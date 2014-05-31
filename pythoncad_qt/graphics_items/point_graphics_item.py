@@ -36,15 +36,15 @@ class MidPoint(PointGraphicsItem):
 
     def __init__(self, *args, **kwargs):
         super(MidPoint, self).__init__(*args, **kwargs)
-        self.setPen(QtGui.QPen(QtCore.Qt.transparent, self.pen_thickness, QtCore.Qt.SolidLine))
+        self.setPen(QtGui.QPen(QtCore.Qt.transparent, settings.ITEM_PEN_THICKNESS, QtCore.Qt.SolidLine))
         self.setBrush(QtCore.Qt.transparent)
 
     def hoverEnterEvent(self, event):
         super(MidPoint, self).hoverEnterEvent(event)
         self.setBrush(QtCore.Qt.black)
-        self.setPen(QtGui.QPen(QtCore.Qt.black, self.pen_thickness))
+        self.setPen(QtGui.QPen(QtCore.Qt.black, settings.ITEM_PEN_THICKNESS))
 
     def hoverLeaveEvent(self, event):
         super(MidPoint, self).hoverLeaveEvent(event)
         self.setBrush(QtCore.Qt.transparent)
-        self.setPen(QtGui.QPen(QtCore.Qt.transparent, self.pen_thickness))
+        self.setPen(QtGui.QPen(QtCore.Qt.transparent, settings.ITEM_PEN_THICKNESS))

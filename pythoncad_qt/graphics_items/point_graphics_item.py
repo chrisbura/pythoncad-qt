@@ -25,7 +25,6 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
             self.radius * 2.0)
 
     def shape(self):
-        shape = super(PointGraphicsItem, self).shape()
         path = QtGui.QPainterPath()
         width = 20.0
         path.addEllipse(self.entity.x - width / 2.0, self.entity.y - width / 2.0, width, width)

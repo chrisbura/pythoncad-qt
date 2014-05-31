@@ -8,6 +8,7 @@ from ..sidebar_widgets import FilterableTreeView
 # Commands
 from commands.point_command import PointCommand
 from commands.segment_command import SegmentCommand
+from commands.circle_command import CircleCommand
 
 # TODO: Move QActions to pythoncad_qt.py
 # TODO: Deselect command on command_cancel (Esc) via signals
@@ -50,8 +51,15 @@ class CommandPane(SidebarPane):
             )
         self.drawing_label.appendRow(segment_command)
 
+        # Command: Circle
         circle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/circle.png'), 'Circle')
+        circle_command.setData(
+            QtGui.QAction('Circle', self.command_list,
+                triggered=partial(self._call_command, CircleCommand)),
+            QtCore.Qt.UserRole,
+            )
         self.drawing_label.appendRow(circle_command)
+
         arc_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/arc.png'), 'Arc')
         self.drawing_label.appendRow(arc_command)
         ellipse_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/ellipse.png'), 'Ellipse')

@@ -88,10 +88,11 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         if command.active_input == len(command.inputs):
             # Get QGraphics*Item
-            graphics_item = command.apply_command()
+            graphics_items = command.apply_command()
             # self.entity_added.emit(graphics_item.entity)
-            for item in graphics_item.children:
-                self.addItem(item)
+            for graphics_item in graphics_items:
+                for item in graphics_item.children:
+                    self.addItem(item)
             self.active_command = None
             self.clear_preview()
 

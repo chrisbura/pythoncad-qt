@@ -13,4 +13,4 @@ class PointCommand(Command):
         ]
 
     def apply_command(self):
-        return PointItem(self.inputs[0].value)
+        return [PointItem(self.inputs[0].value)]

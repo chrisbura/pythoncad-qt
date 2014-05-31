@@ -21,4 +21,4 @@ class SegmentCommand(Command):
         return SegmentPreviewGraphicsItem(self.inputs[0].value)
 
     def apply_command(self):
-        return SegmentItem(self.inputs[0].value, self.inputs[1].value)
+        return [SegmentItem(self.inputs[0].value, self.inputs[1].value)]

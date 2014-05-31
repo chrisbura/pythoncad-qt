@@ -21,4 +21,4 @@ class CircleCommand(Command):
         return CirclePreviewGraphicsItem(self.inputs[0].value)
 
     def apply_command(self):
-        return CircleItem(self.inputs[0].value, self.inputs[1].value)
+        return [CircleItem(self.inputs[0].value, self.inputs[1].value)]

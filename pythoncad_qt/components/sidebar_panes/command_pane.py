@@ -9,6 +9,7 @@ from ..sidebar_widgets import FilterableTreeView
 from commands.point_command import PointCommand
 from commands.segment_command import SegmentCommand
 from commands.circle_command import CircleCommand
+from commands.rectangle_command import RectangleCommand
 
 # TODO: Move QActions to pythoncad_qt.py
 # TODO: Deselect command on command_cancel (Esc) via signals
@@ -51,6 +52,14 @@ class CommandPane(SidebarPane):
             )
         self.drawing_label.appendRow(segment_command)
 
+        rectangle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/rectangle.png'), 'Rectangle')
+        rectangle_command.setData(
+            QtGui.QAction('Rectangle', self.command_list,
+                triggered=partial(self._call_command, RectangleCommand)),
+            QtCore.Qt.UserRole,
+            )
+        self.drawing_label.appendRow(rectangle_command)
+
         # Command: Circle
         circle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/circle.png'), 'Circle')
         circle_command.setData(
@@ -68,8 +77,6 @@ class CommandPane(SidebarPane):
         self.drawing_label.appendRow(polygon_command)
         polyline_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/polyline.png'), 'Polyline')
         self.drawing_label.appendRow(polyline_command)
-        rectangle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/rectangle.png'), 'Rectangle')
-        self.drawing_label.appendRow(rectangle_command)
 
         self.layer_label = QtGui.QStandardItem('Layers')
         self.layer_label.setFlags(QtCore.Qt.NoItemFlags)

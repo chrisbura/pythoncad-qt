@@ -4,17 +4,23 @@ import settings
 
 
 class BaseGraphicsItem(object):
+
+    item_colour = settings.ITEM_COLOUR
+    hover_colour = settings.HIGHLIGHT_COLOUR
+    selected_colour = settings.SELECTED_COLOUR
+    pen_thickness = settings.ITEM_PEN_THICKNESS
+
     def __init__(self, *args, **kwargs):
         super(BaseGraphicsItem, self).__init__(*args, **kwargs)
         self.hover = False
-        self.setPen(QtGui.QPen(settings.ITEM_COLOUR, settings.ITEM_PEN_THICKNESS, QtCore.Qt.SolidLine))
+        self.setPen(QtGui.QPen(self.item_colour, self.pen_thickness, QtCore.Qt.SolidLine))
         self.setAcceptHoverEvents(True)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
         # setBrush comes from QAbstractGraphicsShapeItem, as a result
         # QGraphicsLineItem won't have it
         try:
-            self.setBrush(settings.ITEM_COLOUR)
+            self.setBrush(self.item_colour)
         except AttributeError:
             pass
 
@@ -32,11 +38,11 @@ class BaseGraphicsItem(object):
         option.state &= ~ QtGui.QStyle.State_Selected
 
         if self.hover:
-            pen_colour = settings.HIGHLIGHT_COLOUR
+            pen_colour = self.hover_colour
         else:
-            pen_colour = settings.ITEM_COLOUR
+            pen_colour = self.item_colour
 
-        self.setPen(QtGui.QPen(pen_colour, settings.ITEM_PEN_THICKNESS))
+        self.setPen(QtGui.QPen(pen_colour, self.pen_thickness))
 
         # See note about QAbstractGraphicsShapeItem above
         try:
@@ -45,9 +51,9 @@ class BaseGraphicsItem(object):
             pass
 
         if self.isSelected():
-            self.setPen(QtGui.QPen(settings.SELECTED_COLOUR, settings.ITEM_PEN_THICKNESS))
+            self.setPen(QtGui.QPen(self.selected_colour, self.pen_thickness))
             try:
-                self.setBrush(settings.SELECTED_COLOUR)
+                self.setBrush(self.selected_colour)
             except AttributeError:
                 pass
 

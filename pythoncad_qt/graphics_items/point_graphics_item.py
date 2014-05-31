@@ -2,7 +2,7 @@ from PyQt4 import QtGui, QtCore
 
 import settings
 from graphics_items.base_item import BaseItem
-from graphics_items.base_graphics_item import BaseGraphicsItem
+from graphics_items.base_graphics_item import BaseGraphicsItem, FilledShapeMixin
 
 
 class PointItem(BaseItem):
@@ -13,7 +13,7 @@ class PointItem(BaseItem):
         self.add_child(self.point_item)
 
 
-class PointGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
+class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, point):
         self.entity = point
         self.radius = 2.0
@@ -33,4 +33,4 @@ class PointGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
 
 
 class MidPoint(PointGraphicsItem):
-    item_colour = QtCore.Qt.transparent
+    default_colour = QtCore.Qt.transparent

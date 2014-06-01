@@ -1,12 +1,8 @@
+from math import sqrt
 
 from PyQt4 import QtGui
 
-from sympy.geometry import Point, Segment
-
 from graphics_items.point_graphics_item import PointGraphicsItem
-from graphics_items.circle_graphics_item import CircleGraphicsItem
-
-# TODO: Investigate why it takes so much processing power
 
 
 class CirclePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
@@ -21,16 +17,16 @@ class CirclePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
         self.addToGroup(self.circle_item)
 
     def update(self, event):
-        point = Point(event.scenePos().x(), event.scenePos().y())
-        radius_segment = Segment(self.center_point, point)
-        radius = radius_segment.length
+        x, y = event.scenePos().x(), event.scenePos().y()
+
+        distance_x = self.center_point.x - x
+        distance_y = self.center_point.y - y
+        radius = sqrt(distance_x ** 2 + distance_y ** 2)
         diameter = radius * 2.0
 
-        updated_circle = QtGui.QGraphicsEllipseItem(
+        self.circle_item.setRect(
             self.center_point.x - radius,
             self.center_point.y - radius,
             diameter,
             diameter
-
         )
-        self.circle_item.setRect(updated_circle.rect())

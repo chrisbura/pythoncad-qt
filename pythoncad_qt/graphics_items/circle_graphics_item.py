@@ -25,6 +25,8 @@ class CircleItem(BaseItem):
 class CircleGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, point1, point2):
 
+        self.shape_cache = None
+
         self.point1 = point1
         self.point2 = point2
 
@@ -40,9 +42,14 @@ class CircleGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
         )
 
     def shape(self):
-        shape = super(CircleGraphicsItem, self).shape()
-        stroker = QtGui.QPainterPathStroker()
-        stroker.setWidth(10.0)
-        # simplified removes the 2 extra paths from the three (inside radius,
-        # center, and outside radius)
-        return stroker.createStroke(shape).simplified()
+        # Cache the shape call so that we don't recaulate the stroke unless it
+        # changes
+        # TODO: Invalidate cache when geometry changes
+        if not self.shape_cache:
+            shape = super(CircleGraphicsItem, self).shape()
+            stroker = QtGui.QPainterPathStroker()
+            stroker.setWidth(10.0)
+            # simplified removes the 2 extra paths from the three (inside radius,
+            # center, and outside radius)
+            self.shape_cache = stroker.createStroke(shape).simplified()
+        return self.shape_cache

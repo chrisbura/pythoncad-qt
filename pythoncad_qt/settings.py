@@ -1,7 +1,8 @@
 from PyQt4 import QtCore
 
 DEBUG = True
-DEBUG_SHAPES = True
+DEBUG_SHAPES = False
+DEBUG_BOUNDING_RECT = False
 DEBUG_SHAPES_COLOUR = QtCore.Qt.cyan
 
 STYLESHEET = 'stylesheets/pythoncad_qt.css'

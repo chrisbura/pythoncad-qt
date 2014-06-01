@@ -56,4 +56,9 @@ class BaseGraphicsItem(object):
             painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
             painter.drawPath(self.shape())
 
+        if settings.DEBUG_BOUNDING_RECT:
+            bounding_rect = QtGui.QPainterPath()
+            bounding_rect.addRect(self.boundingRect())
+            painter.drawPath(bounding_rect)
+
         super(BaseGraphicsItem, self).paint(painter, option, widget)

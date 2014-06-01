@@ -10,6 +10,7 @@ from commands.point_command import PointCommand
 from commands.segment_command import SegmentCommand
 from commands.circle_command import CircleCommand
 from commands.rectangle_command import RectangleCommand
+from commands.dimension_command import DimensionCommand
 
 # TODO: Move QActions to pythoncad_qt.py
 # TODO: Deselect command on command_cancel (Esc) via signals
@@ -77,6 +78,19 @@ class CommandPane(SidebarPane):
         self.drawing_label.appendRow(polygon_command)
         polyline_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/polyline.png'), 'Polyline')
         self.drawing_label.appendRow(polyline_command)
+
+        self.dimension_label = QtGui.QStandardItem('Dimensioning')
+        self.dimension_label.setFlags(QtCore.Qt.NoItemFlags)
+        self.dimension_label.setSelectable(False)
+        self.command_list.model.appendRow(self.dimension_label)
+
+        dimension_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Dimension')
+        dimension_command.setData(
+            QtGui.QAction('Dimension', self.command_list,
+                triggered=partial(self._call_command, DimensionCommand)),
+            QtCore.Qt.UserRole,
+            )
+        self.dimension_label.appendRow(dimension_command)
 
         self.layer_label = QtGui.QStandardItem('Layers')
         self.layer_label.setFlags(QtCore.Qt.NoItemFlags)

@@ -2,6 +2,8 @@ from PyQt4 import QtCore
 
 from pythoncad.new_api import Drawing
 
+from models.layer import Layer
+
 
 class Drawing(Drawing, QtCore.QObject):
     # Pass around drawing object, allows connecting signals

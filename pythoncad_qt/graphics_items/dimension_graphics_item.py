@@ -59,3 +59,37 @@ class DimensionItem(BaseItem):
 class DimensionGraphicsItem(SegmentGraphicsItem):
     default_colour = QtCore.Qt.gray
     hover_colour = QtCore.Qt.blue
+
+
+class VerticalDimensionItem(BaseItem):
+    def __init__(self, point1, point2, point3, *args, **kwargs):
+        super(VerticalDimensionItem, self).__init__(*args, **kwargs)
+
+        newp1 = Point(point3.x, point1.y)
+        newp2 = Point(point3.x, point2.y)
+
+        self.segment1 = DimensionGraphicsItem(point1, newp1)
+        self.add_child(self.segment1)
+
+        self.segment2 = DimensionGraphicsItem(point2, newp2)
+        self.add_child(self.segment2)
+
+        self.segment3 = DimensionGraphicsItem(newp1, newp2)
+        self.add_child(self.segment3)
+
+
+class HorizontalDimensionItem(BaseItem):
+    def __init__(self, point1, point2, point3, *args, **kwargs):
+        super(HorizontalDimensionItem, self).__init__(*args, **kwargs)
+
+        newp1 = Point(point1.x, point3.y)
+        newp2 = Point(point2.x, point3.y)
+
+        self.segment1 = DimensionGraphicsItem(point1, newp1)
+        self.add_child(self.segment1)
+
+        self.segment2 = DimensionGraphicsItem(point2, newp2)
+        self.add_child(self.segment2)
+
+        self.segment3 = DimensionGraphicsItem(newp1, newp2)
+        self.add_child(self.segment3)

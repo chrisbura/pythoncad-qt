@@ -10,7 +10,7 @@ from commands.point_command import PointCommand
 from commands.segment_command import SegmentCommand
 from commands.circle_command import CircleCommand
 from commands.rectangle_command import RectangleCommand
-from commands.dimension_command import DimensionCommand
+from commands.dimension_command import DimensionCommand, HorizontalDimensionCommand, VerticalDimensionCommand
 
 # TODO: Move QActions to pythoncad_qt.py
 # TODO: Deselect command on command_cancel (Esc) via signals
@@ -91,6 +91,22 @@ class CommandPane(SidebarPane):
             QtCore.Qt.UserRole,
             )
         self.dimension_label.appendRow(dimension_command)
+
+        vertical_dimension = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Vertical Dimension')
+        vertical_dimension.setData(
+            QtGui.QAction('Vertical Dimension', self.command_list,
+                triggered=partial(self._call_command, VerticalDimensionCommand)),
+            QtCore.Qt.UserRole,
+            )
+        self.dimension_label.appendRow(vertical_dimension)
+
+        horizontal_dimension = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Horizontal Dimension')
+        horizontal_dimension.setData(
+            QtGui.QAction('Horizontal Dimension', self.command_list,
+                triggered=partial(self._call_command, HorizontalDimensionCommand)),
+            QtCore.Qt.UserRole,
+            )
+        self.dimension_label.appendRow(horizontal_dimension)
 
         self.layer_label = QtGui.QStandardItem('Layers')
         self.layer_label.setFlags(QtCore.Qt.NoItemFlags)

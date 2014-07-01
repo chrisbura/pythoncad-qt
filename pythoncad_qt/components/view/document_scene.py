@@ -6,6 +6,7 @@ from sympy.geometry import Point
 
 from graphics_items.point_graphics_item import PointGraphicsItem
 from commands.inputs import PointInput
+from settings import GRID_SPACING
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -20,7 +21,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Arguments are x, y, width, height
         self.setSceneRect(-10000, -10000, 20000, 20000)
-        self.grid_spacing = 20
+        self.grid_spacing = GRID_SPACING
 
         # Commands
         self.last_command = None

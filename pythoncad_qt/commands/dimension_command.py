@@ -33,8 +33,6 @@ class DimensionCommand(Command):
                 self.inputs[2].value
             )
         ]
-        print self.inputs[0]
-
         return items
 
 class VerticalDimensionCommand(DimensionCommand):

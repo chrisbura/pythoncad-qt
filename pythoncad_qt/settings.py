@@ -8,9 +8,12 @@ DEBUG_SHAPES_COLOUR = QtCore.Qt.cyan
 STYLESHEET = 'stylesheets/pythoncad_qt.css'
 
 DEFAULT_COLOUR = QtCore.Qt.black
-ITEM_PEN_THICKNESS = 1
+ITEM_PEN_THICKNESS = 2
 HIGHLIGHT_COLOUR = QtCore.Qt.red
 SELECTED_COLOUR = QtCore.Qt.green
+JOIN_STYLE = QtCore.Qt.MiterJoin
+LINE_STYLE = QtCore.Qt.SolidLine
+
 GRID_SPACING = 20
 
 UNITS = 'mm'

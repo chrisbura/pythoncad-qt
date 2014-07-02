@@ -3,6 +3,7 @@ from sympy.geometry import Point, Segment
 from PyQt4 import QtGui, QtCore
 
 from graphics_items.base_item import BaseItem
+from graphics_items.base_graphics_item import BaseGraphicsItem
 from graphics_items.segment_graphics_item import SegmentGraphicsItem
 from graphics_items.point_graphics_item import PointGraphicsItem
 
@@ -28,25 +29,14 @@ class DimensionItem(BaseItem):
         perpendicular_line_p2_points = list(perpendicular_line_p2.points)
         perpendicular_line_p2_points.remove(point2)
 
-        # TODO: Use path instead of discreet items, or highlight all items
+        # TODO: Refactor, code repeated 3 times
+        self.path = QtGui.QPainterPath(QtCore.QPointF(point1.x, point1.y))
+        self.path.lineTo(perpendicular_line_p1_points[0].x, perpendicular_line_p1_points[0].y)
+        self.path.lineTo(perpendicular_line_p2_points[0].x, perpendicular_line_p2_points[0].y)
+        self.path.lineTo(point2.x, point2.y)
 
-        self.segment = DimensionGraphicsItem(
-            perpendicular_line_p1_points[0],
-            perpendicular_line_p2_points[0]
-        )
-        self.add_child(self.segment)
-
-        self.segment_p1 = DimensionGraphicsItem(
-            point1,
-            perpendicular_line_p1_points[0]
-        )
-        self.add_child(self.segment_p1)
-
-        self.segment_p2 = DimensionGraphicsItem(
-            point2,
-            perpendicular_line_p2_points[0]
-        )
-        self.add_child(self.segment_p2)
+        self.path_item = PathGraphicsItem(self.path)
+        self.add_child(self.path_item)
 
         self.text = QtGui.QGraphicsSimpleTextItem('{0}'.format(segment.length))
         self.text.setPos(point3.x, point3.y)
@@ -60,6 +50,27 @@ class DimensionGraphicsItem(SegmentGraphicsItem):
     default_colour = QtCore.Qt.gray
     hover_colour = QtCore.Qt.blue
 
+    def __init__(self, *args, **kwargs):
+        super(DimensionGraphicsItem, self).__init__(*args, **kwargs)
+        # Want all the dimension segments to be behind other items
+        self.setZValue(-1)
+
+
+class PathGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsPathItem):
+    default_colour = QtCore.Qt.gray
+    hover_colour = QtCore.Qt.blue
+
+    def __init__(self, *args, **kwargs):
+        super(PathGraphicsItem, self).__init__(*args, **kwargs)
+        # Want all the dimension segments to be behind other items
+        self.setZValue(-1)
+
+    def shape(self):
+        stroker = QtGui.QPainterPathStroker()
+        stroker.setWidth(5.0)
+        path = stroker.createStroke(self.path())
+        return path
+
 
 class VerticalDimensionItem(BaseItem):
     def __init__(self, point1, point2, point3, *args, **kwargs):
@@ -68,14 +79,13 @@ class VerticalDimensionItem(BaseItem):
         newp1 = Point(point3.x, point1.y)
         newp2 = Point(point3.x, point2.y)
 
-        self.segment1 = DimensionGraphicsItem(point1, newp1)
-        self.add_child(self.segment1)
+        self.path = QtGui.QPainterPath(QtCore.QPointF(point1.x, point1.y))
+        self.path.lineTo(newp1.x, newp1.y)
+        self.path.lineTo(newp2.x, newp2.y)
+        self.path.lineTo(point2.x, point2.y)
 
-        self.segment2 = DimensionGraphicsItem(point2, newp2)
-        self.add_child(self.segment2)
-
-        self.segment3 = DimensionGraphicsItem(newp1, newp2)
-        self.add_child(self.segment3)
+        self.path_item = PathGraphicsItem(self.path)
+        self.add_child(self.path_item)
 
 
 class HorizontalDimensionItem(BaseItem):
@@ -85,11 +95,10 @@ class HorizontalDimensionItem(BaseItem):
         newp1 = Point(point1.x, point3.y)
         newp2 = Point(point2.x, point3.y)
 
-        self.segment1 = DimensionGraphicsItem(point1, newp1)
-        self.add_child(self.segment1)
+        self.path = QtGui.QPainterPath(QtCore.QPointF(point1.x, point1.y))
+        self.path.lineTo(newp1.x, newp1.y)
+        self.path.lineTo(newp2.x, newp2.y)
+        self.path.lineTo(point2.x, point2.y)
 
-        self.segment2 = DimensionGraphicsItem(point2, newp2)
-        self.add_child(self.segment2)
-
-        self.segment3 = DimensionGraphicsItem(newp1, newp2)
-        self.add_child(self.segment3)
+        self.path_item = PathGraphicsItem(self.path)
+        self.add_child(self.path_item)

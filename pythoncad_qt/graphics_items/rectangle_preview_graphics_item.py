@@ -10,24 +10,49 @@ class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
         super(RectanglePreviewGraphicsItem, self).__init__(*args, **kwargs)
 
         self.point = point
+        self.lines = []
+        self.points = []
 
-        self.line1 = QtGui.QGraphicsLineItem()
-        self.line2 = QtGui.QGraphicsLineItem()
-        self.line3 = QtGui.QGraphicsLineItem()
-        self.line4 = QtGui.QGraphicsLineItem()
+        for i in range(4):
+            # Lines
+            line = QtGui.QGraphicsLineItem()
+            self.lines.append(line)
 
-        self.add_preview_item(self.line1)
-        self.add_preview_item(self.line2)
-        self.add_preview_item(self.line3)
-        self.add_preview_item(self.line4)
+            # Points
+            point = PointGraphicsItem(self.point)
+            self.points.append(point)
 
-        self.point1 = PointGraphicsItem(self.point)
-        self.add_preview_item(self.point1)
+            # Add to QGraphicsItemGroup
+            self.add_preview_item(line)
+            self.add_preview_item(point)
 
     def update(self, event):
         x, y = event.scenePos().x(), event.scenePos().y()
 
-        self.line1.setLine(self.point.x, self.point.y, x, self.point.y)
-        self.line2.setLine(x, self.point.y, x, y)
-        self.line3.setLine(x, y, self.point.x, y)
-        self.line4.setLine(self.point.x, y, self.point.x, self.point.y)
+        # Point Order is clockwise starting from initial point
+        point1 = [self.point.x, self.point.y]
+        point2 = [x, self.point.y]
+        point3 = [x, y]
+        point4 = [self.point.x, y]
+
+        self.lines[0].setLine(*point1+point2)
+        self.lines[1].setLine(*point2+point3)
+        self.lines[2].setLine(*point3+point4)
+        self.lines[3].setLine(*point4+point1)
+
+        # self.points[0] doesn't change
+        # self.points[2] is current mouse position
+
+        # TODO: Create points class for previews (without shape calculations)
+        self.points[1].setRect(
+            point2[0] - self.points[1].radius,
+            point2[1] - self.points[1].radius,
+            self.points[1].radius * 2,
+            self.points[1].radius * 2
+        )
+        self.points[3].setRect(
+            point4[0] - self.points[3].radius,
+            point4[1] - self.points[3].radius,
+            self.points[3].radius * 2,
+            self.points[3].radius * 2
+        )

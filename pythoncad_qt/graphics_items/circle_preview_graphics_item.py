@@ -2,19 +2,20 @@ from math import sqrt
 
 from PyQt4 import QtGui
 
+from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
 from graphics_items.point_graphics_item import PointGraphicsItem
 
 
-class CirclePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
+class CirclePreviewGraphicsItem(BasePreviewGraphicsItem):
     def __init__(self, point, *args, **kwargs):
         super(CirclePreviewGraphicsItem, self).__init__(*args, **kwargs)
 
         self.center_point = point
         self.center_point_item = PointGraphicsItem(self.center_point)
-        self.addToGroup(self.center_point_item)
+        self.add_preview_item(self.center_point_item)
 
         self.circle_item = QtGui.QGraphicsEllipseItem(0, 0, 0, 0)
-        self.addToGroup(self.circle_item)
+        self.add_preview_item(self.circle_item)
 
     def update(self, event):
         x, y = event.scenePos().x(), event.scenePos().y()

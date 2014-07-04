@@ -1,10 +1,11 @@
 
 from PyQt4 import QtGui
 
+from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
 from graphics_items.point_graphics_item import PointGraphicsItem
 
 
-class SegmentPreviewGraphicsItem(QtGui.QGraphicsItemGroup):
+class SegmentPreviewGraphicsItem(BasePreviewGraphicsItem):
     def __init__(self, point, *args, **kwargs):
         super(SegmentPreviewGraphicsItem, self).__init__(*args, **kwargs)
 
@@ -12,7 +13,7 @@ class SegmentPreviewGraphicsItem(QtGui.QGraphicsItemGroup):
 
         # Starting Point
         self.starting_point = PointGraphicsItem(self.point)
-        self.addToGroup(self.starting_point)
+        self.add_preview_item(self.starting_point)
 
         # Segment
         # Uses regular QGraphicsLineItem because shape() override on
@@ -24,7 +25,7 @@ class SegmentPreviewGraphicsItem(QtGui.QGraphicsItemGroup):
             self.point.x,
             self.point.y
         )
-        self.addToGroup(self.segment)
+        self.add_preview_item(self.segment)
 
     def update(self, event):
         self.segment.setLine(

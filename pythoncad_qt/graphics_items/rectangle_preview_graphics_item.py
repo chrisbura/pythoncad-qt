@@ -1,10 +1,11 @@
 
 from PyQt4 import QtGui
 
+from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
 from graphics_items.point_graphics_item import PointGraphicsItem
 
 
-class RectanglePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
+class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
     def __init__(self, point, *args, **kwargs):
         super(RectanglePreviewGraphicsItem, self).__init__(*args, **kwargs)
 
@@ -15,13 +16,13 @@ class RectanglePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
         self.line3 = QtGui.QGraphicsLineItem()
         self.line4 = QtGui.QGraphicsLineItem()
 
-        self.addToGroup(self.line1)
-        self.addToGroup(self.line2)
-        self.addToGroup(self.line3)
-        self.addToGroup(self.line4)
+        self.add_preview_item(self.line1)
+        self.add_preview_item(self.line2)
+        self.add_preview_item(self.line3)
+        self.add_preview_item(self.line4)
 
         self.point1 = PointGraphicsItem(self.point)
-        self.addToGroup(self.point1)
+        self.add_preview_item(self.point1)
 
     def update(self, event):
         x, y = event.scenePos().x(), event.scenePos().y()

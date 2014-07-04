@@ -74,9 +74,10 @@ class DocumentScene(QtGui.QGraphicsScene):
         current_input = command.inputs[command.active_input]
 
         if isinstance(current_input, PointInput):
-            item = self.itemAt(event.scenePos())
-            if item is not None and isinstance(item, PointGraphicsItem):
-                current_input.value = Point(item.entity.x, item.entity.y)
+            # TODO: Handle multiple points
+            items = [item for item in self.items(event.scenePos()) if isinstance(item, PointGraphicsItem)]
+            if items:
+                current_input.value = Point(items[0].entity.x, items[0].entity.y)
             else:
                 current_input.value = Point(event.scenePos().x(), event.scenePos().y())
 

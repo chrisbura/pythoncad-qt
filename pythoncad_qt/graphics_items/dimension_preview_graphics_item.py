@@ -1,8 +1,9 @@
 
 from sympy.geometry import Point, Segment, Line
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
+from graphics_items.base_graphics_item import BasePen
 from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
 
 
@@ -25,6 +26,9 @@ class DimensionPreviewGraphicsItem(BasePreviewGraphicsItem):
     def __init__(self, point1, point2, *args, **kwargs):
         super(DimensionPreviewGraphicsItem, self).__init__(*args, **kwargs)
 
+        # TODO: Move to settings
+        self.pen = BasePen(QtCore.Qt.gray)
+
         self.point1 = point1
         self.point2 = point2
         self.segment = PreviewSegment(point1, point2)
@@ -32,6 +36,7 @@ class DimensionPreviewGraphicsItem(BasePreviewGraphicsItem):
 
         for i in range(3):
             line = QtGui.QGraphicsLineItem()
+            line.setPen(self.pen)
             self.lines.append(line)
             self.add_preview_item(line)
 

@@ -2,6 +2,7 @@
 from commands.base import Command
 from commands.inputs import PointInput
 from graphics_items.dimension_graphics_item import DimensionItem, VerticalDimensionItem, HorizontalDimensionItem
+from graphics_items.dimension_preview_graphics_item import DimensionPreviewGraphicsItem
 
 # TODO: Merge all 3 into one 'smart' dimension command
 
@@ -13,8 +14,8 @@ class DimensionCommand(Command):
     def __init__(self):
         super(DimensionCommand, self).__init__()
 
-        self.has_preview = False
-        self.preview_start = 0
+        self.has_preview = True
+        self.preview_start = 1
 
         self.inputs = [
             PointInput('Enter First Point'),
@@ -23,7 +24,7 @@ class DimensionCommand(Command):
         ]
 
     def preview_item(self):
-        pass
+        return DimensionPreviewGraphicsItem(self.inputs[0].value, self.inputs[1].value)
 
     def apply_command(self):
         items = [

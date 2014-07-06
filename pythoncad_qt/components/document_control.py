@@ -1,4 +1,5 @@
 from tempfile import NamedTemporaryFile
+from functools import partial
 
 from PyQt4 import QtCore, QtGui
 
@@ -7,11 +8,40 @@ from models.layer import Layer
 from components.base import ComponentBase, VerticalLayout
 from components.document import Document
 
+
+# TODO: Find better place to put all the signal connections
 class DocumentStack(QtGui.QStackedWidget):
+
     def process_command(self, command):
         current_widget = self.currentWidget()
-        # TODO: Decouple with signals
-        current_widget.scene.start_commmand(command)
+
+        # Disconnect any currently connected slots
+        try:
+            self.disconnect_command(current_widget)
+        except TypeError:
+            # Exception is thrown if there are no currently connected slots
+            pass
+
+        current_widget.scene.active_command_click.connect(command.process_click)
+        current_widget.scene.command_canceled.connect(command.cancel)
+        current_widget.scene.mouse_move.connect(command.process_move)
+        # Removes all scene connected slots, must be last to prevent removing
+        # ones that are still required
+        current_widget.scene.command_canceled.connect(
+            partial(self.disconnect_command, current_widget)
+        )
+
+        command.add_preview.connect(current_widget.scene.addItem)
+        command.remove_preview.connect(current_widget.scene.removeItem)
+        command.add_item.connect(current_widget.scene.addItem)
+        command.command_ended.connect(
+            partial(self.disconnect_command, current_widget)
+        )
+
+    def disconnect_command(self, current):
+        current.scene.active_command_click.disconnect()
+        current.scene.command_canceled.disconnect()
+        current.scene.mouse_move.disconnect()
 
 
 class DocumentControl(VerticalLayout, ComponentBase):

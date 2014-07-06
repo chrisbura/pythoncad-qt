@@ -22,6 +22,8 @@ class CommandPane(SidebarPane):
     def __init__(self, parent=None):
         super(CommandPane, self).__init__(parent)
 
+        self.active_command = None
+
         self.command_list = FilterableTreeView()
         self.command_list.set_filter_placeholder('Filter Commands')
         self.add_component(self.command_list)
@@ -136,8 +138,11 @@ class CommandPane(SidebarPane):
                 # No action is set on that index
                 pass
 
-    def _call_command(self, command):
-        self.command_started.emit(command)
+    def _call_command(self, command_class):
+        self.active_command = command_class()
+        self.active_command.command_ended.connect(self.cancel)
+        self.active_command.command_cancelled.connect(self.cancel)
+        self.command_started.emit(self.active_command)
 
     def cancel(self):
         self.command_list.tree.clearSelection()

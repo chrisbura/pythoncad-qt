@@ -23,11 +23,11 @@ class DocumentStack(QtGui.QStackedWidget):
             pass
 
         current_widget.scene.active_command_click.connect(command.process_click)
-        current_widget.scene.command_canceled.connect(command.cancel)
+        current_widget.scene.command_cancelled.connect(command.cancel)
         current_widget.scene.mouse_move.connect(command.process_move)
         # Removes all scene connected slots, must be last to prevent removing
         # ones that are still required
-        current_widget.scene.command_canceled.connect(
+        current_widget.scene.command_cancelled.connect(
             partial(self.disconnect_command, current_widget)
         )
 
@@ -40,7 +40,7 @@ class DocumentStack(QtGui.QStackedWidget):
 
     def disconnect_command(self, current):
         current.scene.active_command_click.disconnect()
-        current.scene.command_canceled.disconnect()
+        current.scene.command_cancelled.disconnect()
         current.scene.mouse_move.disconnect()
 
 
@@ -48,7 +48,7 @@ class DocumentControl(VerticalLayout, ComponentBase):
 
     # TODO: Move to Drawing.__init__
     document_opened = QtCore.pyqtSignal(object)
-    command_canceled = QtCore.pyqtSignal()
+    command_cancelled = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentControl, self).__init__(*args, **kwargs)
@@ -94,8 +94,8 @@ class DocumentControl(VerticalLayout, ComponentBase):
 
         self.document_opened.emit(drawing)
 
-        document.scene.command_canceled.connect(self._command_cancelled)
+        document.scene.command_cancelled.connect(self._command_cancelled)
         # document.scene.entity_added.connect(drawing.add_entity)
 
     def _command_cancelled(self):
-        self.command_canceled.emit()
+        self.command_cancelled.emit()

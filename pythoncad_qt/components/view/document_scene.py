@@ -10,7 +10,7 @@ class DocumentScene(QtGui.QGraphicsScene):
     mouse_move = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     active_command_click = QtCore.pyqtSignal(object, list)
     entity_added = QtCore.pyqtSignal(object)
-    command_canceled = QtCore.pyqtSignal()
+    command_cancelled = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
@@ -29,7 +29,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Cancel active command on esc
         # TODO: Handle focus, click command and bring focus to QGraphicsScene
         if event.key() == QtCore.Qt.Key_Escape:
-            self.command_canceled.emit()
+            self.command_cancelled.emit()
 
         # Delete Selected Items
         selected_items = self.selectedItems()

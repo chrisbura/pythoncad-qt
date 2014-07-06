@@ -72,7 +72,7 @@ class PythoncadQt(QtGui.QMainWindow):
         document_control.document_opened.connect(layer_pane.add_document)
         document_control.document_opened.connect(console_pane.add_document)
         document_control.document_opened.connect(document_pane.add_document)
-        document_control.command_canceled.connect(command_pane.cancel)
+        document_control.command_cancelled.connect(command_pane.cancel)
 
         document_pane.document_changed.connect(document_control.switch_document)
         document_pane.document_changed.connect(layer_pane.switch_document)

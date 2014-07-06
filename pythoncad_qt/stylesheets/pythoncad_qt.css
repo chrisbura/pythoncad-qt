@@ -147,12 +147,12 @@ FilterableTreeView QTreeView::item {
   font-size: 12px;
   padding: 10px;
 }
+FilterableTreeView QTreeView::item:hover {
+  background-color: #f2f2f2;
+}
 FilterableTreeView QTreeView::item:selected {
   color: #000;
   background-color: #b9d4ec;
-}
-FilterableTreeView QTreeView::item:hover {
-  background-color: #f2f2f2;
 }
 TopBar {
   background-color: #445059;

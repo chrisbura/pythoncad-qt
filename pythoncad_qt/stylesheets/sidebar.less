@@ -98,12 +98,12 @@ FilterableTreeView {
             border: none;
             font-size: 12px;
             padding: 10px;
+            &:hover {
+                background-color: darken(#fff, 5%);
+            }
             &:selected {
                 color: #000;
                 background-color: lighten(@primary, 30%);
-            }
-            &:hover {
-                background-color: darken(#fff, 5%);
             }
         }
     }

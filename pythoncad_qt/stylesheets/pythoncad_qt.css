@@ -149,7 +149,7 @@ FilterableTreeView QTreeView::item {
 }
 FilterableTreeView QTreeView::item:selected {
   color: #000;
-  background-color: #e6e6e6;
+  background-color: #b9d4ec;
 }
 FilterableTreeView QTreeView::item:hover {
   background-color: #f2f2f2;

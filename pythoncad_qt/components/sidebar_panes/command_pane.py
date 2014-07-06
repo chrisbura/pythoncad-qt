@@ -140,9 +140,15 @@ class CommandPane(SidebarPane):
 
     def _call_command(self, command_class):
         self.active_command = command_class()
-        self.active_command.command_ended.connect(self.cancel)
         self.active_command.command_cancelled.connect(self.cancel)
         self.command_started.emit(self.active_command)
 
+        # Start command again after finishing
+        # TODO: Put in settings
+        self.active_command.command_ended.connect(
+            partial(self._call_command, command_class)
+        )
+
     def cancel(self):
+        self.active_command = None
         self.command_list.tree.clearSelection()

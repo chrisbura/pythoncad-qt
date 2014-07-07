@@ -74,6 +74,11 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsStatusBar, self).__init__(*args, **kwargs)
 
+        # Snap Toggle
+        # TODO: Wire it up
+        self.snap_toggle = ToggleButton(QtGui.QIcon('images/SSnap.png'), 'Snap')
+        self.add_component(self.snap_toggle)
+
         # Grid Toggle
         self.grid_toggle = ToggleButton(QtGui.QIcon('images/SGrid.png'), 'Grid')
         if settings.DRAW_GRID:

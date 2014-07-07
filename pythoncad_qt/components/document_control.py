@@ -17,7 +17,7 @@ class DocumentStack(QtGui.QStackedWidget):
 
         # Disconnect any currently connected slots
         try:
-            self.disconnect_command(current_widget)
+            self.disconnect_command(current_widget, command)
         except TypeError:
             # Exception is thrown if there are no currently connected slots
             pass
@@ -28,20 +28,22 @@ class DocumentStack(QtGui.QStackedWidget):
         # Removes all scene connected slots, must be last to prevent removing
         # ones that are still required
         current_widget.scene.command_cancelled.connect(
-            partial(self.disconnect_command, current_widget)
+            partial(self.disconnect_command, current_widget, command)
         )
 
         command.add_preview.connect(current_widget.scene.addItem)
         command.remove_preview.connect(current_widget.scene.removeItem)
         command.add_item.connect(current_widget.scene.addItem)
         command.command_ended.connect(
-            partial(self.disconnect_command, current_widget)
+            partial(self.disconnect_command, current_widget, command)
         )
 
-    def disconnect_command(self, current):
+    def disconnect_command(self, current, command):
         current.scene.active_command_click.disconnect()
         current.scene.command_cancelled.disconnect()
-        current.scene.mouse_move.disconnect()
+        # Don't disconnect all mouse_move slots, still needed for things like
+        # coordinate display
+        current.scene.mouse_move.disconnect(command.process_move)
 
 
 class DocumentControl(VerticalLayout, ComponentBase):

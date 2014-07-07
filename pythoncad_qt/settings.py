@@ -17,5 +17,6 @@ LINE_STYLE = QtCore.Qt.SolidLine
 
 GRID_SPACING = 20
 DRAW_GRID = True
+DRAW_AXES = True
 
 UNITS = 'mm'

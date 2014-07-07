@@ -22,6 +22,9 @@ class DocumentScene(QtGui.QGraphicsScene):
         self.setting_draw_grid = settings.DRAW_GRID
         self.grid_spacing = settings.GRID_SPACING
 
+        # Axes
+        self.setting_draw_axes = settings.DRAW_AXES
+
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self.active_command_click.emit(event, self.items(event.scenePos()))
@@ -54,6 +57,9 @@ class DocumentScene(QtGui.QGraphicsScene):
         if self.setting_draw_grid:
             self.draw_grid(painter, rect)
 
+        if self.setting_draw_axes:
+            self.draw_axes(painter, rect)
+
     def toggle_grid(self):
         self.setting_draw_grid = not self.setting_draw_grid
         self.invalidate(self.sceneRect(), QtGui.QGraphicsScene.BackgroundLayer)
@@ -64,8 +70,6 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Grid Colours
         # TODO: Move to settings
         painter.setPen(QtGui.QPen(QtGui.QColor(200, 200, 200, 100)))
-
-        # TODO: Allow toggling
 
         # Horizontal Grid
         top_count = -1 * int(math.floor(rect.top() / self.grid_spacing))
@@ -91,14 +95,19 @@ class DocumentScene(QtGui.QGraphicsScene):
             x = i * self.grid_spacing
             painter.drawLine(x, rect.top(), x, rect.bottom())
 
-        # Axis
-        # TODO: Allow toggling
+        painter.restore()
+
+    def toggle_axes(self):
+        self.setting_draw_axes = not self.setting_draw_axes
+        self.invalidate(self.sceneRect(), QtGui.QGraphicsScene.BackgroundLayer)
+
+    def draw_axes(self, painter, rect):
+        painter.save()
         pen = QtGui.QPen(QtGui.QColor(200, 200, 200))
         pen.setWidth(2)
         painter.setPen(pen)
         painter.drawLine(rect.left(), 0, rect.right(), 0)
         painter.drawLine(0, rect.top(), 0, rect.bottom())
-
         painter.restore()
 
     def mouseMoveEvent(self, event):

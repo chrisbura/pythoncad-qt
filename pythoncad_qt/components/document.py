@@ -80,6 +80,12 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
             self.grid_toggle.setChecked(True)
         self.add_component(self.grid_toggle)
 
+        # Axes Toggle
+        self.axes_toggle = ToggleButton(QtGui.QIcon('images/SGrid.png'), 'Axes')
+        if settings.DRAW_AXES:
+            self.axes_toggle.setChecked(True)
+        self.add_component(self.axes_toggle)
+
         self.add_stretch()
 
         self.scene_coordinates = SceneCoordinates('X: 0.000 Y: 0.000')
@@ -111,6 +117,7 @@ class Document(VerticalLayout, ComponentBase):
 
         self.status_bar = GraphicsStatusBar()
         self.status_bar.grid_toggle.toggled.connect(self.scene.toggle_grid)
+        self.status_bar.axes_toggle.toggled.connect(self.scene.toggle_axes)
 
         # Signals
         self.scene.mouse_move.connect(self.status_bar.update_coordinates)

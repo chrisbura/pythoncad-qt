@@ -46,16 +46,6 @@ class DimensionItem(BaseItem):
         self.add_child(self.text)
 
 
-class DimensionGraphicsItem(SegmentGraphicsItem):
-    default_colour = QtCore.Qt.gray
-    hover_colour = QtCore.Qt.blue
-
-    def __init__(self, *args, **kwargs):
-        super(DimensionGraphicsItem, self).__init__(*args, **kwargs)
-        # Want all the dimension segments to be behind other items
-        self.setZValue(-1)
-
-
 class PathGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsPathItem):
     default_colour = QtCore.Qt.gray
     hover_colour = QtCore.Qt.blue

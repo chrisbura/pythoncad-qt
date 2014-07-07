@@ -91,6 +91,21 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
             self.axes_toggle.setChecked(True)
         self.add_component(self.axes_toggle)
 
+        self.snap_auto = ToggleButton(QtGui.QIcon('images/snapauto.png'), '')
+        self.add_component(self.snap_auto)
+
+        self.snap_endpoint = ToggleButton(QtGui.QIcon('images/snapend.png'), '')
+        self.add_component(self.snap_endpoint)
+
+        self.snap_centerpoint = ToggleButton(QtGui.QIcon('images/snapcen.png'), '')
+        self.add_component(self.snap_centerpoint)
+
+        self.snap_midpoint = ToggleButton(QtGui.QIcon('images/snapmid.png'), '')
+        self.add_component(self.snap_midpoint)
+
+        self.snap_quarter = ToggleButton(QtGui.QIcon('images/snapqua.png'), '')
+        self.add_component(self.snap_quarter)
+
         self.add_stretch()
 
         self.scene_coordinates = SceneCoordinates('X: 0.000 Y: 0.000')

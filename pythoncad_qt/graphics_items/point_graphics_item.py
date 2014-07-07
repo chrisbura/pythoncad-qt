@@ -31,5 +31,21 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
         return path
 
 
-class MidPoint(PointGraphicsItem):
+class SnapPoint(PointGraphicsItem):
     default_colour = QtCore.Qt.transparent
+
+
+class MidPoint(SnapPoint):
+    pass
+
+
+class EndPoint(SnapPoint):
+    pass
+
+
+class CenterPoint(SnapPoint):
+    pass
+
+
+class QuarterPoint(SnapPoint):
+    pass

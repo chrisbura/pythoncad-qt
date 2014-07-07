@@ -15,3 +15,9 @@ class DangerButton(Button):
 
 class WarningButton(Button):
     pass
+
+
+class ToggleButton(QtGui.QPushButton):
+    def __init__(self, *args, **kwargs):
+        super(ToggleButton, self).__init__(*args, **kwargs)
+        self.setCheckable(True)

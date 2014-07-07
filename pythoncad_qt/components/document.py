@@ -2,11 +2,11 @@ from PyQt4 import QtCore, QtGui
 
 
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
-from components.buttons import Button
+from components.buttons import Button, ToggleButton
 from components.view.document_view import DocumentView
 from components.view.document_scene import DocumentScene
 from dialogs.document_properties import DocumentPropertiesDialog
-
+import settings
 
 class DocumentTitleLabel(QtGui.QLabel):
     pass
@@ -67,12 +67,21 @@ class SceneCoordinates(QtGui.QLabel):
 
 
 class GraphicsStatusBar(HorizontalLayout, ComponentBase):
+
     layout_margins = QtCore.QMargins(5, 5, 5, 5)
+    layout_spacing = 6
 
     def __init__(self, *args, **kwargs):
         super(GraphicsStatusBar, self).__init__(*args, **kwargs)
 
+        # Grid Toggle
+        self.grid_toggle = ToggleButton(QtGui.QIcon('images/SGrid.png'), 'Grid')
+        if settings.DRAW_GRID:
+            self.grid_toggle.setChecked(True)
+        self.add_component(self.grid_toggle)
+
         self.add_stretch()
+
         self.scene_coordinates = SceneCoordinates('X: 0.000 Y: 0.000')
         self.add_component(self.scene_coordinates)
 
@@ -101,6 +110,7 @@ class Document(VerticalLayout, ComponentBase):
         self.view = DocumentView(self.scene, parent=self)
 
         self.status_bar = GraphicsStatusBar()
+        self.status_bar.grid_toggle.toggled.connect(self.scene.toggle_grid)
 
         # Signals
         self.scene.mouse_move.connect(self.status_bar.update_coordinates)

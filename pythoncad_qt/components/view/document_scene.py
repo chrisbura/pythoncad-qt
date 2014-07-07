@@ -2,7 +2,7 @@ import math
 
 from PyQt4 import QtCore, QtGui
 
-from settings import GRID_SPACING
+import settings
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -17,7 +17,10 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Arguments are x, y, width, height
         self.setSceneRect(-10000, -10000, 20000, 20000)
-        self.grid_spacing = GRID_SPACING
+
+        # Grid
+        self.setting_draw_grid = settings.DRAW_GRID
+        self.grid_spacing = settings.GRID_SPACING
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -48,6 +51,14 @@ class DocumentScene(QtGui.QGraphicsScene):
         super(DocumentScene, self).keyReleaseEvent(event)
 
     def drawBackground(self, painter, rect):
+        if self.setting_draw_grid:
+            self.draw_grid(painter, rect)
+
+    def toggle_grid(self):
+        self.setting_draw_grid = not self.setting_draw_grid
+        self.invalidate(self.sceneRect(), QtGui.QGraphicsScene.BackgroundLayer)
+
+    def draw_grid(self, painter, rect):
         painter.save()
 
         # Grid Colours

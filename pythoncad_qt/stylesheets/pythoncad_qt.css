@@ -237,6 +237,29 @@ LayerPane LayerPaneWidget LayerTreeView::item:hover {
 GraphicsStatusBar {
   background-color: #dee4e8;
 }
+GraphicsStatusBar QPushButton {
+  border: none;
+  padding: 7px;
+  font-size: 14px;
+  color: #FFF;
+  color: #000;
+  border: 1px solid #b7c4cc;
+  background-color: #FFF;
+}
+GraphicsStatusBar QPushButton:pressed {
+  outline: none;
+}
+GraphicsStatusBar QPushButton:hover {
+  background-color: #e6e6e6;
+}
+GraphicsStatusBar QPushButton:pressed {
+  background-color: #cccccc;
+}
+GraphicsStatusBar QPushButton:checked {
+  color: #000;
+  background-color: #b9d4ec;
+  border: 1px solid #428bca;
+}
 GraphicsStatusBar SceneCoordinates {
   border: 1px solid #b7c4cc;
   color: #262626;

@@ -1,5 +1,24 @@
 GraphicsStatusBar {
     background-color: darken(@sidebar_background, 2%);
+
+    QPushButton{
+        .DefaultButton;
+        color: #000;
+        border: 1px solid darken(@sidebar_background, 15%);
+        background-color: #FFF;
+        &:hover {
+            background-color: darken(#FFF, 10%);
+        }
+        &:pressed {
+            background-color: darken(#FFF, 20%);
+        }
+        &:checked {
+            color: #000;
+            background-color: lighten(@primary, 30%);
+            border: 1px solid @primary;
+        }
+    }
+
     SceneCoordinates {
         border: 1px solid darken(@sidebar_background, 15%);
         color: lighten(#000000, 15%);

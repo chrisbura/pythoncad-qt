@@ -20,17 +20,13 @@ class SegmentPreviewGraphicsItem(BasePreviewGraphicsItem):
         # SegmentGraphicsItem takes a lot of processing
         # TODO: Extract shape to be only on display item, want line thickness
         self.segment = QtGui.QGraphicsLineItem(
-            self.point.x,
-            self.point.y,
-            self.point.x,
-            self.point.y
+            self.point.x, self.point.y,
+            self.point.x, self.point.y
         )
         self.add_preview_item(self.segment)
 
     def update(self, event):
         self.segment.setLine(
-            self.point.x,
-            self.point.y,
-            event.scenePos().x(),
-            event.scenePos().y()
+            self.point.x, self.point.y,
+            event.scenePos().x(), event.scenePos().y()
         )

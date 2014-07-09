@@ -14,6 +14,7 @@ class DocumentStack(QtGui.QStackedWidget):
 
     def process_command(self, command):
         current_widget = self.currentWidget()
+        scene = current_widget.scene
 
         # Disconnect any currently connected slots
         try:
@@ -22,17 +23,17 @@ class DocumentStack(QtGui.QStackedWidget):
             # Exception is thrown if there are no currently connected slots
             pass
 
-        current_widget.scene.active_command_click.connect(command.process_click)
-        current_widget.scene.command_cancelled.connect(command.cancel)
-        current_widget.scene.mouse_move.connect(command.process_move)
+        scene.active_command_click.connect(command.process_click)
+        scene.command_cancelled.connect(command.cancel)
+        scene.mouse_move.connect(command.process_move)
         # Removes all scene connected slots, must be last to prevent removing
         # ones that are still required
-        current_widget.scene.command_cancelled.connect(
+        scene.command_cancelled.connect(
             partial(self.disconnect_command, current_widget, command)
         )
 
-        command.add_item.connect(current_widget.scene.addItem)
-        command.remove_item.connect(current_widget.scene.removeItem)
+        command.add_item.connect(scene.addItem)
+        command.remove_item.connect(scene.removeItem)
         command.command_ended.connect(
             partial(self.disconnect_command, current_widget, command)
         )

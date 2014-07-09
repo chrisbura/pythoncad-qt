@@ -32,6 +32,7 @@ class DocumentStack(QtGui.QStackedWidget):
             partial(self.disconnect_command, current_widget, command)
         )
 
+        command.command_finished.connect(scene.add_composite_item)
         command.add_item.connect(scene.addItem)
         command.remove_item.connect(scene.removeItem)
         command.command_ended.connect(

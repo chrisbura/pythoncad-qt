@@ -12,6 +12,7 @@ class Command(QtCore.QObject):
     command_ended = QtCore.pyqtSignal()
     command_cancelled = QtCore.pyqtSignal()
     add_item = QtCore.pyqtSignal(object)
+    command_finished = QtCore.pyqtSignal(object)
     remove_item = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
@@ -37,16 +38,13 @@ class Command(QtCore.QObject):
 
         if self.has_preview and (self.active_input == self.preview_start):
             self.preview_graphics_item = self.preview_item()
-            # self.mouse_move.connect(self.preview_item.update)
             self.add_item.emit(self.preview_graphics_item)
 
         self.active_input = self.active_input + 1
 
         if self.active_input == len(self.inputs):
             graphics_items = self.apply_command()
-            for graphics_item in graphics_items:
-                for item in graphics_item.children:
-                    self.add_item.emit(item)
+            self.command_finished.emit(graphics_items)
 
             self.remove_preview_item()
             self.command_ended.emit()

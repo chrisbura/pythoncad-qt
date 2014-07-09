@@ -25,6 +25,14 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Axes
         self.setting_draw_axes = settings.DRAW_AXES
 
+        self.composite_items = []
+
+    def add_composite_item(self, composite_items):
+        self.composite_items.append(composite_items)
+        for composite_item in composite_items:
+            for item in composite_item.children:
+                self.addItem(item)
+
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self.active_command_click.emit(event, self.items(event.scenePos()))

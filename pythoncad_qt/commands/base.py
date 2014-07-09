@@ -9,10 +9,10 @@ from commands.inputs import PointInput
 
 class Command(QtCore.QObject):
 
+    command_finished = QtCore.pyqtSignal(object)
     command_ended = QtCore.pyqtSignal()
     command_cancelled = QtCore.pyqtSignal()
     add_item = QtCore.pyqtSignal(object)
-    command_finished = QtCore.pyqtSignal(object)
     remove_item = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
@@ -23,6 +23,7 @@ class Command(QtCore.QObject):
         self.has_preview = False
         self.preview_start = 0
         self.preview_graphics_item = None
+        self.input_snapped = False
 
     def process_click(self, event, items):
         current_input = self.inputs[self.active_input]
@@ -49,9 +50,18 @@ class Command(QtCore.QObject):
             self.remove_preview_item()
             self.command_ended.emit()
 
-    def process_move(self, event):
+    def snap_preview(self, point):
+        self.input_snapped = True
         if self.preview_graphics_item:
-            self.preview_graphics_item.update(event)
+            self.preview_graphics_item.update(point.x, point.y)
+
+    def snap_release(self):
+        self.input_snapped = False
+
+    def process_move(self, x, y):
+        if not self.input_snapped:
+            if self.preview_graphics_item:
+                self.preview_graphics_item.update(x, y)
 
     def cancel(self):
         self.remove_preview_item()

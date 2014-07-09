@@ -49,9 +49,22 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
             self.diameter, self.diameter
         )
 
+    def hoverEnterEvent(self, event):
+        super(PointGraphicsItem, self).hoverEnterEvent(event)
+        self.parent.hover_enter.emit(self.entity)
+
+    def hoverLeaveEvent(self, event):
+        super(PointGraphicsItem, self).hoverLeaveEvent(event)
+        self.parent.hover_leave.emit()
+
 
 class SnapPoint(PointGraphicsItem):
     default_colour = QtCore.Qt.transparent
+    hover_colour = QtCore.Qt.transparent
+
+    def __init__(self, *args, **kwargs):
+        super(SnapPoint, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, False)
 
 
 class MidPoint(SnapPoint):

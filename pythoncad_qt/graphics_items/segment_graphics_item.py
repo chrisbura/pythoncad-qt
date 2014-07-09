@@ -55,3 +55,20 @@ class SegmentGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsLineItem):
         path = stroker.createStroke(p)
 
         return path
+
+
+class SnapSegment(SegmentGraphicsItem):
+    default_colour = QtCore.Qt.transparent
+    hover_colour = QtCore.Qt.transparent
+
+    def __init__(self, *args, **kwargs):
+        super(SnapSegment, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, False)
+
+
+class HorizontalSnap(SnapSegment):
+    pass
+
+
+class VerticalSnap(SnapSegment):
+    pass

@@ -23,9 +23,11 @@ class DocumentStack(QtGui.QStackedWidget):
             # Exception is thrown if there are no currently connected slots
             pass
 
-        scene.active_command_click.connect(command.process_click)
+        scene.mouse_click.connect(command.process_click)
         scene.command_cancelled.connect(command.cancel)
         scene.mouse_move.connect(command.process_move)
+        scene.lock_input.connect(command.snap_preview)
+        scene.release_input.connect(command.snap_release)
         # Removes all scene connected slots, must be last to prevent removing
         # ones that are still required
         scene.command_cancelled.connect(
@@ -40,7 +42,7 @@ class DocumentStack(QtGui.QStackedWidget):
         )
 
     def disconnect_command(self, current, command):
-        current.scene.active_command_click.disconnect()
+        current.scene.mouse_click.disconnect()
         current.scene.command_cancelled.disconnect()
         # Don't disconnect all mouse_move slots, still needed for things like
         # coordinate display

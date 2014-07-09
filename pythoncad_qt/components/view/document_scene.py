@@ -11,6 +11,8 @@ class DocumentScene(QtGui.QGraphicsScene):
     mouse_click = QtCore.pyqtSignal(object, list)
     entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
+    lock_input = QtCore.pyqtSignal(object)
+    release_input = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
@@ -30,13 +32,27 @@ class DocumentScene(QtGui.QGraphicsScene):
         self.cursor.hide()
         self.addItem(self.cursor)
 
+        self.input_snapped = False
+
         self.composite_items = []
+
+    def lock_point(self, point):
+        self.input_snapped = True
+        # TODO: Proper cursor handling
+        self.cursor.setRect(point.x - 5, point.y - 5, 10, 10)
+        self.lock_input.emit(point)
+
+    def unlock_point(self):
+        self.input_snapped = False
+        self.release_input.emit()
 
     def add_composite_item(self, composite_items):
         self.composite_items.append(composite_items)
         for composite_item in composite_items:
             for item in composite_item.children:
                 self.addItem(item)
+                item.parent.hover_enter.connect(self.lock_point)
+                item.parent.hover_leave.connect(self.unlock_point)
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -125,9 +141,11 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
-        self.cursor.setRect(event.scenePos().x() - 5, event.scenePos().y() - 5, 10, 10)
         x, y = event.scenePos().x(), event.scenePos().y()
         self.mouse_move.emit(x, y)
+
+        if not self.input_snapped:
+            self.cursor.setRect(event.scenePos().x() - 5, event.scenePos().y() - 5, 10, 10)
 
     def focusInEvent(self, event):
         self.cursor.show()

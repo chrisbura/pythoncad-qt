@@ -2,7 +2,6 @@
 from PyQt4 import QtGui
 
 from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
-from graphics_items.point_graphics_item import PointGraphicsItem
 
 
 class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
@@ -11,20 +10,14 @@ class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
 
         self.point = point
         self.lines = []
-        self.points = []
 
         for i in range(4):
             # Lines
             line = QtGui.QGraphicsLineItem()
             self.lines.append(line)
 
-            # Points
-            point = PointGraphicsItem(self.point)
-            self.points.append(point)
-
             # Add to QGraphicsItemGroup
             self.add_preview_item(line)
-            self.add_preview_item(point)
 
     def update(self, event):
         x, y = event.scenePos().x(), event.scenePos().y()
@@ -39,20 +32,3 @@ class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
         self.lines[1].setLine(*point2+point3)
         self.lines[2].setLine(*point3+point4)
         self.lines[3].setLine(*point4+point1)
-
-        # self.points[0] doesn't change
-        # self.points[2] is current mouse position
-
-        # TODO: Create points class for previews (without shape calculations)
-        self.points[1].setRect(
-            point2[0] - self.points[1].radius,
-            point2[1] - self.points[1].radius,
-            self.points[1].radius * 2,
-            self.points[1].radius * 2
-        )
-        self.points[3].setRect(
-            point4[0] - self.points[3].radius,
-            point4[1] - self.points[3].radius,
-            self.points[3].radius * 2,
-            self.points[3].radius * 2
-        )

@@ -17,14 +17,15 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
     def __init__(self, point):
         self.entity = point
         self.radius = 2.0
+        self.diameter = self.radius * 2.0
 
         self.shape_cache = None
 
         super(PointGraphicsItem, self).__init__(
             self.entity.x - self.radius,
             self.entity.y - self.radius,
-            self.radius * 2.0,
-            self.radius * 2.0)
+            self.diameter,
+            self.diameter)
 
     def shape(self):
         # TODO: Find how to properly handle overzealous shape calculations
@@ -34,6 +35,19 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
             path.addEllipse(self.entity.x - width / 2.0, self.entity.y - width / 2.0, width, width)
             self.shape_cache = path
         return self.shape_cache
+
+    def set_position(self, point):
+        self.entity = point
+
+        # Invalidate shape cache
+        self.shape_cache = None
+
+        # Args - x, y, w, h
+        self.setRect(
+            self.entity.x - self.radius,
+            self.entity.y - self.radius,
+            self.diameter, self.diameter
+        )
 
 
 class SnapPoint(PointGraphicsItem):

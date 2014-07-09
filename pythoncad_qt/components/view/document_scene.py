@@ -8,7 +8,7 @@ import settings
 class DocumentScene(QtGui.QGraphicsScene):
 
     mouse_move = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
-    active_command_click = QtCore.pyqtSignal(object, list)
+    mouse_click = QtCore.pyqtSignal(object, list)
     entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
 
@@ -40,7 +40,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
-            self.active_command_click.emit(event, self.items(event.scenePos()))
+            self.mouse_click.emit(event, self.items(event.scenePos()))
 
         super(DocumentScene, self).mouseReleaseEvent(event)
 

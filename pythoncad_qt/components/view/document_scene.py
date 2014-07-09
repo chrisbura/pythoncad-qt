@@ -25,6 +25,11 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Axes
         self.setting_draw_axes = settings.DRAW_AXES
 
+        # TODO: Proper cursor
+        self.cursor = QtGui.QGraphicsEllipseItem(0, 0, 10, 10)
+        self.cursor.hide()
+        self.addItem(self.cursor)
+
         self.composite_items = []
 
     def add_composite_item(self, composite_items):
@@ -121,3 +126,10 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
         self.mouse_move.emit(event)
+        self.cursor.setRect(event.scenePos().x() - 5, event.scenePos().y() - 5, 10, 10)
+
+    def focusInEvent(self, event):
+        self.cursor.show()
+
+    def focusOutEvent(self, event):
+        self.cursor.hide()

@@ -1,5 +1,5 @@
 
-from commands.base import Command
+from commands.command import Command
 from commands.inputs import PointInput
 from graphics_items.segment_graphics_item import SegmentItem
 from graphics_items.segment_preview_graphics_item import SegmentPreviewGraphicsItem

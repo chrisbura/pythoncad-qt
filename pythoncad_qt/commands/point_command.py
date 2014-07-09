@@ -1,5 +1,5 @@
 
-from commands.base import Command
+from commands.command import Command
 from commands.inputs import PointInput
 from graphics_items.point_graphics_item import PointItem
 

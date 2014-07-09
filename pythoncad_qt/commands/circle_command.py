@@ -1,5 +1,5 @@
 
-from commands.base import Command
+from commands.command import Command
 from commands.inputs import PointInput
 from graphics_items.circle_graphics_item import CircleItem
 from graphics_items.circle_preview_graphics_item import CirclePreviewGraphicsItem

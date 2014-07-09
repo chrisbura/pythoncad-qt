@@ -1,5 +1,5 @@
 
-from commands.base import Command
+from commands.command import Command
 from commands.inputs import PointInput
 from graphics_items.dimension_graphics_item import DimensionItem, VerticalDimensionItem, HorizontalDimensionItem
 from graphics_items.dimension_preview_graphics_item import DimensionPreviewGraphicsItem

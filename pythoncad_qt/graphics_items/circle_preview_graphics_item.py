@@ -17,9 +17,7 @@ class CirclePreviewGraphicsItem(BasePreviewGraphicsItem):
         self.circle_item = QtGui.QGraphicsEllipseItem(0, 0, 0, 0)
         self.add_preview_item(self.circle_item)
 
-    def update(self, event):
-        x, y = event.scenePos().x(), event.scenePos().y()
-
+    def update(self, x, y):
         distance_x = self.center_point.x - x
         distance_y = self.center_point.y - y
         radius = sqrt(distance_x ** 2 + distance_y ** 2)

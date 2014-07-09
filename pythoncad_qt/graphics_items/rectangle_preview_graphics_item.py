@@ -19,9 +19,7 @@ class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
             # Add to QGraphicsItemGroup
             self.add_preview_item(line)
 
-    def update(self, event):
-        x, y = event.scenePos().x(), event.scenePos().y()
-
+    def update(self, x, y):
         # Point Order is clockwise starting from initial point
         point1 = [self.point.x, self.point.y]
         point2 = [x, self.point.y]

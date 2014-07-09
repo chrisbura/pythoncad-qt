@@ -57,11 +57,11 @@ class DimensionPreviewGraphicsItem(BasePreviewGraphicsItem):
         # Get new point
         return result.pop()
 
-    def update(self, event):
+    def update(self, x, y):
         # Create a line parallel to the input coordinates at the
         # mouse coordinates
         parallel_line = self.segment.parallel_line(
-            Point(event.scenePos().x(), event.scenePos().y())
+            Point(x, y)
         )
 
         # First input point

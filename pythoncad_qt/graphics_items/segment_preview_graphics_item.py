@@ -25,8 +25,8 @@ class SegmentPreviewGraphicsItem(BasePreviewGraphicsItem):
         )
         self.add_preview_item(self.segment)
 
-    def update(self, event):
+    def update(self, x, y):
         self.segment.setLine(
             self.point.x, self.point.y,
-            event.scenePos().x(), event.scenePos().y()
+            x, y
         )

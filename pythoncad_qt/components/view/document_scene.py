@@ -7,7 +7,7 @@ import settings
 
 class DocumentScene(QtGui.QGraphicsScene):
 
-    mouse_move = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
+    mouse_move = QtCore.pyqtSignal(float, float)
     mouse_click = QtCore.pyqtSignal(object, list)
     entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
@@ -125,8 +125,9 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
-        self.mouse_move.emit(event)
         self.cursor.setRect(event.scenePos().x() - 5, event.scenePos().y() - 5, 10, 10)
+        x, y = event.scenePos().x(), event.scenePos().y()
+        self.mouse_move.emit(x, y)
 
     def focusInEvent(self, event):
         self.cursor.show()

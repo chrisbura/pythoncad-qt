@@ -3,6 +3,7 @@ import math
 from PyQt4 import QtCore, QtGui
 
 import settings
+from graphics_items.snap_cursor import SnapCursor
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -28,7 +29,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         self.setting_draw_axes = settings.DRAW_AXES
 
         # TODO: Proper cursor
-        self.cursor = QtGui.QGraphicsEllipseItem(0, 0, 10, 10)
+        self.cursor = SnapCursor(0, 0)
         self.cursor.hide()
         self.addItem(self.cursor)
 
@@ -39,7 +40,7 @@ class DocumentScene(QtGui.QGraphicsScene):
     def lock_point(self, point):
         self.input_snapped = True
         # TODO: Proper cursor handling
-        self.cursor.setRect(point.x - 5, point.y - 5, 10, 10)
+        self.cursor.set_position(point.x, point.y)
         self.lock_input.emit(point)
 
     def unlock_point(self):
@@ -144,8 +145,9 @@ class DocumentScene(QtGui.QGraphicsScene):
         x, y = event.scenePos().x(), event.scenePos().y()
         self.mouse_move.emit(x, y)
 
+        # TODO: Only show cursor when snapped
         if not self.input_snapped:
-            self.cursor.setRect(event.scenePos().x() - 5, event.scenePos().y() - 5, 10, 10)
+            self.cursor.set_position(x, y)
 
     def focusInEvent(self, event):
         self.cursor.show()

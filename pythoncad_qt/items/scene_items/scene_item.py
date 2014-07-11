@@ -28,7 +28,7 @@ class BasePen(QtGui.QPen):
         self.setColor(color)
 
 
-class BaseGraphicsItem(object):
+class SceneItem(object):
 
     default_colour = settings.DEFAULT_COLOUR
     hover_colour = settings.HIGHLIGHT_COLOUR
@@ -37,7 +37,7 @@ class BaseGraphicsItem(object):
     pen_join_style = settings.JOIN_STYLE
 
     def __init__(self, *args, **kwargs):
-        super(BaseGraphicsItem, self).__init__(*args, **kwargs)
+        super(SceneItem, self).__init__(*args, **kwargs)
         self.hover = False
 
         # Pens
@@ -56,11 +56,11 @@ class BaseGraphicsItem(object):
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
     def hoverEnterEvent(self, event):
-        super(BaseGraphicsItem, self).hoverEnterEvent(event)
+        super(SceneItem, self).hoverEnterEvent(event)
         self.hover = True
 
     def hoverLeaveEvent(self, event):
-        super(BaseGraphicsItem, self).hoverLeaveEvent(event)
+        super(SceneItem, self).hoverLeaveEvent(event)
         self.hover = False
 
     def active_pen(self):
@@ -92,4 +92,4 @@ class BaseGraphicsItem(object):
             bounding_rect.addRect(self.boundingRect())
             painter.drawPath(bounding_rect)
 
-        super(BaseGraphicsItem, self).paint(painter, option, widget)
+        super(SceneItem, self).paint(painter, option, widget)

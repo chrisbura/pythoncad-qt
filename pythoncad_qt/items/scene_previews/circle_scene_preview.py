@@ -2,16 +2,16 @@ from math import sqrt
 
 from PyQt4 import QtGui
 
-from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
-from graphics_items.point_graphics_item import PointGraphicsItem
+from items.scene_previews import ScenePreview
+from items.scene_items import PointSceneItem
 
 
-class CirclePreviewGraphicsItem(BasePreviewGraphicsItem):
+class CircleScenePreview(ScenePreview):
     def __init__(self, point, *args, **kwargs):
-        super(CirclePreviewGraphicsItem, self).__init__(*args, **kwargs)
+        super(CircleScenePreview, self).__init__(*args, **kwargs)
 
         self.center_point = point
-        self.center_point_item = PointGraphicsItem(self.center_point)
+        self.center_point_item = PointSceneItem(self.center_point)
         self.add_preview_item(self.center_point_item)
 
         self.circle_item = QtGui.QGraphicsEllipseItem(0, 0, 0, 0)

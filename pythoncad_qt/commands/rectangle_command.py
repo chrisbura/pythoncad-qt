@@ -3,8 +3,8 @@ from sympy.geometry import Point
 
 from commands.command import Command
 from commands.inputs import PointInput
-from graphics_items.segment_graphics_item import SegmentItem
-from graphics_items.rectangle_preview_graphics_item import RectanglePreviewGraphicsItem
+from items import SegmentItem
+from items.scene_previews import RectangleScenePreview
 
 
 class RectangleCommand(Command):
@@ -20,7 +20,7 @@ class RectangleCommand(Command):
         ]
 
     def preview_item(self):
-        return RectanglePreviewGraphicsItem(self.inputs[0].value)
+        return RectangleScenePreview(self.inputs[0].value)
 
     def apply_command(self):
         point1 = self.inputs[0].value

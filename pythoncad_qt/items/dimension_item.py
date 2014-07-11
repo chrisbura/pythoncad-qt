@@ -2,13 +2,11 @@ from sympy.geometry import Point, Segment
 
 from PyQt4 import QtGui, QtCore
 
-from graphics_items.base_item import BaseItem
-from graphics_items.base_graphics_item import BaseGraphicsItem
-from graphics_items.segment_graphics_item import SegmentGraphicsItem
-from graphics_items.point_graphics_item import PointGraphicsItem
+from items import Item
+from items.scene_items import DimensionSceneItem
 
 
-class DimensionItem(BaseItem):
+class DimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
         super(DimensionItem, self).__init__(*args, **kwargs)
 
@@ -35,7 +33,7 @@ class DimensionItem(BaseItem):
         self.path.lineTo(perpendicular_line_p2_points[0].x, perpendicular_line_p2_points[0].y)
         self.path.lineTo(point2.x, point2.y)
 
-        self.path_item = PathGraphicsItem(self.path)
+        self.path_item = DimensionSceneItem(self.path)
         self.add_child(self.path_item)
 
         self.text = QtGui.QGraphicsSimpleTextItem('{0}'.format(segment.length))
@@ -46,23 +44,7 @@ class DimensionItem(BaseItem):
         self.add_child(self.text)
 
 
-class PathGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsPathItem):
-    default_colour = QtCore.Qt.gray
-    hover_colour = QtCore.Qt.blue
-
-    def __init__(self, *args, **kwargs):
-        super(PathGraphicsItem, self).__init__(*args, **kwargs)
-        # Want all the dimension segments to be behind other items
-        self.setZValue(-1)
-
-    def shape(self):
-        stroker = QtGui.QPainterPathStroker()
-        stroker.setWidth(5.0)
-        path = stroker.createStroke(self.path())
-        return path
-
-
-class VerticalDimensionItem(BaseItem):
+class VerticalDimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
         super(VerticalDimensionItem, self).__init__(*args, **kwargs)
 
@@ -74,11 +56,11 @@ class VerticalDimensionItem(BaseItem):
         self.path.lineTo(newp2.x, newp2.y)
         self.path.lineTo(point2.x, point2.y)
 
-        self.path_item = PathGraphicsItem(self.path)
+        self.path_item = DimensionSceneItem(self.path)
         self.add_child(self.path_item)
 
 
-class HorizontalDimensionItem(BaseItem):
+class HorizontalDimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
         super(HorizontalDimensionItem, self).__init__(*args, **kwargs)
 
@@ -90,5 +72,5 @@ class HorizontalDimensionItem(BaseItem):
         self.path.lineTo(newp2.x, newp2.y)
         self.path.lineTo(point2.x, point2.y)
 
-        self.path_item = PathGraphicsItem(self.path)
+        self.path_item = DimensionSceneItem(self.path)
         self.add_child(self.path_item)

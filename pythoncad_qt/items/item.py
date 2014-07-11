@@ -1,7 +1,7 @@
 
 from PyQt4 import QtCore, QtGui
 
-class BaseItem(QtCore.QObject):
+class Item(QtCore.QObject):
 
     hover_enter = QtCore.pyqtSignal(object)
     hover_leave = QtCore.pyqtSignal()
@@ -9,7 +9,7 @@ class BaseItem(QtCore.QObject):
     lock_vertical = QtCore.pyqtSignal(float)
 
     def __init__(self, *args, **kwargs):
-        super(BaseItem, self).__init__(*args, **kwargs)
+        super(Item, self).__init__(*args, **kwargs)
         self.children = []
 
     def add_child(self, item):

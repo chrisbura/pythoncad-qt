@@ -1,8 +1,8 @@
 
 from commands.command import Command
 from commands.inputs import PointInput
-from graphics_items.circle_graphics_item import CircleItem
-from graphics_items.circle_preview_graphics_item import CirclePreviewGraphicsItem
+from items import CircleItem
+from items.scene_previews import CircleScenePreview
 
 
 class CircleCommand(Command):
@@ -18,7 +18,7 @@ class CircleCommand(Command):
         ]
 
     def preview_item(self):
-        return CirclePreviewGraphicsItem(self.inputs[0].value)
+        return CircleScenePreview(self.inputs[0].value)
 
     def apply_command(self):
         return [CircleItem(self.inputs[0].value, self.inputs[1].value)]

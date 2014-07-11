@@ -2,12 +2,12 @@
 from PyQt4 import QtGui
 
 import settings
-from graphics_items.base_graphics_item import BasePen
+from items.scene_items.scene_item import BasePen
 
 
-class BasePreviewGraphicsItem(QtGui.QGraphicsItemGroup):
+class ScenePreview(QtGui.QGraphicsItemGroup):
     def __init__(self, *args, **kwargs):
-        super(BasePreviewGraphicsItem, self).__init__(*args, **kwargs)
+        super(ScenePreview, self).__init__(*args, **kwargs)
 
         self.pen = BasePen(settings.DEFAULT_COLOUR)
 

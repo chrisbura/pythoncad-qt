@@ -1,18 +1,18 @@
 
 from PyQt4 import QtGui
 
-from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
-from graphics_items.point_graphics_item import PointGraphicsItem
+from items.scene_previews import ScenePreview
+from items.scene_items import PointSceneItem
 
 
-class SegmentPreviewGraphicsItem(BasePreviewGraphicsItem):
+class SegmentScenePreview(ScenePreview):
     def __init__(self, point, *args, **kwargs):
-        super(SegmentPreviewGraphicsItem, self).__init__(*args, **kwargs)
+        super(SegmentScenePreview, self).__init__(*args, **kwargs)
 
         self.point = point
 
         # Starting Point
-        self.starting_point = PointGraphicsItem(self.point)
+        self.starting_point = PointSceneItem(self.point)
         self.add_preview_item(self.starting_point)
 
         # Segment

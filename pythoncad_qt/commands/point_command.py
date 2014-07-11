@@ -1,7 +1,7 @@
 
 from commands.command import Command
 from commands.inputs import PointInput
-from graphics_items.point_graphics_item import PointItem
+from items import PointItem
 
 
 class PointCommand(Command):

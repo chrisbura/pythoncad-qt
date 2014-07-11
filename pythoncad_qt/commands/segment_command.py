@@ -1,8 +1,8 @@
 
 from commands.command import Command
 from commands.inputs import PointInput
-from graphics_items.segment_graphics_item import SegmentItem
-from graphics_items.segment_preview_graphics_item import SegmentPreviewGraphicsItem
+from items import SegmentItem
+from items.scene_previews import SegmentScenePreview
 
 
 class SegmentCommand(Command):
@@ -18,7 +18,7 @@ class SegmentCommand(Command):
         ]
 
     def preview_item(self):
-        return SegmentPreviewGraphicsItem(self.inputs[0].value)
+        return SegmentScenePreview(self.inputs[0].value)
 
     def apply_command(self):
         return [SegmentItem(self.inputs[0].value, self.inputs[1].value)]

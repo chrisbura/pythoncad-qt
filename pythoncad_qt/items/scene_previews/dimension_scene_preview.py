@@ -1,10 +1,10 @@
 
-from sympy.geometry import Point, Segment, Line
-
 from PyQt4 import QtGui, QtCore
 
-from graphics_items.base_graphics_item import BasePen
-from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
+from sympy.geometry import Point, Line, Segment
+
+from items.scene_previews import ScenePreview
+from items.scene_items.scene_item import BasePen
 
 
 # Override __contains__ to disable checking if point is on the line itself
@@ -22,9 +22,9 @@ class PreviewSegment(Segment):
         return PreviewLine(p, p + d)
 
 
-class DimensionPreviewGraphicsItem(BasePreviewGraphicsItem):
+class DimensionScenePreview(ScenePreview):
     def __init__(self, point1, point2, *args, **kwargs):
-        super(DimensionPreviewGraphicsItem, self).__init__(*args, **kwargs)
+        super(DimensionScenePreview, self).__init__(*args, **kwargs)
 
         # TODO: Move to settings
         self.pen = BasePen(QtCore.Qt.gray)

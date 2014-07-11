@@ -3,7 +3,7 @@ from PyQt4 import QtCore
 
 from sympy.geometry import Point
 
-from graphics_items.point_graphics_item import PointGraphicsItem
+from items.scene_items import PointSceneItem
 from commands.inputs import PointInput
 
 
@@ -30,7 +30,7 @@ class Command(QtCore.QObject):
 
         if isinstance(current_input, PointInput):
             # TODO: Handle multiple points
-            items = [item for item in items if isinstance(item, PointGraphicsItem)]
+            items = [item for item in items if isinstance(item, PointSceneItem)]
 
             if items:
                 current_input.value = Point(items[0].entity.x, items[0].entity.y)

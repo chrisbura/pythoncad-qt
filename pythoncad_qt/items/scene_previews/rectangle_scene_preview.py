@@ -1,12 +1,12 @@
 
 from PyQt4 import QtGui
 
-from graphics_items.base_preview_graphics_item import BasePreviewGraphicsItem
+from items.scene_previews import ScenePreview
 
 
-class RectanglePreviewGraphicsItem(BasePreviewGraphicsItem):
+class RectangleScenePreview(ScenePreview):
     def __init__(self, point, *args, **kwargs):
-        super(RectanglePreviewGraphicsItem, self).__init__(*args, **kwargs)
+        super(RectangleScenePreview, self).__init__(*args, **kwargs)
 
         self.point = point
         self.lines = []

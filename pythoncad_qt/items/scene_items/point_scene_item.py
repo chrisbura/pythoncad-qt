@@ -2,26 +2,12 @@
 from PyQt4 import QtGui, QtCore
 
 import settings
-from graphics_items.base_item import BaseItem
-from graphics_items.base_graphics_item import BaseGraphicsItem, FilledShapeMixin
+from items.scene_items import SceneItem
+from items.scene_items.scene_item import FilledShapeMixin
 from graphics_items.snap_lines import HorizontalSnap, VerticalSnap
 
 
-class PointItem(BaseItem):
-    def __init__(self, point, *args, **kwargs):
-        super(PointItem, self).__init__(*args, **kwargs)
-
-        self.point_item = PointGraphicsItem(point)
-        self.add_child(self.point_item)
-
-        self.horizontal_snap = HorizontalSnap(point)
-        self.add_child(self.horizontal_snap)
-
-        self.vertical_snap = VerticalSnap(point)
-        self.add_child(self.vertical_snap)
-
-
-class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllipseItem):
+class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, point):
         self.entity = point
         self.radius = 2.0
@@ -29,7 +15,7 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
 
         self.shape_cache = None
 
-        super(PointGraphicsItem, self).__init__(
+        super(PointSceneItem, self).__init__(
             self.entity.x - self.radius,
             self.entity.y - self.radius,
             self.diameter,
@@ -58,15 +44,15 @@ class PointGraphicsItem(FilledShapeMixin, BaseGraphicsItem, QtGui.QGraphicsEllip
         )
 
     def hoverEnterEvent(self, event):
-        super(PointGraphicsItem, self).hoverEnterEvent(event)
+        super(PointSceneItem, self).hoverEnterEvent(event)
         self.parent.hover_enter.emit(self.entity)
 
     def hoverLeaveEvent(self, event):
-        super(PointGraphicsItem, self).hoverLeaveEvent(event)
+        super(PointSceneItem, self).hoverLeaveEvent(event)
         self.parent.hover_leave.emit()
 
 
-class SnapPoint(PointGraphicsItem):
+class SnapPoint(PointSceneItem):
     default_colour = QtCore.Qt.transparent
     hover_colour = QtCore.Qt.transparent
 

@@ -6,7 +6,6 @@ import settings
 from graphics_items.base_item import BaseItem
 from graphics_items.base_graphics_item import BaseGraphicsItem
 from graphics_items.point_graphics_item import CenterPoint, QuarterPoint
-from graphics_items.segment_graphics_item import HorizontalSnap, VerticalSnap
 
 
 class CircleItem(BaseItem):
@@ -32,19 +31,6 @@ class CircleItem(BaseItem):
 
         for point in quarter_points:
             self.add_child(QuarterPoint(point))
-
-        h_segment = HorizontalSnap(
-            Point(self.point1.x - circle_item.radius * 20.0, self.point1.y - circle_item.radius),
-            Point(self.point1.x + circle_item.radius * 20.0, self.point1.y - circle_item.radius)
-        )
-        self.add_child(h_segment)
-
-
-        v_segment = VerticalSnap(
-            Point(self.point1.x + circle_item.radius, self.point1.y - circle_item.radius * 20.0),
-            Point(self.point1.x + circle_item.radius, self.point1.y + circle_item.radius * 20.0)
-        )
-        self.add_child(v_segment)
 
 
 class CircleGraphicsItem(BaseGraphicsItem, QtGui.QGraphicsEllipseItem):

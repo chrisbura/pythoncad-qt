@@ -5,6 +5,8 @@ class BaseItem(QtCore.QObject):
 
     hover_enter = QtCore.pyqtSignal(object)
     hover_leave = QtCore.pyqtSignal()
+    lock_horizontal = QtCore.pyqtSignal(float)
+    lock_vertical = QtCore.pyqtSignal(float)
 
     def __init__(self, *args, **kwargs):
         super(BaseItem, self).__init__(*args, **kwargs)

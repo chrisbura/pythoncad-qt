@@ -34,6 +34,10 @@ class DocumentScene(QtGui.QGraphicsScene):
         self.addItem(self.cursor)
 
         self.input_snapped = False
+        self.horizontal_snapped = False
+        self.horizontal_value = None
+        self.vertical_snapped = False
+        self.vertical_value = None
 
         self.composite_items = []
 
@@ -45,6 +49,10 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def unlock_point(self):
         self.input_snapped = False
+        self.horizontal_snapped = False
+        self.vertical_snapped = False
+        self.horizontal_value = None
+        self.vertical_value = None
         self.release_input.emit()
 
     def add_composite_item(self, composite_items):
@@ -54,6 +62,16 @@ class DocumentScene(QtGui.QGraphicsScene):
                 self.addItem(item)
                 item.parent.hover_enter.connect(self.lock_point)
                 item.parent.hover_leave.connect(self.unlock_point)
+                item.parent.lock_horizontal.connect(self.lock_horizontal)
+                item.parent.lock_vertical.connect(self.lock_vertical)
+
+    def lock_horizontal(self, y):
+        self.horizontal_snapped = True
+        self.horizontal_value = y
+
+    def lock_vertical(self, x):
+        self.vertical_snapped = True
+        self.vertical_value = x
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -144,6 +162,12 @@ class DocumentScene(QtGui.QGraphicsScene):
         super(DocumentScene, self).mouseMoveEvent(event)
         x, y = event.scenePos().x(), event.scenePos().y()
         self.mouse_move.emit(x, y)
+
+        if self.horizontal_snapped:
+            y = self.horizontal_value
+
+        if self.vertical_snapped:
+            x = self.vertical_value
 
         # TODO: Only show cursor when snapped
         if not self.input_snapped:

@@ -25,7 +25,7 @@ class Command(QtCore.QObject):
         self.preview_graphics_item = None
         self.input_snapped = False
 
-    def process_click(self, event, items):
+    def process_click(self, x, y, items):
         current_input = self.inputs[self.active_input]
 
         if isinstance(current_input, PointInput):
@@ -35,7 +35,7 @@ class Command(QtCore.QObject):
             if items:
                 current_input.value = Point(items[0].entity.x, items[0].entity.y)
             else:
-                current_input.value = Point(event.scenePos().x(), event.scenePos().y())
+                current_input.value = Point(x, y)
 
         if self.has_preview and (self.active_input == self.preview_start):
             self.preview_graphics_item = self.preview_item()

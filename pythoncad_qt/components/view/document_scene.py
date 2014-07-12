@@ -9,7 +9,7 @@ from graphics_items.snap_cursor import SnapCursor
 class DocumentScene(QtGui.QGraphicsScene):
 
     mouse_move = QtCore.pyqtSignal(float, float)
-    mouse_click = QtCore.pyqtSignal(object, list)
+    mouse_click = QtCore.pyqtSignal(float, float, list)
     entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
     lock_input = QtCore.pyqtSignal(object)
@@ -75,7 +75,15 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
-            self.mouse_click.emit(event, self.items(event.scenePos()))
+            x, y = event.scenePos().x(), event.scenePos().y()
+
+            if self.horizontal_snapped:
+                y = self.horizontal_value
+
+            if self.vertical_snapped:
+                x = self.vertical_value
+
+            self.mouse_click.emit(x, y, self.items(event.scenePos()))
 
         super(DocumentScene, self).mouseReleaseEvent(event)
 

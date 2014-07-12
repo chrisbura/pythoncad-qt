@@ -36,8 +36,8 @@ class SnapSegment(QtGui.QGraphicsLineItem):
         return path
 
     def paint(self, painter, option, widget):
-        painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
-        painter.drawPath(self.shape())
+        # painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
+        # painter.drawPath(self.shape())
         super(SnapSegment, self).paint(painter, option, widget)
 
 

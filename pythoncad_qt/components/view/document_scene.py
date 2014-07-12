@@ -169,13 +169,14 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
         x, y = event.scenePos().x(), event.scenePos().y()
-        self.mouse_move.emit(x, y)
 
         if self.horizontal_snapped:
             y = self.horizontal_value
 
         if self.vertical_snapped:
             x = self.vertical_value
+
+        self.mouse_move.emit(x, y)
 
         # TODO: Only show cursor when snapped
         if not self.input_snapped:

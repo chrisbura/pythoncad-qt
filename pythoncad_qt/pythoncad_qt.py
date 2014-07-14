@@ -13,6 +13,7 @@ from components.document import Document, DocumentView
 from components.document_control import DocumentControl
 from components.sidebar_panes import *
 from dialogs.document_properties import DocumentPropertiesDialog
+from input_manager import InputManager
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -67,9 +68,26 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Document Viewport
         self.document_control = DocumentControl()
+        scene = self.document_control.document.scene
         self.drawing_opened.connect(self.document_control.document.load_drawing)
         self.document_control.document.titlebar.expand_viewport.connect(self.toggle_expand)
         self.document_control.document.titlebar.open_properties.connect(self.open_properties)
+
+        # Input Manager
+        self.input_manager = InputManager()
+        self.input_manager.command_finished.connect(scene.add_composite_item)
+        self.input_manager.add_item.connect(scene.addItem)
+        self.input_manager.remove_item.connect(scene.removeItem)
+        scene.mouse_click.connect(self.input_manager.handle_click)
+        scene.mouse_moved.connect(self.input_manager.handle_move)
+        scene.command_cancelled.connect(self.input_manager.cancel_command)
+        scene.command_cancelled.connect(command_pane.command_list.tree.clearSelection)
+
+        scene.lock_input.connect(self.input_manager.lock_input.emit)
+        scene.release_input.connect(self.input_manager.release_input.emit)
+
+        command_pane.command_started.connect(self.input_manager.cancel_command)
+        command_pane.command_started.connect(self.input_manager.start_command)
 
         # Right Sidebar
         right_sidebar = Sidebar()
@@ -90,7 +108,6 @@ class PythoncadQt(QtGui.QMainWindow):
         splitter.setStretchFactor(1, 9)
         splitter.setStretchFactor(2, 2)
 
-        # command_pane.command_started.connect()
 
     def open_drawing(self):
         self.drawing = Drawing(title='New Drawing')

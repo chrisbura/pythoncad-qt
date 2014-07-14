@@ -41,7 +41,7 @@ class CommandPane(SidebarPane):
         point_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Point')
         point_command.setData(
             QtGui.QAction('Point', self.command_list,
-                triggered=partial(self._call_command, PointCommand)),
+                triggered=partial(self.command_started.emit, PointCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(point_command)
@@ -50,7 +50,7 @@ class CommandPane(SidebarPane):
         segment_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/segment.png'), 'Segment')
         segment_command.setData(
             QtGui.QAction('Segment', self.command_list,
-                triggered=partial(self._call_command, SegmentCommand)),
+                triggered=partial(self.command_started.emit, SegmentCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(segment_command)
@@ -58,7 +58,7 @@ class CommandPane(SidebarPane):
         rectangle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/rectangle.png'), 'Rectangle')
         rectangle_command.setData(
             QtGui.QAction('Rectangle', self.command_list,
-                triggered=partial(self._call_command, RectangleCommand)),
+                triggered=partial(self.command_started.emit, RectangleCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(rectangle_command)
@@ -67,7 +67,7 @@ class CommandPane(SidebarPane):
         circle_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/circle.png'), 'Circle')
         circle_command.setData(
             QtGui.QAction('Circle', self.command_list,
-                triggered=partial(self._call_command, CircleCommand)),
+                triggered=partial(self.command_started.emit, CircleCommand)),
             QtCore.Qt.UserRole,
             )
         self.drawing_label.appendRow(circle_command)
@@ -89,7 +89,7 @@ class CommandPane(SidebarPane):
         dimension_command = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Dimension')
         dimension_command.setData(
             QtGui.QAction('Dimension', self.command_list,
-                triggered=partial(self._call_command, DimensionCommand)),
+                triggered=partial(self.command_started.emit, DimensionCommand)),
             QtCore.Qt.UserRole,
             )
         self.dimension_label.appendRow(dimension_command)
@@ -97,7 +97,7 @@ class CommandPane(SidebarPane):
         vertical_dimension = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Vertical Dimension')
         vertical_dimension.setData(
             QtGui.QAction('Vertical Dimension', self.command_list,
-                triggered=partial(self._call_command, VerticalDimensionCommand)),
+                triggered=partial(self.command_started.emit, VerticalDimensionCommand)),
             QtCore.Qt.UserRole,
             )
         self.dimension_label.appendRow(vertical_dimension)
@@ -105,7 +105,7 @@ class CommandPane(SidebarPane):
         horizontal_dimension = QtGui.QStandardItem(QtGui.QIcon('images/commands/new.png'), 'Horizontal Dimension')
         horizontal_dimension.setData(
             QtGui.QAction('Horizontal Dimension', self.command_list,
-                triggered=partial(self._call_command, HorizontalDimensionCommand)),
+                triggered=partial(self.command_started.emit, HorizontalDimensionCommand)),
             QtCore.Qt.UserRole,
             )
         self.dimension_label.appendRow(horizontal_dimension)
@@ -137,18 +137,3 @@ class CommandPane(SidebarPane):
             except AttributeError:
                 # No action is set on that index
                 pass
-
-    def _call_command(self, command_class):
-        self.active_command = command_class()
-        self.active_command.command_cancelled.connect(self.cancel)
-        self.command_started.emit(self.active_command)
-
-        # Start command again after finishing
-        # TODO: Put in settings
-        self.active_command.command_ended.connect(
-            partial(self._call_command, command_class)
-        )
-
-    def cancel(self):
-        self.active_command = None
-        self.command_list.tree.clearSelection()

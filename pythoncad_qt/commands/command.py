@@ -11,7 +11,6 @@ class Command(QtCore.QObject):
 
     command_finished = QtCore.pyqtSignal(object)
     command_ended = QtCore.pyqtSignal()
-    command_cancelled = QtCore.pyqtSignal()
     add_item = QtCore.pyqtSignal(object)
     remove_item = QtCore.pyqtSignal(object)
 
@@ -46,8 +45,7 @@ class Command(QtCore.QObject):
         if self.active_input == len(self.inputs):
             graphics_items = self.apply_command()
             self.command_finished.emit(graphics_items)
-
-            self.remove_preview_item()
+            self.cleanup()
             self.command_ended.emit()
 
     def snap_preview(self, point):
@@ -63,9 +61,8 @@ class Command(QtCore.QObject):
             if self.preview_graphics_item:
                 self.preview_graphics_item.update(x, y)
 
-    def cancel(self):
+    def cleanup(self):
         self.remove_preview_item()
-        self.command_cancelled.emit()
 
     def remove_preview_item(self):
         if self.preview_graphics_item is not None:

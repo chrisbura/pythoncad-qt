@@ -9,6 +9,7 @@ from graphics_items.snap_cursor import SnapCursor
 class DocumentScene(QtGui.QGraphicsScene):
 
     mouse_move = QtCore.pyqtSignal(float, float)
+    mouse_moved = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     mouse_click = QtCore.pyqtSignal(float, float, list)
     entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
@@ -172,6 +173,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
+        self.mouse_moved.emit(event)
         x, y = event.scenePos().x(), event.scenePos().y()
 
         if self.horizontal_snapped:

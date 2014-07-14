@@ -7,6 +7,7 @@ from components.base import VerticalLayout, ComponentBase
 
 # TODO: Set current selection to active_layer
 
+
 class LayerTreeView(QtGui.QTreeView):
     def __init__(self, *args, **kwargs):
         super(LayerTreeView, self).__init__(*args, **kwargs)
@@ -14,6 +15,7 @@ class LayerTreeView(QtGui.QTreeView):
         self.setHeaderHidden(True)
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setSelectionBehavior(QtGui.QAbstractItemView.SelectItems)
+
 
 class LayerPaneWidget(VerticalLayout, ComponentBase):
 
@@ -88,23 +90,5 @@ class LayerPane(SidebarPane):
     def __init__(self, parent=None):
         super(LayerPane, self).__init__(parent)
 
-        self.stack = QtGui.QStackedWidget()
-        self.add_component(self.stack)
-
-    def add_document(self, document):
-        layer_view = LayerPaneWidget()
-        index = self.stack.addWidget(layer_view)
-        document.layer_pane_index = index
-
-        # Signals
-        layer_view.layer_changed.connect(document.set_active_layer)
-        layer_view.create_layer_button.clicked.connect(document.create_layer)
-        document.layer_added.connect(layer_view.add_layer)
-
-        layer_view.add_layers(document.layers)
-
-    def switch_document(self, document):
-        self.stack.setCurrentIndex(document.layer_pane_index)
-
-    def update(self, document):
-        pass
+        self.layer_pane_widget = LayerPaneWidget()
+        self.add_component(self.layer_pane_widget)

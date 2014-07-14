@@ -12,6 +12,7 @@ from components.viewport import Viewport
 from components.document import Document, DocumentView
 from components.document_control import DocumentControl
 from components.sidebar_panes import *
+from dialogs.document_properties import DocumentPropertiesDialog
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -27,6 +28,7 @@ class PythoncadQt(QtGui.QMainWindow):
         super(PythoncadQt, self).__init__()
 
         self.drawing = None
+        self.viewport_expanded = False
 
         self.setWindowTitle('PythonCAD')
 
@@ -48,7 +50,8 @@ class PythoncadQt(QtGui.QMainWindow):
 
         ### Splitter
         splitter = QtGui.QSplitter(content)
-        splitter.setChildrenCollapsible(False)
+        self.splitter = splitter
+        splitter.setChildrenCollapsible(True)
         content.layout.addWidget(splitter)
 
         ### Left Vertical Layout
@@ -63,8 +66,10 @@ class PythoncadQt(QtGui.QMainWindow):
         # left_sidebar.add_pane('Outline', outline_pane)
 
         # Document Viewport
-        document_control = DocumentControl()
-        self.drawing_opened.connect(document_control.document.load_drawing)
+        self.document_control = DocumentControl()
+        self.drawing_opened.connect(self.document_control.document.load_drawing)
+        self.document_control.document.titlebar.expand_viewport.connect(self.toggle_expand)
+        self.document_control.document.titlebar.open_properties.connect(self.open_properties)
 
         # Right Sidebar
         right_sidebar = Sidebar()
@@ -77,7 +82,7 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Add Sidebars and document to central widget splitter
         splitter.addWidget(left_sidebar)
-        splitter.addWidget(document_control)
+        splitter.addWidget(self.document_control)
         splitter.addWidget(right_sidebar)
 
         # Set initial splitter proportions
@@ -93,10 +98,36 @@ class PythoncadQt(QtGui.QMainWindow):
         self.drawing_opened.emit(self.drawing)
         self.drawing.layer_added.connect(self.layer_pane.layer_pane_widget.add_layer)
         self.layer_pane.layer_pane_widget.create_layer_button.clicked.connect(self.drawing.create_layer)
+        self.drawing.title_changed.connect(self.document_control.document.titlebar.set_title)
 
         # Add default layer if drawing has no layers
         if self.drawing.layer_count == 0:
             self.drawing.add_layer(Layer(title='Default Layer'))
+
+    def open_properties(self):
+        document_properties_dialog = DocumentPropertiesDialog(
+            drawing=self.drawing, parent=self)
+        dialog_return = document_properties_dialog.exec_()
+
+        if dialog_return == QtGui.QDialog.Accepted:
+            # TODO: Error checking
+            # TODO: Auto update title using signal
+            drawing_title = str(document_properties_dialog.form.fields['title'].text())
+            self.drawing.set_title(drawing_title)
+        else:
+            # TODO: Reset fields
+            pass
+
+    def toggle_expand(self):
+        if not self.viewport_expanded:
+            self.viewport_size = self.splitter.saveState()
+
+        self.viewport_expanded = not self.viewport_expanded
+
+        if self.viewport_expanded:
+            self.splitter.setSizes([0, 100, 0])
+        else:
+            self.splitter.restoreState(self.viewport_size)
 
 
 if __name__ == '__main__':

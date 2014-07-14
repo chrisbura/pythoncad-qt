@@ -1,11 +1,10 @@
-from PyQt4 import QtCore, QtGui
 
+from PyQt4 import QtCore, QtGui
 
 from components.base import ComponentBase, VerticalLayout, HorizontalLayout
 from components.buttons import Button, ToggleButton
 from components.view.document_view import DocumentView
 from components.view.document_scene import DocumentScene
-from dialogs.document_properties import DocumentPropertiesDialog
 import settings
 
 class DocumentTitleLabel(QtGui.QLabel):
@@ -17,47 +16,26 @@ class TitleBar(HorizontalLayout, ComponentBase):
     layout_margins = QtCore.QMargins(0, 0, 11, 0)
     layout_spacing = 6
 
+    expand_viewport = QtCore.pyqtSignal()
+    open_properties = QtCore.pyqtSignal()
+
     def __init__(self, *args, **kwargs):
         super(TitleBar, self).__init__(*args, **kwargs)
 
         # TODO: Double click to edit title
         self.title = DocumentTitleLabel()
-        self.filename = QtGui.QLabel()
+        self.properties_button = Button('Properties')
+        self.properties_button.clicked.connect(self.open_properties.emit)
+        self.expand_button = Button(QtGui.QIcon('images/maximize.png'), 'Expand')
+        self.expand_button.clicked.connect(self.expand_viewport.emit)
 
         self.add_component(self.title)
-        self.add_component(self.filename)
-        self.add_component(Button('Save'))
-        self.add_component(Button('Save As'))
-        self.add_component(Button('Properties',
-            clicked=self.open_document_properties_dialog))
-        self.add_component(Button('Close'))
-
+        self.add_component(self.properties_button)
         self.add_stretch()
-
-        self.expand = Button(QtGui.QIcon('images/maximize.png'), 'Expand')
-        self.add_component(self.expand)
-
-    def set_filename(self, filename):
-        self.filename.setText(filename)
+        self.add_component(self.expand_button)
 
     def set_title(self, title):
         self.title.setText(title)
-
-    def open_document_properties_dialog(self):
-        document_properties_dialog = DocumentPropertiesDialog(
-            drawing=self.drawing, parent=self)
-        dialog_return = document_properties_dialog.exec_()
-
-        if dialog_return == QtGui.QDialog.Accepted:
-            # TODO: Error checking
-            # TODO: Auto update title using signal
-            drawing_title = str(document_properties_dialog.form.fields['title'].text())
-            self.drawing.set_title(drawing_title)
-            self.set_title(drawing_title)
-        else:
-            # TODO: Reset fields
-            print 'Rejected'
-
 
 
 class SceneCoordinates(QtGui.QLabel):

@@ -17,13 +17,11 @@ class TitleBar(HorizontalLayout, ComponentBase):
     layout_margins = QtCore.QMargins(0, 0, 11, 0)
     layout_spacing = 6
 
-    def __init__(self, drawing, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(TitleBar, self).__init__(*args, **kwargs)
 
-        self.drawing = drawing
-
         # TODO: Double click to edit title
-        self.title = DocumentTitleLabel(self.drawing.title)
+        self.title = DocumentTitleLabel()
         self.filename = QtGui.QLabel()
 
         self.add_component(self.title)
@@ -119,15 +117,10 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
 
 
 class Document(VerticalLayout, ComponentBase):
-    def __init__(self, drawing, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(Document, self).__init__(*args, **kwargs)
 
-        self.drawing = drawing
-
-        # TODO: Find better way to pass around drawing
-        self.titlebar = TitleBar(drawing=self.drawing)
-        self.titlebar.set_filename('')
-        self.titlebar.set_title('{title}'.format(title=self.drawing.title))
+        self.titlebar = TitleBar()
 
         self.scene = DocumentScene(parent=self)
         self.view = DocumentView(self.scene, parent=self)
@@ -143,3 +136,7 @@ class Document(VerticalLayout, ComponentBase):
         self.add_component(self.titlebar)
         self.add_component(self.view)
         self.add_component(self.status_bar)
+
+    def load_drawing(self, drawing):
+        # self.scene.reset_scene()
+        self.titlebar.set_title(drawing.title)

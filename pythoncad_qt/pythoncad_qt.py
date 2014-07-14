@@ -13,12 +13,20 @@ from components.document import Document, DocumentView
 from components.document_control import DocumentControl
 from components.sidebar_panes import *
 
+from models.drawing import Drawing
+from models.layer import Layer
+
 sip.setdestroyonexit(False)
 
 
 class PythoncadQt(QtGui.QMainWindow):
+
+    drawing_opened = QtCore.pyqtSignal(Drawing)
+
     def __init__(self):
         super(PythoncadQt, self).__init__()
+
+        self.drawing = None
 
         self.setWindowTitle('PythonCAD')
 
@@ -50,45 +58,24 @@ class PythoncadQt(QtGui.QMainWindow):
         command_pane = CommandPane()
         left_sidebar.add_pane('Commands', command_pane)
 
-        # Document Pane
-        document_pane = DocumentPane()
-        left_sidebar.add_pane('Documents', document_pane)
-
         # Outline Pane
         # outline_pane = OutlinePane()
         # left_sidebar.add_pane('Outline', outline_pane)
 
-        # Layer Pane
-        layer_pane = LayerPane()
-
         # Document Viewport
         document_control = DocumentControl()
+        self.drawing_opened.connect(document_control.document.load_drawing)
 
+        # Right Sidebar
+        right_sidebar = Sidebar()
+
+        self.layer_pane = LayerPane()
         console_pane = ConsolePane()
 
-        # Signals
-        command_pane.command_started.connect(document_control.document_stack.process_command)
-
-        document_control.document_opened.connect(layer_pane.add_document)
-        document_control.document_opened.connect(console_pane.add_document)
-        document_control.document_opened.connect(document_pane.add_document)
-        document_control.command_cancelled.connect(command_pane.cancel)
-
-        document_pane.document_changed.connect(document_control.switch_document)
-        document_pane.document_changed.connect(layer_pane.switch_document)
-        document_pane.document_changed.connect(console_pane.switch_document)
-        document_pane.document_changed.connect(layer_pane.update)
-
-        # Open initial blank drawing on component creation
-        document_control.open_document()
-
-        ### Right Vertical Layout
-        right_sidebar = Sidebar()
-        right_sidebar.add_pane('Layers', layer_pane)
-
+        right_sidebar.add_pane('Layers', self.layer_pane)
         right_sidebar.add_pane('Console', console_pane)
 
-
+        # Add Sidebars and document to central widget splitter
         splitter.addWidget(left_sidebar)
         splitter.addWidget(document_control)
         splitter.addWidget(right_sidebar)
@@ -98,10 +85,18 @@ class PythoncadQt(QtGui.QMainWindow):
         splitter.setStretchFactor(1, 9)
         splitter.setStretchFactor(2, 2)
 
-        # Signals
-        # New Drawing Buttons
-        topbar.new_file_button.clicked.connect(document_control.open_document)
-        document_pane.new_document_button.clicked.connect(document_control.open_document)
+        # command_pane.command_started.connect()
+
+    def open_drawing(self):
+        self.drawing = Drawing(title='New Drawing')
+
+        self.drawing_opened.emit(self.drawing)
+        self.drawing.layer_added.connect(self.layer_pane.layer_pane_widget.add_layer)
+        self.layer_pane.layer_pane_widget.create_layer_button.clicked.connect(self.drawing.create_layer)
+
+        # Add default layer if drawing has no layers
+        if self.drawing.layer_count == 0:
+            self.drawing.add_layer(Layer(title='Default Layer'))
 
 
 if __name__ == '__main__':
@@ -110,5 +105,7 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     app.setEffectEnabled(QtCore.Qt.UI_AnimateCombo, False)
     widget = PythoncadQt()
+    # TODO: Allow opening documents via command line
+    widget.open_drawing()
     widget.show()
     app.exec_()

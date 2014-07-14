@@ -41,6 +41,10 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         self.composite_items = []
 
+    def reset_scene(self):
+        # TODO: Reset scene properly
+        self.clear()
+
     def lock_point(self, point):
         self.input_snapped = True
         # TODO: Proper cursor handling

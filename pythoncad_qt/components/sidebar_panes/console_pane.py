@@ -1,3 +1,4 @@
+
 from PyQt4 import QtGui, QtCore
 
 from components.base import VerticalLayout, ComponentBase
@@ -21,18 +22,8 @@ class ConsolePaneWidget(VerticalLayout, ComponentBase):
 
 
 class ConsolePane(SidebarPane):
-
     def __init__(self, parent=None):
         super(ConsolePane, self).__init__(parent)
 
-        self.stack = QtGui.QStackedWidget()
-        self.add_component(self.stack)
-
-    def add_document(self, document):
-        console_view = ConsolePaneWidget()
-        index = self.stack.addWidget(console_view)
-        # TODO: Move to signal
-        document.console_pane_index = index
-
-    def switch_document(self, document):
-        self.stack.setCurrentIndex(document.console_pane_index)
+        self.console_pane_widget = ConsolePaneWidget()
+        self.add_component(self.console_pane_widget)

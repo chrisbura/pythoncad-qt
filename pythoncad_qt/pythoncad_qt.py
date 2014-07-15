@@ -14,6 +14,7 @@ from components.document_control import DocumentControl
 from components.sidebar_panes import *
 from dialogs.document_properties import DocumentPropertiesDialog
 from input_manager import InputManager
+from graphics_items.snap import SnapLineManager
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -75,7 +76,6 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Input Manager
         self.input_manager = InputManager()
-        self.input_manager.command_finished.connect(scene.add_composite_item)
         self.input_manager.add_item.connect(scene.addItem)
         self.input_manager.remove_item.connect(scene.removeItem)
         scene.mouse_click.connect(self.input_manager.handle_click)
@@ -83,11 +83,17 @@ class PythoncadQt(QtGui.QMainWindow):
         scene.command_cancelled.connect(self.input_manager.cancel_command)
         scene.command_cancelled.connect(command_pane.command_list.tree.clearSelection)
 
-        scene.lock_input.connect(self.input_manager.lock_input.emit)
-        scene.release_input.connect(self.input_manager.release_input.emit)
-
         command_pane.command_started.connect(self.input_manager.cancel_command)
         command_pane.command_started.connect(self.input_manager.start_command)
+
+        # Snap Manager
+        self.snap_manager = SnapLineManager(scene.sceneRect())
+        self.snap_manager.new_line.connect(scene.addItem)
+        self.input_manager.command_finished.connect(self.snap_manager.add_snaplines)
+        self.snap_manager.lock_vertical.connect(self.input_manager.lock_vertical_axis)
+        self.snap_manager.unlock_vertical.connect(self.input_manager.unlock_vertical_axis)
+        self.snap_manager.lock_horizontal.connect(self.input_manager.lock_horizontal_axis)
+        self.snap_manager.unlock_horizontal.connect(self.input_manager.unlock_horizontal_axis)
 
         # Right Sidebar
         right_sidebar = Sidebar()

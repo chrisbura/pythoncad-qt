@@ -4,7 +4,6 @@ from PyQt4 import QtGui, QtCore
 import settings
 from items.scene_items import SceneItem
 from items.scene_items.scene_item import FilledShapeMixin
-from graphics_items.snap_lines import HorizontalSnap, VerticalSnap
 
 
 class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):

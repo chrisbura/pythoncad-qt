@@ -3,18 +3,13 @@ import math
 from PyQt4 import QtCore, QtGui
 
 import settings
-from graphics_items.snap_cursor import SnapCursor
 
 
 class DocumentScene(QtGui.QGraphicsScene):
 
-    mouse_move = QtCore.pyqtSignal(float, float)
     mouse_moved = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     mouse_click = QtCore.pyqtSignal(float, float, list)
-    entity_added = QtCore.pyqtSignal(object)
     command_cancelled = QtCore.pyqtSignal()
-    lock_input = QtCore.pyqtSignal(object)
-    release_input = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
@@ -29,67 +24,14 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Axes
         self.setting_draw_axes = settings.DRAW_AXES
 
-        # TODO: Proper cursor
-        self.cursor = SnapCursor(0, 0)
-        self.cursor.hide()
-        self.addItem(self.cursor)
-
-        self.input_snapped = False
-        self.horizontal_snapped = False
-        self.horizontal_value = None
-        self.vertical_snapped = False
-        self.vertical_value = None
-
-        self.composite_items = []
-
     def reset_scene(self):
         # TODO: Reset scene properly
         self.clear()
 
-    def lock_point(self, point):
-        self.input_snapped = True
-        # TODO: Proper cursor handling
-        self.cursor.set_position(point.x, point.y)
-        self.lock_input.emit(point)
-
-    def unlock_point(self):
-        self.input_snapped = False
-        self.horizontal_snapped = False
-        self.vertical_snapped = False
-        self.horizontal_value = None
-        self.vertical_value = None
-        self.release_input.emit()
-
-    def add_composite_item(self, composite_items):
-        self.composite_items.append(composite_items)
-        for composite_item in composite_items:
-            for item in composite_item.children:
-                self.addItem(item)
-                item.parent.hover_enter.connect(self.lock_point)
-                item.parent.hover_leave.connect(self.unlock_point)
-                item.parent.lock_horizontal.connect(self.lock_horizontal)
-                item.parent.lock_vertical.connect(self.lock_vertical)
-
-    def lock_horizontal(self, y):
-        self.horizontal_snapped = True
-        self.horizontal_value = y
-
-    def lock_vertical(self, x):
-        self.vertical_snapped = True
-        self.vertical_value = x
-
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             x, y = event.scenePos().x(), event.scenePos().y()
-
-            if self.horizontal_snapped:
-                y = self.horizontal_value
-
-            if self.vertical_snapped:
-                x = self.vertical_value
-
             self.mouse_click.emit(x, y, self.items(event.scenePos()))
-
         super(DocumentScene, self).mouseReleaseEvent(event)
 
     def keyReleaseEvent(self, event):
@@ -174,22 +116,3 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
         self.mouse_moved.emit(event)
-        x, y = event.scenePos().x(), event.scenePos().y()
-
-        if self.horizontal_snapped:
-            y = self.horizontal_value
-
-        if self.vertical_snapped:
-            x = self.vertical_value
-
-        self.mouse_move.emit(x, y)
-
-        # TODO: Only show cursor when snapped
-        if not self.input_snapped:
-            self.cursor.set_position(x, y)
-
-    def focusInEvent(self, event):
-        self.cursor.show()
-
-    def focusOutEvent(self, event):
-        self.cursor.hide()

@@ -5,6 +5,7 @@ DEBUG_SHAPES = False
 DEBUG_BOUNDING_RECT = False
 DEBUG_SHAPES_COLOUR = QtCore.Qt.cyan
 DEBUG_DIMENSION_ZONES = True
+DEBUG_SNAP_LINES = False
 
 STYLESHEET = 'stylesheets/pythoncad_qt.css'
 

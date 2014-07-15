@@ -80,6 +80,18 @@ class SnapLineSceneItem(QtGui.QGraphicsLineItem):
             painter.drawPath(self.shape())
         super(SnapLineSceneItem, self).paint(painter, option, widget)
 
+    def hoverEnterEvent(self, event):
+        super(SnapLineSceneItem, self).hoverEnterEvent(event)
+        pen = self.pen()
+        pen.setColor(QtCore.Qt.cyan)
+        self.setPen(pen)
+
+    def hoverLeaveEvent(self, event):
+        super(SnapLineSceneItem, self).hoverLeaveEvent(event)
+        pen = self.pen()
+        pen.setColor(QtCore.Qt.transparent)
+        self.setPen(pen)
+
 
 class HorizontalSnapLineSceneItem(SnapLineSceneItem):
 

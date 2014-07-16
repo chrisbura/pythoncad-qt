@@ -57,15 +57,15 @@ class PythoncadQt(QtGui.QMainWindow):
         content.layout.addWidget(splitter)
 
         ### Left Vertical Layout
-        left_sidebar = Sidebar()
+        self.left_sidebar = Sidebar()
 
         # Command Pane
         command_pane = CommandPane()
-        left_sidebar.add_pane('Commands', command_pane)
+        self.left_sidebar.add_pane('Commands', command_pane)
 
         # Outline Pane
         # outline_pane = OutlinePane()
-        # left_sidebar.add_pane('Outline', outline_pane)
+        # self.left_sidebar.add_pane('Outline', outline_pane)
 
         # Document Viewport
         self.document_control = DocumentControl()
@@ -96,18 +96,18 @@ class PythoncadQt(QtGui.QMainWindow):
         self.snap_manager.unlock_horizontal.connect(self.input_manager.unlock_horizontal_axis)
 
         # Right Sidebar
-        right_sidebar = Sidebar()
+        self.right_sidebar = Sidebar()
 
         self.layer_pane = LayerPane()
         console_pane = ConsolePane()
 
-        right_sidebar.add_pane('Layers', self.layer_pane)
-        right_sidebar.add_pane('Console', console_pane)
+        self.right_sidebar.add_pane('Layers', self.layer_pane)
+        self.right_sidebar.add_pane('Console', console_pane)
 
         # Add Sidebars and document to central widget splitter
-        splitter.addWidget(left_sidebar)
+        splitter.addWidget(self.left_sidebar)
         splitter.addWidget(self.document_control)
-        splitter.addWidget(right_sidebar)
+        splitter.addWidget(self.right_sidebar)
 
         # Set initial splitter proportions
         splitter.setStretchFactor(0, 2)
@@ -142,15 +142,16 @@ class PythoncadQt(QtGui.QMainWindow):
             pass
 
     def toggle_expand(self):
-        if not self.viewport_expanded:
-            self.viewport_size = self.splitter.saveState()
 
-        self.viewport_expanded = not self.viewport_expanded
-
-        if self.viewport_expanded:
-            self.splitter.setSizes([0, 100, 0])
+        if self.left_sidebar.isVisible():
+            self.left_sidebar.hide()
         else:
-            self.splitter.restoreState(self.viewport_size)
+            self.left_sidebar.show()
+
+        if self.right_sidebar.isVisible():
+            self.right_sidebar.hide()
+        else:
+            self.right_sidebar.show()
 
 
 if __name__ == '__main__':

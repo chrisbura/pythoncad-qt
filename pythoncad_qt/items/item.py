@@ -24,12 +24,38 @@ class Item(QtCore.QObject):
     hover_enter = QtCore.pyqtSignal(object)
     hover_leave = QtCore.pyqtSignal()
     lock_horizontal = QtCore.pyqtSignal(float)
+    unlock_horizontal = QtCore.pyqtSignal()
     lock_vertical = QtCore.pyqtSignal(float)
+    unlock_vertical = QtCore.pyqtSignal()
+    deleted = QtCore.pyqtSignal()
+    remove_scene_item = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(Item, self).__init__(*args, **kwargs)
         self.children = []
+        self.items = []
 
+    # TODO: Move to scene_items instead of children
     def add_child(self, item):
         item.parent = self
         self.children.append(item)
+
+    def add_item(self, item):
+        item.parent = self
+        self.deleted.connect(item.delete)
+        self.items.append(item)
+
+    def delete(self):
+        # TODO: Yield instead of signals?
+        # TODO: Merge with get_items
+        for item in self.children:
+            self.remove_scene_item.emit(item)
+        self.deleted.emit()
+
+    # TODO: Audit/Refactor
+    def get_items(self):
+        for item in self.items:
+            for scene_item in item.children:
+                yield scene_item
+            for item_ in item.get_items():
+                yield item_

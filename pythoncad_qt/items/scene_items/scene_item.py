@@ -22,6 +22,12 @@ from PyQt4 import QtCore, QtGui
 import settings
 
 
+class UnselectableMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(UnselectableMixin, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, False)
+
+
 class FilledShapeMixin(object):
     def __init__(self, *args, **kwargs):
         super(FilledShapeMixin, self).__init__(*args, **kwargs)

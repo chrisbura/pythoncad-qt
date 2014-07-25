@@ -21,7 +21,7 @@ from PyQt4 import QtGui, QtCore
 
 import settings
 from items.scene_items import SceneItem
-from items.scene_items.scene_item import FilledShapeMixin
+from items.scene_items.scene_item import FilledShapeMixin, UnselectableMixin
 
 
 class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
@@ -69,13 +69,9 @@ class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
         self.parent.hover_leave.emit()
 
 
-class SnapPoint(PointSceneItem):
+class SnapPoint(UnselectableMixin, PointSceneItem):
     default_colour = QtCore.Qt.transparent
     hover_colour = QtCore.Qt.transparent
-
-    def __init__(self, *args, **kwargs):
-        super(SnapPoint, self).__init__(*args, **kwargs)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, False)
 
 
 class MidPoint(SnapPoint):

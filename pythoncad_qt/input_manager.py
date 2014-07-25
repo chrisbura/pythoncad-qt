@@ -97,10 +97,27 @@ class InputManager(QtCore.QObject):
 
     def add_items(self, composite_items):
         for composite_item in composite_items:
+
+            composite_item.remove_scene_item.connect(self.remove_item.emit)
+
+            # TODO: Merge with get_items
             for item in composite_item.children:
                 self.add_item.emit(item)
                 item.parent.hover_enter.connect(self.lock_point)
                 item.parent.hover_leave.connect(self.unlock_point)
+                item.parent.lock_horizontal.connect(self.lock_horizontal_axis)
+                item.parent.lock_vertical.connect(self.lock_vertical_axis)
+                item.parent.unlock_horizontal.connect(self.unlock_horizontal_axis)
+                item.parent.unlock_vertical.connect(self.unlock_vertical_axis)
+
+            for scene_item in composite_item.get_items():
+                self.add_item.emit(scene_item)
+                scene_item.parent.hover_enter.connect(self.lock_point)
+                scene_item.parent.hover_leave.connect(self.unlock_point)
+                scene_item.parent.lock_horizontal.connect(self.lock_horizontal_axis)
+                scene_item.parent.lock_vertical.connect(self.lock_vertical_axis)
+                scene_item.parent.unlock_horizontal.connect(self.unlock_horizontal_axis)
+                scene_item.parent.unlock_vertical.connect(self.unlock_vertical_axis)
 
     def cancel_command(self):
         if self.active_command:

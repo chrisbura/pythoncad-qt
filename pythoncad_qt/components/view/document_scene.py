@@ -62,16 +62,8 @@ class DocumentScene(QtGui.QGraphicsScene):
         # Delete Selected Items
         selected_items = self.selectedItems()
         if event.key() == QtCore.Qt.Key_Delete and len(selected_items) > 0:
-            items_to_remove = set(selected_items)
             for item in selected_items:
-                # Create list of unique items to remove using set.union
-                # items_to_remove ends up being made up of selectedItems and all
-                # the siblings of those items
-                items_to_remove = items_to_remove | set(item.parent.children)
-
-            # Remove items
-            for item in items_to_remove:
-                self.removeItem(item)
+                item.parent.delete()
 
         super(DocumentScene, self).keyReleaseEvent(event)
 

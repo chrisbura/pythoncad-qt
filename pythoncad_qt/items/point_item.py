@@ -41,12 +41,6 @@ class PointItem(PointSnaplines, Item):
         self.point_item = PointSceneItem(point)
         self.add_child(self.point_item)
 
-    def horizontal_snap_points(self):
-        return [self.point.y]
-
-    def vertical_snap_points(self):
-        return [self.point.x]
-
 
 class EndPointItem(PointSnaplines, Item):
     def __init__(self, point, *args, **kwargs):

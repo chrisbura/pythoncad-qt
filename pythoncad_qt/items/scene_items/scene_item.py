@@ -53,39 +53,23 @@ class BasePen(QtGui.QPen):
         self.setColor(color)
 
 
-class SceneItem(object):
+class HoverMixin(object):
 
-    default_colour = settings.DEFAULT_COLOUR
     hover_colour = settings.HIGHLIGHT_COLOUR
-    selected_colour = settings.SELECTED_COLOUR
-    pen_thickness = settings.ITEM_PEN_THICKNESS
-    pen_join_style = settings.JOIN_STYLE
 
     def __init__(self, *args, **kwargs):
-        super(SceneItem, self).__init__(*args, **kwargs)
+        super(HoverMixin, self).__init__(*args, **kwargs)
         self.hover = False
-
-        # Pens
-        self.default_pen = BasePen(self.default_colour)
         self.hover_pen = BasePen(self.hover_colour)
-        self.selected_pen = BasePen(self.selected_colour)
-
-        # Brushes
-        self.default_brush = BaseBrush(self.default_colour)
         self.hover_brush = BaseBrush(self.hover_colour)
-        self.selected_brush = BaseBrush(self.selected_colour)
-
-        self.setPen(self.default_pen)
-
         self.setAcceptHoverEvents(True)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
 
     def hoverEnterEvent(self, event):
-        super(SceneItem, self).hoverEnterEvent(event)
+        super(HoverMixin, self).hoverEnterEvent(event)
         self.hover = True
 
     def hoverLeaveEvent(self, event):
-        super(SceneItem, self).hoverLeaveEvent(event)
+        super(HoverMixin, self).hoverLeaveEvent(event)
         self.hover = False
 
     def active_pen(self):
@@ -98,16 +82,50 @@ class SceneItem(object):
             return self.hover_brush
         return self.default_brush
 
+
+class SelectableMixin(object):
+
+    selected_colour = settings.SELECTED_COLOUR
+
+    def __init__(self, *args, **kwargs):
+        super(SelectableMixin, self).__init__(*args, **kwargs)
+        self.selected_pen = BasePen(self.selected_colour)
+        self.selected_brush = BaseBrush(self.selected_colour)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
+
     def paint(self, painter, option, widget):
         # Disable dotted selection rectangle
         option = QtGui.QStyleOptionGraphicsItem(option)
         option.state &= ~ QtGui.QStyle.State_Selected
 
-        self.setPen(self.active_pen())
-
         if self.isSelected():
             self.setPen(self.selected_pen)
+        super(SelectableMixin, self).paint(painter, option, widget)
 
+
+class DefaultPenMixin(object):
+
+    default_colour = settings.DEFAULT_COLOUR
+
+    def __init__(self, *args, **kwargs):
+        super(DefaultPenMixin, self).__init__(*args, **kwargs)
+        self.default_pen = BasePen(self.default_colour)
+        self.default_brush = BaseBrush(self.default_colour)
+        self.setPen(self.default_pen)
+
+    def active_pen(self):
+        return self.default_pen
+
+    def active_brush(self):
+        return self.default_brush
+
+    def paint(self, *args, **kwargs):
+        self.setPen(self.active_pen())
+        super(DefaultPenMixin, self).paint(*args, **kwargs)
+
+
+class ShapeDebugMixin(object):
+    def paint(self, painter, *args, **kwargs):
         if settings.DEBUG_SHAPES:
             painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
             painter.drawPath(self.shape())
@@ -117,4 +135,8 @@ class SceneItem(object):
             bounding_rect.addRect(self.boundingRect())
             painter.drawPath(bounding_rect)
 
-        super(SceneItem, self).paint(painter, option, widget)
+        super(ShapeDebugMixin, self).paint(painter, *args, **kwargs)
+
+
+class SceneItem(HoverMixin, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
+    pass

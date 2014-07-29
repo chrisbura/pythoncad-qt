@@ -51,9 +51,3 @@ class SegmentItem(Item):
         # TODO: Set only visible on PointInput
         self.midpoint_item = MidPoint(self.segment.midpoint)
         self.add_child(self.midpoint_item)
-
-    def horizontal_snap_points(self):
-        return [self.point1.y, self.point2.y]
-
-    def vertical_snap_points(self):
-        return [self.point1.x, self.point2.x]

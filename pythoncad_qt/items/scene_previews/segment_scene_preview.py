@@ -19,29 +19,29 @@
 
 from PyQt4 import QtGui
 
-from items.scene_previews import ScenePreview
-from items.scene_items import PointSceneItem
+from items import Item
+from items.point_item import EndPointItem
+from items.scene_items.segment_scene_item import BaseSegmentSceneItem
 
 
-class SegmentScenePreview(ScenePreview):
+class SegmentScenePreview(Item):
     def __init__(self, point, *args, **kwargs):
         super(SegmentScenePreview, self).__init__(*args, **kwargs)
 
         self.point = point
 
         # Starting Point
-        self.starting_point = PointSceneItem(self.point)
-        self.add_preview_item(self.starting_point)
+        self.starting_point = EndPointItem(self.point)
+        self.add_child_item(self.starting_point)
 
         # Segment
         # Uses regular QGraphicsLineItem because shape() override on
         # SegmentGraphicsItem takes a lot of processing
         # TODO: Extract shape to be only on display item, want line thickness
-        self.segment = QtGui.QGraphicsLineItem(
-            self.point.x, self.point.y,
-            self.point.x, self.point.y
+        self.segment = BaseSegmentSceneItem(
+            self.point, self.point
         )
-        self.add_preview_item(self.segment)
+        self.add_scene_item(self.segment)
 
     def update(self, x, y):
         self.segment.setLine(

@@ -19,10 +19,15 @@
 
 from PyQt4 import QtGui
 
-from items.scene_previews import ScenePreview
+from items import Item
+from items.scene_items.scene_item import DefaultPenMixin
 
 
-class RectangleScenePreview(ScenePreview):
+class RectanglePreviewLineItem(DefaultPenMixin, QtGui.QGraphicsLineItem):
+    pass
+
+
+class RectangleScenePreview(Item):
     def __init__(self, point, *args, **kwargs):
         super(RectangleScenePreview, self).__init__(*args, **kwargs)
 
@@ -31,11 +36,9 @@ class RectangleScenePreview(ScenePreview):
 
         for i in range(4):
             # Lines
-            line = QtGui.QGraphicsLineItem()
+            line = RectanglePreviewLineItem()
             self.lines.append(line)
-
-            # Add to QGraphicsItemGroup
-            self.add_preview_item(line)
+            self.add_scene_item(line)
 
     def update(self, x, y):
         # Point Order is clockwise starting from initial point

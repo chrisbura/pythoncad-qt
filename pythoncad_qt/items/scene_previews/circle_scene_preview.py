@@ -21,20 +21,25 @@ from math import sqrt
 
 from PyQt4 import QtGui
 
-from items.scene_previews import ScenePreview
+from items import Item, PointItem
 from items.scene_items import PointSceneItem
+from items.scene_items.scene_item import DefaultPenMixin
 
 
-class CircleScenePreview(ScenePreview):
+class CirclePreviewSceneItem(DefaultPenMixin, QtGui.QGraphicsEllipseItem):
+    pass
+
+
+class CircleScenePreview(Item):
     def __init__(self, point, *args, **kwargs):
         super(CircleScenePreview, self).__init__(*args, **kwargs)
 
         self.center_point = point
-        self.center_point_item = PointSceneItem(self.center_point)
-        self.add_preview_item(self.center_point_item)
+        self.center_point_item = PointItem(self.center_point)
+        self.add_child_item(self.center_point_item)
 
-        self.circle_item = QtGui.QGraphicsEllipseItem(0, 0, 0, 0)
-        self.add_preview_item(self.circle_item)
+        self.circle_item = CirclePreviewSceneItem(0, 0, 0, 0)
+        self.add_scene_item(self.circle_item)
 
     def update(self, x, y):
         distance_x = self.center_point.x - x

@@ -21,7 +21,7 @@ from PyQt4 import QtGui, QtCore
 
 from sympy.geometry import Point, Line, Segment
 
-from items.scene_previews import ScenePreview
+from items import Item
 from items.scene_items.scene_item import BasePen
 
 
@@ -40,7 +40,7 @@ class PreviewSegment(Segment):
         return PreviewLine(p, p + d)
 
 
-class DimensionScenePreview(ScenePreview):
+class DimensionScenePreview(Item):
     def __init__(self, point1, point2, *args, **kwargs):
         super(DimensionScenePreview, self).__init__(*args, **kwargs)
 
@@ -56,7 +56,7 @@ class DimensionScenePreview(ScenePreview):
             line = QtGui.QGraphicsLineItem()
             line.setPen(self.pen)
             self.lines.append(line)
-            self.add_preview_item(line)
+            self.add_scene_item(line)
 
     def _get_point(self, segment, point):
         # Get perpendicular segment from the parallel line through point

@@ -21,7 +21,11 @@ from PyQt4 import QtGui
 
 from items import Item
 from items.point_item import EndPointItem
-from items.scene_items.segment_scene_item import BaseSegmentSceneItem
+from items.scene_items.scene_item import DefaultPenMixin
+
+
+class SegmentPreviewLine(DefaultPenMixin, QtGui.QGraphicsLineItem):
+    pass
 
 
 class SegmentScenePreview(Item):
@@ -37,9 +41,9 @@ class SegmentScenePreview(Item):
         # Segment
         # Uses regular QGraphicsLineItem because shape() override on
         # SegmentGraphicsItem takes a lot of processing
-        # TODO: Extract shape to be only on display item, want line thickness
-        self.segment = BaseSegmentSceneItem(
-            self.point, self.point
+        self.segment = SegmentPreviewLine(
+            self.point.x, self.point.y,
+            self.point.x, self.point.y
         )
         self.add_scene_item(self.segment)
 

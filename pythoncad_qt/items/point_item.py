@@ -35,6 +35,9 @@ class PointSnaplines(object):
 
 
 class PointItem(PointSnaplines, Item):
+
+    name = 'Point'
+
     def __init__(self, point, *args, **kwargs):
         self.point = point
         super(PointItem, self).__init__(*args, **kwargs)
@@ -43,6 +46,9 @@ class PointItem(PointSnaplines, Item):
 
 
 class EndPointItem(PointSnaplines, Item):
+
+    name = 'Point'
+
     def __init__(self, point, *args, **kwargs):
         self.point = point
         super(EndPointItem, self).__init__(*args, **kwargs)

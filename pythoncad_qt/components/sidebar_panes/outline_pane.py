@@ -17,6 +17,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from PyQt4 import QtGui, QtCore
+
+import settings
 from ..sidebar_widgets import FilterableTreeView
 from .sidebar_pane import SidebarPane
 
@@ -26,4 +29,23 @@ class OutlinePane(SidebarPane):
         super(OutlinePane, self).__init__(parent)
 
         self.tree_widget = FilterableTreeView()
+        self.tree_widget.tree.setIndentation(10)
         self.add_component(self.tree_widget)
+
+    def add_item(self, items):
+        for item in items:
+            model_item = QtGui.QStandardItem(QtGui.QIcon(item.icon), item.name)
+            self.tree_widget.model.appendRow(model_item)
+            self._get_children(item, model_item)
+        self.tree_widget.tree.expandAll()
+
+    def _get_children(self, item, model_item):
+        if settings.DEBUG_OUTLINE_SCENEITEMS:
+            for scene_item in item.scene_items:
+                scene_item_row = QtGui.QStandardItem(str(scene_item.__class__.__name__))
+                model_item.appendRow(scene_item_row)
+
+        for child in item.child_items:
+            child_item = QtGui.QStandardItem(QtGui.QIcon(child.icon), child.name)
+            model_item.appendRow(child_item)
+            self._get_children(child, child_item)

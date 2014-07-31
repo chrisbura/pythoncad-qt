@@ -21,6 +21,9 @@ from PyQt4 import QtCore, QtGui
 
 class Item(QtCore.QObject):
 
+    name = 'Item'
+    icon = 'images/commands/new.png'
+
     hover_enter = QtCore.pyqtSignal(object)
     hover_leave = QtCore.pyqtSignal()
     lock_horizontal = QtCore.pyqtSignal(float)

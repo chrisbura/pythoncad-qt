@@ -81,10 +81,6 @@ class PythoncadQt(QtGui.QMainWindow):
         command_pane = CommandPane()
         self.left_sidebar.add_pane('Commands', command_pane)
 
-        # Outline Pane
-        # outline_pane = OutlinePane()
-        # self.left_sidebar.add_pane('Outline', outline_pane)
-
         # Document Viewport
         self.document_control = DocumentControl()
         scene = self.document_control.document.scene
@@ -106,6 +102,11 @@ class PythoncadQt(QtGui.QMainWindow):
 
         # Right Sidebar
         self.right_sidebar = Sidebar()
+
+        # Outline Pane
+        outline_pane = OutlinePane()
+        self.right_sidebar.add_pane('Outline', outline_pane)
+        self.input_manager.command_finished.connect(outline_pane.add_item)
 
         self.layer_pane = LayerPane()
         console_pane = ConsolePane()

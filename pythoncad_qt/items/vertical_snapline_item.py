@@ -24,6 +24,9 @@ from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineScene
 
 
 class VerticalSnaplineItem(SnaplineItem):
+
+    name = 'Vertical Snap Line'
+
     def __init__(self, point, *args, **kwargs):
         self.point = point
         super(VerticalSnaplineItem, self).__init__(*args, **kwargs)

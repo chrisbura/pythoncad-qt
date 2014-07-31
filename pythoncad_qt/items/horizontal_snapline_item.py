@@ -24,6 +24,9 @@ from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineS
 
 
 class HorizontalSnaplineItem(SnaplineItem):
+
+    name = 'Horizontal Snap Line'
+
     def __init__(self, point, *args, **kwargs):
         super(HorizontalSnaplineItem, self).__init__(*args, **kwargs)
         self.point = point

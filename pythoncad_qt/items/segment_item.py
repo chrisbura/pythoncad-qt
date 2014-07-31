@@ -26,6 +26,10 @@ from items.scene_items.point_scene_item import EndPoint, MidPoint
 
 
 class SegmentItem(Item):
+
+    name = 'Segment'
+    icon = 'images/commands/segment.png'
+
     def __init__(self, point1, point2, *args, **kwargs):
         super(SegmentItem, self).__init__(*args, **kwargs)
 

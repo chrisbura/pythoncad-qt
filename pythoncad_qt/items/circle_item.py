@@ -35,11 +35,11 @@ class CircleItem(Item):
         self.point2 = point2
 
         circle_item = CircleSceneItem(self.point1, self.point2)
-        self.add_child(circle_item)
+        self.add_scene_item(circle_item)
 
         # Snap Points
         center_point_item = CenterPoint(self.point1)
-        self.add_child(center_point_item)
+        self.add_scene_item(center_point_item)
 
         quarter_points = [
             Point(self.point1.x, self.point1.y + circle_item.radius),
@@ -49,4 +49,4 @@ class CircleItem(Item):
         ]
 
         for point in quarter_points:
-            self.add_child(QuarterPoint(point))
+            self.add_scene_item(QuarterPoint(point))

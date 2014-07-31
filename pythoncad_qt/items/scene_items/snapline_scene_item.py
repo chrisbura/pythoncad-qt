@@ -64,6 +64,6 @@ class SnaplineSceneItem(QtGui.QGraphicsLineItem):
         self.setPen(pen)
 
     def itemChange(self, change, value):
-        if change == QtGui.QGraphicsItem.ItemSceneChange:
+        if change == QtGui.QGraphicsItem.ItemSceneChange and value is not None:
             self.update_line(value.sceneRect())
         return super(SnaplineSceneItem, self).itemChange(change, value)

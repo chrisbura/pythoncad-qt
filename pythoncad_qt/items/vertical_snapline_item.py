@@ -32,4 +32,4 @@ class VerticalSnaplineItem(SnaplineItem):
         super(VerticalSnaplineItem, self).__init__(*args, **kwargs)
         # Line dimensions will be set when added to scene
         self.line = VerticalSnaplineSceneItem()
-        self.add_child(self.line)
+        self.add_scene_item(self.line)

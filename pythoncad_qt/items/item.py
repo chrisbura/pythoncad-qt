@@ -32,33 +32,31 @@ class Item(QtCore.QObject):
     unlock_vertical = QtCore.pyqtSignal()
     deleted = QtCore.pyqtSignal()
     remove_scene_item = QtCore.pyqtSignal(object)
+    delete = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(Item, self).__init__(*args, **kwargs)
-        self.children = []
-        self.items = []
+        self.parent = None
+        self.child_items = []
+        self.scene_items = []
 
-    # TODO: Move to scene_items instead of children
-    def add_child(self, item):
-        item.parent = self
-        self.children.append(item)
+        self.delete.connect(self.delete_item)
 
-    def add_item(self, item):
-        item.parent = self
-        self.deleted.connect(item.delete)
-        self.items.append(item)
+    def add_scene_item(self, scene_item):
+        scene_item.parent = self
+        self.scene_items.append(scene_item)
 
-    def delete(self):
-        # TODO: Yield instead of signals?
-        # TODO: Merge with get_items
-        for item in self.children:
-            self.remove_scene_item.emit(item)
-        self.deleted.emit()
+    def add_child_item(self, child):
+        child.parent = self
+        self.child_items.append(child)
 
-    # TODO: Audit/Refactor
-    def get_items(self):
-        for item in self.items:
-            for scene_item in item.children:
-                yield scene_item
-            for item_ in item.get_items():
-                yield item_
+    def get_scene_items(self):
+        for scene_item in self.scene_items:
+            yield scene_item
+        for child in self.child_items:
+            for item in child.get_scene_items():
+                yield item
+
+    def delete_item(self):
+        for scene_item in self.get_scene_items():
+            self.remove_scene_item.emit(scene_item)

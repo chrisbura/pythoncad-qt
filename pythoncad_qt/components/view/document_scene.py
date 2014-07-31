@@ -63,7 +63,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         selected_items = self.selectedItems()
         if event.key() == QtCore.Qt.Key_Delete and len(selected_items) > 0:
             for item in selected_items:
-                item.parent.delete()
+                item.parent.delete.emit()
 
         super(DocumentScene, self).keyReleaseEvent(event)
 

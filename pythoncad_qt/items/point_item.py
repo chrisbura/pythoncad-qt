@@ -30,8 +30,8 @@ class PointSnaplines(object):
 
         self.horizontal_snapline = HorizontalSnaplineItem(self.point)
         self.vertical_snapline = VerticalSnaplineItem(self.point)
-        self.add_item(self.horizontal_snapline)
-        self.add_item(self.vertical_snapline)
+        self.add_child_item(self.horizontal_snapline)
+        self.add_child_item(self.vertical_snapline)
 
 
 class PointItem(PointSnaplines, Item):
@@ -42,7 +42,7 @@ class PointItem(PointSnaplines, Item):
         self.point = point
         super(PointItem, self).__init__(*args, **kwargs)
         self.point_item = PointSceneItem(point)
-        self.add_child(self.point_item)
+        self.add_scene_item(self.point_item)
 
 
 class EndPointItem(PointSnaplines, Item):
@@ -53,4 +53,4 @@ class EndPointItem(PointSnaplines, Item):
         self.point = point
         super(EndPointItem, self).__init__(*args, **kwargs)
         self.point_item = EndPoint(self.point)
-        self.add_child(self.point_item)
+        self.add_scene_item(self.point_item)

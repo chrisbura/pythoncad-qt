@@ -22,15 +22,18 @@ from PyQt4 import QtGui, QtCore
 from items.scene_items import SceneItem
 
 
-class SegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
+class BaseSegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
     def __init__(self, point1, point2):
 
         self.point1 = point1
         self.point2 = point2
 
-        super(SegmentSceneItem, self).__init__(
+        super(BaseSegmentSceneItem, self).__init__(
             self.point1.x, self.point1.y,
             self.point2.x, self.point2.y)
+
+
+class SegmentSceneItem(BaseSegmentSceneItem):
 
     def shape(self):
         p = QtGui.QPainterPath(QtCore.QPointF(self.point1.x, self.point1.y))

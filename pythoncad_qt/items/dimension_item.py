@@ -53,14 +53,14 @@ class DimensionItem(Item):
         self.path.lineTo(point2.x, point2.y)
 
         self.path_item = DimensionSceneItem(self.path)
-        self.add_child(self.path_item)
+        self.add_scene_item(self.path_item)
 
         self.text = QtGui.QGraphicsSimpleTextItem('{0}'.format(segment.length))
         self.text.setPos(point3.x, point3.y)
         # TODO: DocumentView.scale causes text to be flipped, need to get
         # proper mapping from scene
         self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations, True)
-        self.add_child(self.text)
+        self.add_scene_item(self.text)
 
 
 class VerticalDimensionItem(Item):
@@ -76,7 +76,7 @@ class VerticalDimensionItem(Item):
         self.path.lineTo(point2.x, point2.y)
 
         self.path_item = DimensionSceneItem(self.path)
-        self.add_child(self.path_item)
+        self.add_scene_item(self.path_item)
 
 
 class HorizontalDimensionItem(Item):
@@ -92,4 +92,4 @@ class HorizontalDimensionItem(Item):
         self.path.lineTo(point2.x, point2.y)
 
         self.path_item = DimensionSceneItem(self.path)
-        self.add_child(self.path_item)
+        self.add_scene_item(self.path_item)

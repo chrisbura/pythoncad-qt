@@ -32,4 +32,4 @@ class HorizontalSnaplineItem(SnaplineItem):
         self.point = point
         # Line dimensions will be set when added to scene
         self.line = HorizontalSnaplineSceneItem()
-        self.add_child(self.line)
+        self.add_scene_item(self.line)

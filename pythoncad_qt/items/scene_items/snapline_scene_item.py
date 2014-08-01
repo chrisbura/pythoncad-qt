@@ -22,6 +22,7 @@ from PyQt4 import QtGui, QtCore
 import settings
 from hover_event_manager import HoverEnterEvent, HoverLeaveEvent, HoverMoveEvent
 
+
 class SnaplineSceneItem(QtGui.QGraphicsLineItem):
     def __init__(self, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)

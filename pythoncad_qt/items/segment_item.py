@@ -19,10 +19,9 @@
 
 from sympy.geometry import Segment
 
-from items import Item, PointItem
+from items.item import Item
 from items.scene_items import SegmentSceneItem
-from items.point_item import EndPointItem
-from items.scene_items.point_scene_item import EndPoint, MidPoint
+from items.point_item import EndPointItem, MidPointItem
 
 
 class SegmentItem(Item):
@@ -51,7 +50,6 @@ class SegmentItem(Item):
         self.add_child_item(self.point2_item)
 
         # Mid Point
-        # TODO: Set deleteable = false
         # TODO: Set only visible on PointInput
-        self.midpoint_item = MidPoint(self.segment.midpoint)
-        self.add_scene_item(self.midpoint_item)
+        self.midpoint_item = MidPointItem(self.segment.midpoint)
+        self.add_child_item(self.midpoint_item)

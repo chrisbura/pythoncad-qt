@@ -19,9 +19,10 @@
 
 from sympy.geometry import Point
 
-from items import Item
+from items.item import Item
 from items.scene_items import CircleSceneItem
-from items.scene_items.point_scene_item import CenterPoint, QuarterPoint
+from items.point_item import CenterPointItem, QuarterPointItem
+
 
 class CircleItem(Item):
 
@@ -38,8 +39,8 @@ class CircleItem(Item):
         self.add_scene_item(circle_item)
 
         # Snap Points
-        center_point_item = CenterPoint(self.point1)
-        self.add_scene_item(center_point_item)
+        center_point_item = CenterPointItem(self.point1)
+        self.add_child_item(center_point_item)
 
         quarter_points = [
             Point(self.point1.x, self.point1.y + circle_item.radius),
@@ -49,4 +50,4 @@ class CircleItem(Item):
         ]
 
         for point in quarter_points:
-            self.add_scene_item(QuarterPoint(point))
+            self.add_child_item(QuarterPointItem(point))

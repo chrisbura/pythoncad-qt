@@ -17,7 +17,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from items import Item
+from items.item import Item
 from items.scene_items import PointSceneItem
 from items.scene_items.point_scene_item import EndPoint, CenterPoint, MidPoint, QuarterPoint
 from items.vertical_snapline_item import VerticalSnaplineItem
@@ -34,23 +34,33 @@ class PointSnaplines(object):
         self.add_child_item(self.vertical_snapline)
 
 
-class PointItem(PointSnaplines, Item):
+class BasePointItem(PointSnaplines, Item):
 
     name = 'Point'
+    scene_item = PointSceneItem
 
     def __init__(self, point, *args, **kwargs):
         self.point = point
-        super(PointItem, self).__init__(*args, **kwargs)
-        self.point_item = PointSceneItem(point)
+        super(BasePointItem, self).__init__(*args, **kwargs)
+        self.point_item = self.scene_item(point)
         self.add_scene_item(self.point_item)
 
 
-class EndPointItem(PointSnaplines, Item):
+class PointItem(BasePointItem):
+    pass
 
-    name = 'Point'
 
-    def __init__(self, point, *args, **kwargs):
-        self.point = point
-        super(EndPointItem, self).__init__(*args, **kwargs)
-        self.point_item = EndPoint(self.point)
-        self.add_scene_item(self.point_item)
+class EndPointItem(BasePointItem):
+    scene_item = EndPoint
+
+
+class MidPointItem(BasePointItem):
+    scene_item = MidPoint
+
+
+class CenterPointItem(BasePointItem):
+    scene_item = CenterPoint
+
+
+class QuarterPointItem(BasePointItem):
+    scene_item = QuarterPoint

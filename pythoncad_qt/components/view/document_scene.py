@@ -22,6 +22,8 @@ import math
 from PyQt4 import QtCore, QtGui
 
 import settings
+from hover_event_manager import HoverEventManager
+from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -42,6 +44,9 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Axes
         self.setting_draw_axes = settings.DRAW_AXES
+
+        # Hover Manager
+        self.hover_manager = HoverEventManager()
 
     def reset_scene(self):
         # TODO: Reset scene properly
@@ -126,4 +131,9 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
+
+        # TODO: Generalize for all items (not just snaplines)
+        items = [x for x in self.items(event.scenePos()) if isinstance(x, SnaplineSceneItem)]
+        self.hover_manager.process_hover(event, items)
+
         self.mouse_moved.emit(event)

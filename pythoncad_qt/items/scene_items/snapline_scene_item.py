@@ -20,7 +20,7 @@
 from PyQt4 import QtGui, QtCore
 
 import settings
-
+from hover_event_manager import HoverEnterEvent, HoverLeaveEvent, HoverMoveEvent
 
 class SnaplineSceneItem(QtGui.QGraphicsLineItem):
     def __init__(self, *args, **kwargs):
@@ -51,19 +51,30 @@ class SnaplineSceneItem(QtGui.QGraphicsLineItem):
             painter.drawPath(self.shape())
         super(SnaplineSceneItem, self).paint(painter, option, widget)
 
-    def hoverEnterEvent(self, event):
-        super(SnaplineSceneItem, self).hoverEnterEvent(event)
-        pen = self.pen()
-        pen.setColor(QtCore.Qt.cyan)
-        self.setPen(pen)
-
-    def hoverLeaveEvent(self, event):
-        super(SnaplineSceneItem, self).hoverLeaveEvent(event)
-        pen = self.pen()
-        pen.setColor(QtCore.Qt.transparent)
-        self.setPen(pen)
-
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSceneChange and value is not None:
             self.update_line(value.sceneRect())
         return super(SnaplineSceneItem, self).itemChange(change, value)
+
+    def hover_event(self, event):
+        if type(event) == HoverEnterEvent:
+            self.hover_enter_event(event)
+
+        if type(event) == HoverLeaveEvent:
+            self.hover_leave_event(event)
+
+        if type(event) == HoverMoveEvent:
+            self.hover_move_event(event)
+
+    def hover_enter_event(self, event):
+        pen = self.pen()
+        pen.setColor(QtCore.Qt.cyan)
+        self.setPen(pen)
+
+    def hover_leave_event(self, event):
+        pen = self.pen()
+        pen.setColor(QtCore.Qt.transparent)
+        self.setPen(pen)
+
+    def hover_move_event(self, event):
+        pass

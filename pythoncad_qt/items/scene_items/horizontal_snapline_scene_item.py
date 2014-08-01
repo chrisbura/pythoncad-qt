@@ -23,13 +23,18 @@ from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 
 class HorizontalSnaplineSceneItem(SnaplineSceneItem):
-    def hoverEnterEvent(self, event):
-        super(HorizontalSnaplineSceneItem, self).hoverEnterEvent(event)
+
+    def hover_enter_event(self, event):
+        super(HorizontalSnaplineSceneItem, self).hover_enter_event(event)
         self.parent.lock_horizontal.emit(self.line().y1())
 
-    def hoverLeaveEvent(self, event):
-        super(HorizontalSnaplineSceneItem, self).hoverLeaveEvent(event)
+    def hover_leave_event(self, event):
+        super(HorizontalSnaplineSceneItem, self).hover_leave_event(event)
         self.parent.unlock_horizontal.emit()
+
+    def hover_move_event(self, event):
+        super(HorizontalSnaplineSceneItem, self).hover_move_event(event)
+        self.parent.lock_horizontal.emit(self.line().y1())
 
     def update_line(self, scene_rect):
         self.setLine(scene_rect.left(), self.parent.point.y, scene_rect.right(), self.parent.point.y)

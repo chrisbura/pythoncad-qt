@@ -40,9 +40,9 @@ class PreviewSegment(Segment):
         return PreviewLine(p, p + d)
 
 
-class DimensionScenePreview(Item):
+class BaseDimensionScenePreview(Item):
     def __init__(self, point1, point2, *args, **kwargs):
-        super(DimensionScenePreview, self).__init__(*args, **kwargs)
+        super(BaseDimensionScenePreview, self).__init__(*args, **kwargs)
 
         # TODO: Move to settings
         self.pen = BasePen(QtCore.Qt.gray)
@@ -57,6 +57,9 @@ class DimensionScenePreview(Item):
             line.setPen(self.pen)
             self.lines.append(line)
             self.add_scene_item(line)
+
+
+class DimensionScenePreview(BaseDimensionScenePreview):
 
     def _get_point(self, segment, point):
         # Get perpendicular segment from the parallel line through point

@@ -21,6 +21,8 @@ from commands.command import Command
 from commands.inputs import PointInput
 from items import DimensionItem, VerticalDimensionItem, HorizontalDimensionItem
 from items.scene_previews import DimensionScenePreview
+from items.scene_previews.horizontal_dimension_scene_preview import HorizontalDimensionScenePreview
+from items.scene_previews.vertical_dimension_scene_preview import VerticalDimensionScenePreview
 
 # TODO: Merge all 3 into one 'smart' dimension command
 
@@ -28,6 +30,7 @@ from items.scene_previews import DimensionScenePreview
 class DimensionCommand(Command):
 
     item = DimensionItem
+    preview_scene_item = DimensionScenePreview
 
     def __init__(self):
         super(DimensionCommand, self).__init__()
@@ -42,7 +45,7 @@ class DimensionCommand(Command):
         ]
 
     def preview_item(self):
-        return DimensionScenePreview(self.inputs[0].value, self.inputs[1].value)
+        return self.preview_scene_item(self.inputs[0].value, self.inputs[1].value)
 
     def apply_command(self):
         items = [
@@ -56,7 +59,9 @@ class DimensionCommand(Command):
 
 class VerticalDimensionCommand(DimensionCommand):
     item = VerticalDimensionItem
+    preview_scene_item = VerticalDimensionScenePreview
 
 
 class HorizontalDimensionCommand(DimensionCommand):
     item = HorizontalDimensionItem
+    preview_scene_item = HorizontalDimensionScenePreview

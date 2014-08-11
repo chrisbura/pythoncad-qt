@@ -23,6 +23,7 @@ from PyQt4 import QtGui, QtCore
 
 from items import Item
 from items.scene_items import DimensionSceneItem
+from items.scene_items.text_scene_item import TextSceneItem
 
 
 class DimensionItem(Item):
@@ -55,12 +56,37 @@ class DimensionItem(Item):
         self.path_item = DimensionSceneItem(self.path)
         self.add_scene_item(self.path_item)
 
-        self.text = QtGui.QGraphicsSimpleTextItem('{0}'.format(segment.length))
-        self.text.setPos(point3.x, point3.y)
-        # TODO: DocumentView.scale causes text to be flipped, need to get
-        # proper mapping from scene
-        self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations, True)
-        self.add_scene_item(self.text)
+        new_segment = Segment(perpendicular_line_p1_points[0], perpendicular_line_p2_points[0])
+        midpoint = new_segment.midpoint
+
+        segment_midpoint = segment.midpoint
+
+        # TODO: Customizable precision
+        self.text_node = TextSceneItem('{0:.2f}'.format(float(segment.length.evalf())))
+        self.text_node.setTransform(self.text_node.sceneTransform().scale(1, -1))
+        self.add_scene_item(self.text_node)
+
+        bounding_rect = self.text_node.boundingRect()
+        offset_x = 0
+        offset_y = 0
+
+        # Quadrant 1, 4, Horizontal Right
+        if midpoint.x > segment_midpoint.x:
+            offset_x = bounding_rect.width() / 2
+
+        # Quadrant 2, 3, Horizontal Left
+        if midpoint.x < segment_midpoint.x:
+            offset_x = -bounding_rect.width() / 2
+
+        # Quadrant 1, 2, Vertical Top
+        if midpoint.y > segment_midpoint.y:
+            offset_y = bounding_rect.height() / 2
+
+        # Quadrant 3, 4, Vertical Bottom
+        if midpoint.y < segment_midpoint.y:
+            offset_y = -bounding_rect.height() / 2
+
+        self.text_node.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
 
 
 class VerticalDimensionItem(Item):

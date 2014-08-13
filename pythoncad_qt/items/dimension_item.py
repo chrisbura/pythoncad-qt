@@ -62,11 +62,11 @@ class DimensionItem(Item):
         segment_midpoint = segment.midpoint
 
         # TODO: Customizable precision
-        self.text_node = TextSceneItem('{0:.2f}'.format(float(segment.length.evalf())))
-        self.text_node.setTransform(self.text_node.sceneTransform().scale(1, -1))
-        self.add_scene_item(self.text_node)
+        self.text_item = TextSceneItem('{0:.2f}'.format(float(segment.length.evalf())))
+        self.text_item.setTransform(self.text_item.sceneTransform().scale(1, -1))
+        self.add_scene_item(self.text_item)
 
-        bounding_rect = self.text_node.boundingRect()
+        bounding_rect = self.text_item.boundingRect()
         offset_x = 0
         offset_y = 0
 
@@ -86,7 +86,7 @@ class DimensionItem(Item):
         if midpoint.y < segment_midpoint.y:
             offset_y = -bounding_rect.height() / 2
 
-        self.text_node.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
+        self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
 
 
 class VerticalDimensionItem(Item):

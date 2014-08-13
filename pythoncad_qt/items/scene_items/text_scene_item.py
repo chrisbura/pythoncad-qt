@@ -19,11 +19,15 @@
 
 from PyQt4 import QtGui, QtCore
 
+import settings
+from items.scene_items.scene_item import BasePen
+
 
 class TextSceneItem(QtGui.QGraphicsItem):
 
     # TODO: Settings
     padding = 5
+    selected_colour = settings.SELECTED_COLOUR
 
     def __init__(self, text, *args, **kwargs):
         self.text = text
@@ -33,7 +37,14 @@ class TextSceneItem(QtGui.QGraphicsItem):
         # TODO: Settings
         self.font = QtGui.QFont('Calibri', 12, QtGui.QFont.Bold)
         self.pen = QtGui.QPen(QtCore.Qt.gray)
+        self.hover_pen = QtGui.QPen(QtCore.Qt.blue)
+        self.selected_pen = BasePen(self.selected_colour)
         self.metrics = QtGui.QFontMetricsF(self.font)
+
+        self.hover = False
+
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
+        self.setAcceptHoverEvents(True)
 
     def boundingRect(self):
         rect = self.metrics.boundingRect(self.text)
@@ -41,7 +52,40 @@ class TextSceneItem(QtGui.QGraphicsItem):
         rect.translate(-rect.center())
         return rect
 
-    def paint(self, painter, option, *args, **kwargs):
-        painter.setFont(self.font)
+    def shape(self):
+        path = QtGui.QPainterPath()
+        path.addRect(self.boundingRect())
+        return path
+
+    def paint(self, painter, option, widget):
         painter.setPen(self.pen)
+        # if option.state & QtGui.QStyle.State_MouseOver:
+            # painter.setPen(self.hover_pen)
+
+        if self.hover:
+            painter.setPen(self.hover_pen)
+
+        if option.state & QtGui.QStyle.State_Selected:
+            painter.setPen(self.selected_pen)
+
+        painter.setFont(self.font)
         painter.drawText(self.boundingRect(), QtCore.Qt.AlignCenter, self.text)
+
+        # Can't inherit from ShapeDebugMixin because super().paint is virtual
+        # TODO: Investigate further
+        if settings.DEBUG_SHAPES:
+            painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
+            painter.drawPath(self.shape())
+
+        if settings.DEBUG_BOUNDING_RECT:
+            bounding_rect = QtGui.QPainterPath()
+            bounding_rect.addRect(self.boundingRect())
+            painter.drawPath(bounding_rect)
+
+    def hoverEnterEvent(self, event):
+        self.hover = True
+        self.update()
+
+    def hoverLeaveEvent(self, event):
+        self.hover = False
+        self.update()

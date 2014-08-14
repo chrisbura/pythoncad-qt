@@ -104,6 +104,34 @@ class VerticalDimensionItem(Item):
         self.path_item = DimensionSceneItem(self.path)
         self.add_scene_item(self.path_item)
 
+        # TODO: Repeated for all dimension items
+        # Determine where to place label
+        segment = Segment(point1, point2)
+        segment_midpoint = segment.midpoint
+
+        # Get length
+        new_segment = Segment(newp1, newp2)
+        midpoint = new_segment.midpoint
+
+        # TODO: Customizable precision
+        self.text_item = TextSceneItem('{0:.2f}'.format(float(new_segment.length.evalf())))
+        self.text_item.setTransform(self.text_item.sceneTransform().scale(1, -1))
+        self.add_scene_item(self.text_item)
+
+        bounding_rect = self.text_item.boundingRect()
+        offset_x = 0
+        offset_y = 0
+
+        # Horizontal Right
+        if midpoint.x > segment_midpoint.x:
+            offset_x = bounding_rect.width() / 2
+
+        # Horizontal Left
+        if midpoint.x < segment_midpoint.x:
+            offset_x = -bounding_rect.width() / 2
+
+        self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
+
 
 class HorizontalDimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
@@ -119,3 +147,31 @@ class HorizontalDimensionItem(Item):
 
         self.path_item = DimensionSceneItem(self.path)
         self.add_scene_item(self.path_item)
+
+        # TODO: Repeated for all dimension items
+        # Determine where to place label
+        segment = Segment(point1, point2)
+        segment_midpoint = segment.midpoint
+
+        # Get length
+        new_segment = Segment(newp1, newp2)
+        midpoint = new_segment.midpoint
+
+        # TODO: Customizable precision
+        self.text_item = TextSceneItem('{0:.2f}'.format(float(new_segment.length.evalf())))
+        self.text_item.setTransform(self.text_item.sceneTransform().scale(1, -1))
+        self.add_scene_item(self.text_item)
+
+        bounding_rect = self.text_item.boundingRect()
+        offset_x = 0
+        offset_y = 0
+
+        # Vertical Top
+        if midpoint.y > segment_midpoint.y:
+            offset_y = bounding_rect.height() / 2
+
+        # Vertical Bottom
+        if midpoint.y < segment_midpoint.y:
+            offset_y = -bounding_rect.height() / 2
+
+        self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)

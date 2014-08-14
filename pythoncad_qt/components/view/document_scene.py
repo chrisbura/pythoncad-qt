@@ -24,6 +24,7 @@ from PyQt4 import QtCore, QtGui
 import settings
 from hover_event_manager import HoverEventManager
 from items.scene_items.snapline_scene_item import SnaplineSceneItem
+from graphics_items.hover_state import HoverState
 
 
 class DocumentScene(QtGui.QGraphicsScene):
@@ -133,7 +134,7 @@ class DocumentScene(QtGui.QGraphicsScene):
         super(DocumentScene, self).mouseMoveEvent(event)
 
         # TODO: Generalize for all items (not just snaplines)
-        items = [x for x in self.items(event.scenePos()) if isinstance(x, SnaplineSceneItem)]
+        items = [x for x in self.items(event.scenePos()) if isinstance(x, HoverState)]
         self.hover_manager.process_hover(event, items)
 
         self.mouse_moved.emit(event)

@@ -20,6 +20,7 @@
 from PyQt4 import QtCore, QtGui
 
 import settings
+from graphics_items.hover_state import HoverState
 
 
 class UnselectableMixin(object):
@@ -62,15 +63,14 @@ class HoverMixin(object):
         self.hover = False
         self.hover_pen = BasePen(self.hover_colour)
         self.hover_brush = BaseBrush(self.hover_colour)
-        self.setAcceptHoverEvents(True)
 
-    def hoverEnterEvent(self, event):
-        super(HoverMixin, self).hoverEnterEvent(event)
+    def hover_enter_event(self, event):
         self.hover = True
+        super(HoverMixin, self).hover_enter_event(event)
 
-    def hoverLeaveEvent(self, event):
-        super(HoverMixin, self).hoverLeaveEvent(event)
+    def hover_leave_event(self, event):
         self.hover = False
+        super(HoverMixin, self).hover_leave_event(event)
 
     def active_pen(self):
         if self.hover:
@@ -138,5 +138,5 @@ class ShapeDebugMixin(object):
         super(ShapeDebugMixin, self).paint(painter, *args, **kwargs)
 
 
-class SceneItem(HoverMixin, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
+class SceneItem(HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
     pass

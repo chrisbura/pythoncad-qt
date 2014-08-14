@@ -20,10 +20,10 @@
 from PyQt4 import QtGui, QtCore
 
 import settings
-from hover_event_manager import HoverEnterEvent, HoverLeaveEvent, HoverMoveEvent
+from graphics_items.hover_state import HoverState
 
 
-class SnaplineSceneItem(QtGui.QGraphicsLineItem):
+class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
     def __init__(self, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)
 
@@ -57,16 +57,6 @@ class SnaplineSceneItem(QtGui.QGraphicsLineItem):
             self.update_line(value.sceneRect())
         return super(SnaplineSceneItem, self).itemChange(change, value)
 
-    def hover_event(self, event):
-        if type(event) == HoverEnterEvent:
-            self.hover_enter_event(event)
-
-        if type(event) == HoverLeaveEvent:
-            self.hover_leave_event(event)
-
-        if type(event) == HoverMoveEvent:
-            self.hover_move_event(event)
-
     def hover_enter_event(self, event):
         pen = self.pen()
         pen.setColor(QtCore.Qt.cyan)
@@ -76,6 +66,3 @@ class SnaplineSceneItem(QtGui.QGraphicsLineItem):
         pen = self.pen()
         pen.setColor(QtCore.Qt.transparent)
         self.setPen(pen)
-
-    def hover_move_event(self, event):
-        pass

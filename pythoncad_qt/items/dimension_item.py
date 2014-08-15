@@ -24,6 +24,7 @@ from PyQt4 import QtGui, QtCore
 from items import Item
 from items.scene_items import DimensionSceneItem
 from items.scene_items.text_scene_item import TextSceneItem
+from items.point_item import HiddenPointItem
 
 
 class DimensionItem(Item):
@@ -88,6 +89,10 @@ class DimensionItem(Item):
 
         self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
 
+        # Point used to allow alligning dimension labels
+        point_item = HiddenPointItem(midpoint)
+        self.add_child_item(point_item)
+
 
 class VerticalDimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
@@ -132,6 +137,10 @@ class VerticalDimensionItem(Item):
 
         self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
 
+        # Point used to allow alligning dimension labels
+        point_item = HiddenPointItem(midpoint)
+        self.add_child_item(point_item)
+
 
 class HorizontalDimensionItem(Item):
     def __init__(self, point1, point2, point3, *args, **kwargs):
@@ -175,3 +184,7 @@ class HorizontalDimensionItem(Item):
             offset_y = -bounding_rect.height() / 2
 
         self.text_item.setPos(midpoint.x + offset_x, midpoint.y + offset_y)
+
+        # Point used to allow alligning dimension labels
+        point_item = HiddenPointItem(midpoint)
+        self.add_child_item(point_item)

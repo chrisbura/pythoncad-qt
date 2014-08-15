@@ -88,3 +88,7 @@ class CenterPoint(SnapPoint):
 
 class QuarterPoint(SnapPoint):
     pass
+
+
+class HiddenPoint(SnapPoint):
+    pass

@@ -19,7 +19,7 @@
 
 from items.item import Item
 from items.scene_items import PointSceneItem
-from items.scene_items.point_scene_item import EndPoint, CenterPoint, MidPoint, QuarterPoint
+from items.scene_items.point_scene_item import EndPoint, CenterPoint, MidPoint, QuarterPoint, HiddenPoint
 from items.vertical_snapline_item import VerticalSnaplineItem
 from items.horizontal_snapline_item import HorizontalSnaplineItem
 
@@ -48,6 +48,10 @@ class BasePointItem(PointSnaplines, Item):
 
 class PointItem(BasePointItem):
     pass
+
+
+class HiddenPointItem(BasePointItem):
+    scene_item = HiddenPoint
 
 
 class EndPointItem(BasePointItem):

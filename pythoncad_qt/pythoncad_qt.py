@@ -109,10 +109,10 @@ class PythoncadQt(QtGui.QMainWindow):
         self.input_manager.command_finished.connect(outline_pane.add_item)
 
         self.layer_pane = LayerPane()
-        console_pane = ConsolePane()
+        # console_pane = ConsolePane()
 
         self.right_sidebar.add_pane('Layers', self.layer_pane)
-        self.right_sidebar.add_pane('Console', console_pane)
+        # self.right_sidebar.add_pane('Console', console_pane)
 
         # Add Sidebars and document to central widget splitter
         splitter.addWidget(self.left_sidebar)

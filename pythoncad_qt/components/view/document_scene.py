@@ -95,11 +95,11 @@ class DocumentScene(QtGui.QGraphicsScene):
         top_count = -1 * int(math.floor(rect.top() / self.grid_spacing))
         bottom_count = int(math.ceil(rect.bottom() / self.grid_spacing))
 
-        for i in xrange(bottom_count):
+        for i in range(bottom_count):
             y = i * self.grid_spacing
             painter.drawLine(rect.left(), y, rect.right(), y)
 
-        for i in xrange(top_count):
+        for i in range(top_count):
             y = i * -self.grid_spacing
             painter.drawLine(rect.left(), y, rect.right(), y)
 
@@ -107,11 +107,11 @@ class DocumentScene(QtGui.QGraphicsScene):
         left_count = -1 * int(math.floor(rect.left() / self.grid_spacing))
         right_count = int(math.ceil(rect.right() / self.grid_spacing))
 
-        for i in xrange(left_count):
+        for i in range(left_count):
             x = i * -self.grid_spacing
             painter.drawLine(x, rect.top(), x, rect.bottom())
 
-        for i in xrange(right_count):
+        for i in range(right_count):
             x = i * self.grid_spacing
             painter.drawLine(x, rect.top(), x, rect.bottom())
 

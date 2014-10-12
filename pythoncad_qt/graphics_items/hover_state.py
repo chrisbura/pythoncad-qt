@@ -22,13 +22,13 @@ from hover_event_manager import HoverEnterEvent, HoverLeaveEvent, HoverMoveEvent
 
 class HoverState(object):
     def hover_event(self, event):
-        if type(event) == HoverEnterEvent:
+        if isinstance(event, HoverEnterEvent):
             self.hover_enter_event(event)
 
-        if type(event) == HoverLeaveEvent:
+        if isinstance(event, HoverLeaveEvent):
             self.hover_leave_event(event)
 
-        if type(event) == HoverMoveEvent:
+        if isinstance(event, HoverMoveEvent):
             self.hover_move_event(event)
 
     def hover_enter_event(self, event):

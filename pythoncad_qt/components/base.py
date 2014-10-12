@@ -19,7 +19,7 @@
 
 from PyQt4 import QtCore, QtGui
 
-from constants import MARGINS_ZERO
+from .constants import MARGINS_ZERO
 
 
 class Layout(object):
@@ -45,6 +45,7 @@ class VerticalLayout(Layout):
     def __init__(self, *args, **kwargs):
         self.layout = QtGui.QVBoxLayout()
         super(VerticalLayout, self).__init__(*args, **kwargs)
+
 
 class HorizontalLayout(Layout):
     def __init__(self, *args, **kwargs):

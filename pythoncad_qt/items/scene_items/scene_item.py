@@ -102,6 +102,25 @@ class SelectableMixin(object):
             self.setPen(self.selected_pen)
         super(SelectableMixin, self).paint(painter, option, widget)
 
+    def on_selected(self):
+        if settings.DEBUG_SELECTION:
+            # TODO(chrisbura): Print item information
+            print 'Selected'
+
+    def on_unselected(self):
+        if settings.DEBUG_SELECTION:
+            # TODO(chrisbura): Print item information
+            print 'Unselected'
+
+    def itemChange(self, change, value):
+        # TODO(chrisbura): Find difference between ItemSelectedHasChanged and ItemSelectedChange
+        if change == QtGui.QGraphicsItem.ItemSelectedHasChanged and value is not None:
+            if value == True:
+                self.on_selected()
+            else:
+                self.on_unselected()
+        return super(SelectableMixin, self).itemChange(change, value)
+
 
 class DefaultPenMixin(object):
 

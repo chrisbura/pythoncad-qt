@@ -38,3 +38,32 @@ class DimensionSceneItem(SceneItem, QtGui.QGraphicsPathItem):
         stroker.setWidth(5.0)
         path = stroker.createStroke(self.path())
         return path
+
+    # TODO(chrisbura): Move to SceneItem (or mixins)
+    def bring_to_front(self):
+        self.setZValue(100)
+
+    # TODO(chrisbura): Move to SceneItem (or mixins)
+    def send_to_back(self):
+        self.setZValue(-1)
+
+    def hover_enter_event(self, event):
+        super(DimensionSceneItem, self).hover_enter_event(event)
+        # Bring the dimension item to the top when hovered
+        # TODO(chrisbura): Define levels for each type of item
+        # TODO(chrisbura): Add priority system for cycling thru hovered items
+        self.bring_to_front()
+
+    def hover_leave_event(self, event):
+        super(DimensionSceneItem, self).hover_leave_event(event)
+        # If we selected the item during hover event then don't send it back
+        if not self.isSelected():
+            self.send_to_back()
+
+    def on_selected(self):
+        super(DimensionSceneItem, self).on_selected()
+        self.bring_to_front()
+
+    def on_unselected(self):
+        super(DimensionSceneItem, self).on_unselected()
+        self.send_to_back()

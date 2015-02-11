@@ -43,6 +43,7 @@ class DocumentView(QtGui.QGraphicsView):
 
     def mousePressEvent(self, event):
         keyboard_modifiers = QtGui.QApplication.keyboardModifiers()
+        # TODO(chrisbura): Pause active command on pan
         if keyboard_modifiers == QtCore.Qt.ControlModifier and event.button() == QtCore.Qt.LeftButton:
             self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
         super(DocumentView, self).mousePressEvent(event)

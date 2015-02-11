@@ -20,31 +20,19 @@
 from PyQt4 import QtGui, QtCore
 
 import settings
-from items.scene_items.scene_item import BasePen
+from items.scene_items.scene_item import BasePen, ShapeDebugMixin
 
 
-class TextSceneItem(QtGui.QGraphicsItem):
-
-    # TODO: Settings
+class BaseTextGraphicsItem(QtGui.QGraphicsItem):
+    # TODO(chrisbura): Add to settings
     padding = 5
-    selected_colour = settings.SELECTED_COLOUR
 
     def __init__(self, text, *args, **kwargs):
+        super(BaseTextGraphicsItem, self).__init__(*args, **kwargs)
         self.text = text
-
-        super(TextSceneItem, self).__init__(*args, **kwargs)
-
-        # TODO: Settings
+        # TODO(chrisbura): Add to settings
         self.font = QtGui.QFont('Calibri', 12, QtGui.QFont.Bold)
-        self.pen = QtGui.QPen(QtCore.Qt.gray)
-        self.hover_pen = QtGui.QPen(QtCore.Qt.blue)
-        self.selected_pen = BasePen(self.selected_colour)
         self.metrics = QtGui.QFontMetricsF(self.font)
-
-        self.hover = False
-
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
-        self.setAcceptHoverEvents(True)
 
     def boundingRect(self):
         rect = self.metrics.boundingRect(self.text)
@@ -58,6 +46,30 @@ class TextSceneItem(QtGui.QGraphicsItem):
         return path
 
     def paint(self, painter, option, widget):
+        painter.setFont(self.font)
+        painter.drawText(self.boundingRect(), QtCore.Qt.AlignCenter, self.text)
+
+
+class TextSceneItem(ShapeDebugMixin, BaseTextGraphicsItem):
+
+    selected_colour = settings.SELECTED_COLOUR
+    default_colour = QtCore.Qt.gray
+    hover_colour = QtCore.Qt.blue
+
+    def __init__(self, *args, **kwargs):
+        super(TextSceneItem, self).__init__(*args, **kwargs)
+
+        # TODO: Settings
+        self.pen = QtGui.QPen(QtCore.Qt.gray)
+        self.hover_pen = QtGui.QPen(QtCore.Qt.blue)
+        self.selected_pen = BasePen(self.selected_colour)
+
+        self.hover = False
+
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
+        self.setAcceptHoverEvents(True)
+
+    def paint(self, painter, option, widget):
         painter.setPen(self.pen)
         # if option.state & QtGui.QStyle.State_MouseOver:
             # painter.setPen(self.hover_pen)
@@ -68,19 +80,7 @@ class TextSceneItem(QtGui.QGraphicsItem):
         if option.state & QtGui.QStyle.State_Selected:
             painter.setPen(self.selected_pen)
 
-        painter.setFont(self.font)
-        painter.drawText(self.boundingRect(), QtCore.Qt.AlignCenter, self.text)
-
-        # Can't inherit from ShapeDebugMixin because super().paint is virtual
-        # TODO: Investigate further
-        if settings.DEBUG_SHAPES:
-            painter.setPen(QtGui.QPen(settings.DEBUG_SHAPES_COLOUR))
-            painter.drawPath(self.shape())
-
-        if settings.DEBUG_BOUNDING_RECT:
-            bounding_rect = QtGui.QPainterPath()
-            bounding_rect.addRect(self.boundingRect())
-            painter.drawPath(bounding_rect)
+        super(TextSceneItem, self).paint(painter, option, widget)
 
     def hoverEnterEvent(self, event):
         self.hover = True

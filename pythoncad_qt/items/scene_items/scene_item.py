@@ -21,6 +21,7 @@ from PyQt4 import QtCore, QtGui
 
 import settings
 from graphics_items.hover_state import HoverState
+from .simple_signal import SimpleSignal
 
 
 class UnselectableMixin(object):
@@ -57,6 +58,8 @@ class BasePen(QtGui.QPen):
 class HoverMixin(object):
 
     hover_colour = settings.HIGHLIGHT_COLOUR
+    hover_enter_signal = SimpleSignal()
+    hover_leave_signal = SimpleSignal()
 
     def __init__(self, *args, **kwargs):
         super(HoverMixin, self).__init__(*args, **kwargs)
@@ -66,10 +69,12 @@ class HoverMixin(object):
 
     def hover_enter_event(self, event):
         self.hover = True
+        self.hover_enter_signal.emit(event)
         super(HoverMixin, self).hover_enter_event(event)
 
     def hover_leave_event(self, event):
         self.hover = False
+        self.hover_leave_signal.emit(event)
         super(HoverMixin, self).hover_leave_event(event)
 
     def active_pen(self):
@@ -86,6 +91,8 @@ class HoverMixin(object):
 class SelectableMixin(object):
 
     selected_colour = settings.SELECTED_COLOUR
+    selected_signal = SimpleSignal()
+    unselected_signal = SimpleSignal()
 
     def __init__(self, *args, **kwargs):
         super(SelectableMixin, self).__init__(*args, **kwargs)
@@ -103,11 +110,13 @@ class SelectableMixin(object):
         super(SelectableMixin, self).paint(painter, option, widget)
 
     def on_selected(self):
+        self.selected_signal.emit()
         if settings.DEBUG_SELECTION:
             # TODO(chrisbura): Print item information
             print 'Selected'
 
     def on_unselected(self):
+        self.unselected_signal.emit()
         if settings.DEBUG_SELECTION:
             # TODO(chrisbura): Print item information
             print 'Unselected'

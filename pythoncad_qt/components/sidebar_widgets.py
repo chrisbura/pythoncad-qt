@@ -89,8 +89,10 @@ class BoldParentDelegate(QtGui.QStyledItemDelegate):
 class FilterableTreeView(VerticalLayout, ComponentBase):
     layout_spacing = 6
 
-    def __init__(self, parent=None):
-        super(FilterableTreeView, self).__init__(parent)
+    def __init__(self, model=QtGui.QStandardItemModel(), *args, **kwargs):
+        super(FilterableTreeView, self).__init__(*args, **kwargs)
+
+        self.model = model
 
         # Contents
         self.prepare_widgets()
@@ -106,7 +108,6 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         self.filter = ClearableLineEdit(placeholder='Filter')
 
         # Setup Tree model and proxy model
-        self.model = QtGui.QStandardItemModel(self)
         self.proxy_model = CommandFilterProxy(self)
         self.proxy_model.setFilterCaseSensitivity(False)
         self.proxy_model.setSourceModel(self.model)

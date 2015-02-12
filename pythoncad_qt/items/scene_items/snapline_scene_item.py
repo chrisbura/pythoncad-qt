@@ -27,11 +27,13 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
     def __init__(self, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)
 
-        pen = QtGui.QPen()
-        pen.setColor(QtCore.Qt.transparent)
+        self.default_pen = QtGui.QPen(QtCore.Qt.transparent)
+        self.default_pen.setWidth(1)
 
-        pen.setWidth(1)
-        self.setPen(pen)
+        self.hover_pen = QtGui.QPen(QtCore.Qt.cyan)
+        self.hover_pen.setWidth(1)
+
+        self.setPen(self.default_pen)
         self.setZValue(-100)
 
         self.setAcceptHoverEvents(True)
@@ -58,11 +60,7 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
         return super(SnaplineSceneItem, self).itemChange(change, value)
 
     def hover_enter_event(self, event):
-        pen = self.pen()
-        pen.setColor(QtCore.Qt.cyan)
-        self.setPen(pen)
+        self.setPen(self.hover_pen)
 
     def hover_leave_event(self, event):
-        pen = self.pen()
-        pen.setColor(QtCore.Qt.transparent)
-        self.setPen(pen)
+        self.setPen(self.default_pen)

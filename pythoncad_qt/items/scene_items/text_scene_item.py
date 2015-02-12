@@ -23,7 +23,25 @@ import settings
 from items.scene_items.scene_item import BasePen, ShapeDebugMixin, SceneItem
 
 
-class BaseTextGraphicsItem(QtGui.QGraphicsItem):
+class PenMixin(object):
+    """
+    Used to add pen() and setPen() capabilities to
+    custom items derived from QGraphicsItem
+    """
+    def __init__(self, *args, **kwargs):
+        super(PenShim, self).__init__(*args, **kwargs)
+        self._pen = QtGui.QPen()
+
+    def setPen(self, pen):
+        self.prepareGeometryChange()
+        self._pen = pen
+        self.update()
+
+    def pen(self):
+        return self._pen
+
+
+class BaseTextGraphicsItem(PenMixin, QtGui.QGraphicsItem):
     # TODO(chrisbura): Add to settings
     padding = 5
 
@@ -46,6 +64,7 @@ class BaseTextGraphicsItem(QtGui.QGraphicsItem):
         return path
 
     def paint(self, painter, option, widget):
+        painter.setPen(self.pen())
         painter.setFont(self.font)
         painter.drawText(self.boundingRect(), QtCore.Qt.AlignCenter, self.text)
 

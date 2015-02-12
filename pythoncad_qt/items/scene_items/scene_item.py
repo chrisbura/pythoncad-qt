@@ -106,12 +106,7 @@ class SelectableMixin(object):
         option.state &= ~ QtGui.QStyle.State_Selected
 
         if self.isSelected():
-            # TODO(chrisbura): Find cleaner way to handle this
-            pen_setter = getattr(self, 'setPen', None)
-            if callable(pen_setter):
-                self.setPen(self.selected_pen)
-            else:
-                painter.setPen(self.selected_pen)
+            self.setPen(self.selected_pen)
 
         super(SelectableMixin, self).paint(painter, option, widget)
 
@@ -153,14 +148,7 @@ class DefaultPenMixin(object):
         return self.default_brush
 
     def paint(self, painter, *args, **kwargs):
-
-        # TODO(chrisbura): Find cleaner way to handle this
-        pen_setter = getattr(self, 'setPen', None)
-        if callable(pen_setter):
-            self.setPen(self.active_pen())
-        else:
-            painter.setPen(self.active_pen())
-
+        self.setPen(self.active_pen())
         super(DefaultPenMixin, self).paint(painter, *args, **kwargs)
 
 

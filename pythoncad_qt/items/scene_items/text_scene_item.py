@@ -29,7 +29,7 @@ class PenMixin(object):
     custom items derived from QGraphicsItem
     """
     def __init__(self, *args, **kwargs):
-        super(PenShim, self).__init__(*args, **kwargs)
+        super(PenMixin, self).__init__(*args, **kwargs)
         self._pen = QtGui.QPen()
 
     def setPen(self, pen):

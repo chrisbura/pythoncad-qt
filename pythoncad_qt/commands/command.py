@@ -48,6 +48,7 @@ class Command(QtCore.QObject):
 
         if isinstance(current_input, PointInput):
             # TODO: Handle multiple points
+            # TODO(chrisbura): Ignore clicks on preview item when on snapline (try with rectangle and snapline)
             items = [item for item in items if isinstance(item, PointSceneItem)]
 
             if items:

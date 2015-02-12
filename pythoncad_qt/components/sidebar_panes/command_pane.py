@@ -21,6 +21,7 @@ from functools import partial
 
 from PyQt4 import QtGui, QtCore
 
+import settings
 from .sidebar_pane import SidebarPane
 from ..sidebar_widgets import FilterableTreeView
 
@@ -63,8 +64,7 @@ class CommandLabel(QtGui.QStandardItem):
         super(CommandLabel, self).__init__(*args, **kwargs)
         # TODO(chrisbura): Create default command icon
         # TODO(chrisbura): Use qrc
-        # TODO(chrisbura): Customize in settings
-        self.set_icon_path('images/commands/new.png')
+        self.set_icon_path(settings.ICON_DEFAULT_COMMAND)
         # TODO(chrisbura): Create default empty action
         # self.set_action(QtGui.QAction()))
 
@@ -108,40 +108,40 @@ class CommandPane(SidebarPane):
 
         # Drawing -> Segment
         segment_command = CommandLabel('Segment')
-        segment_command.set_icon_path('images/commands/segment.png')
+        segment_command.set_icon_path(settings.ICON_SEGMENT_COMMAND)
         segment_command.set_action(self.segment_action)
         self.drawing_label.add_command(segment_command)
 
         # Drawing -> Rectangle
         rectangle_command = CommandLabel('Rectangle')
-        rectangle_command.set_icon_path('images/commands/rectangle.png')
+        rectangle_command.set_icon_path(settings.ICON_SEGMENT_COMMAND)
         rectangle_command.set_action(self.rectangle_action)
         self.drawing_label.add_command(rectangle_command)
 
         # Drawing -> Circle
         circle_command = CommandLabel('Circle')
-        circle_command.set_icon_path('images/commands/circle.png')
+        circle_command.set_icon_path(settings.ICON_CIRCLE_COMMAND)
         circle_command.set_action(self.circle_action)
         self.drawing_label.add_command(circle_command)
 
         # Drawing -> Arc
         arc_command = CommandLabel('Arc')
-        arc_command.set_icon_path('images/commands/arc.png')
+        arc_command.set_icon_path(settings.ICON_ARC_COMMAND)
         self.drawing_label.add_command(arc_command)
 
         # Drawing -> Ellipse
         ellipse_command = CommandLabel('Ellipse')
-        ellipse_command.set_icon_path('images/commands/ellipse.png')
+        ellipse_command.set_icon_path(settings.ICON_ELLIPSE_COMMAND)
         self.drawing_label.add_command(ellipse_command)
 
         # Drawing -> Polygon
         polygon_command = CommandLabel('Polygon')
-        polygon_command.set_icon_path('images/commands/polygon.png')
+        polygon_command.set_icon_path(settings.ICON_POLYGON_COMMAND)
         self.drawing_label.add_command(polygon_command)
 
         # Drawing -> Polyline
         polyline_command = CommandLabel('Polyline')
-        polyline_command.set_icon_path('images/commands/polyline.png')
+        polyline_command.set_icon_path(settings.ICON_POLYLINE_COMMAND)
         self.drawing_label.add_command(polyline_command)
 
         # Dimensioning Category

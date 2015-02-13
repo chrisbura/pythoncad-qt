@@ -114,7 +114,7 @@ class CommandPane(SidebarPane):
 
         # Drawing -> Rectangle
         rectangle_command = CommandLabel('Rectangle')
-        rectangle_command.set_icon_path(settings.ICON_SEGMENT_COMMAND)
+        rectangle_command.set_icon_path(settings.ICON_RECTANGLE_COMMAND)
         rectangle_command.set_action(self.rectangle_action)
         self.drawing_label.add_command(rectangle_command)
 

@@ -23,7 +23,7 @@
 # of the type checking or robustness available in the Qt system is available
 # here. It is simply used for things like selected events and hover events.
 
-
+# TODO(chrisbura): Investigate methods to get full Qt signal support
 class SimpleSignal(object):
     def __init__(self):
         self.connections = []

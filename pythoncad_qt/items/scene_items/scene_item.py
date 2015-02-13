@@ -58,14 +58,15 @@ class BasePen(QtGui.QPen):
 class HoverMixin(object):
 
     hover_colour = settings.HIGHLIGHT_COLOUR
-    hover_enter_signal = SimpleSignal()
-    hover_leave_signal = SimpleSignal()
 
     def __init__(self, *args, **kwargs):
         super(HoverMixin, self).__init__(*args, **kwargs)
         self.hover = False
         self.hover_pen = BasePen(self.hover_colour)
         self.hover_brush = BaseBrush(self.hover_colour)
+
+        self.hover_enter_signal = SimpleSignal()
+        self.hover_leave_signal = SimpleSignal()
 
     def hover_enter_event(self, event):
         self.hover = True
@@ -91,14 +92,15 @@ class HoverMixin(object):
 class SelectableMixin(object):
 
     selected_colour = settings.SELECTED_COLOUR
-    selected_signal = SimpleSignal()
-    unselected_signal = SimpleSignal()
 
     def __init__(self, *args, **kwargs):
         super(SelectableMixin, self).__init__(*args, **kwargs)
         self.selected_pen = BasePen(self.selected_colour)
         self.selected_brush = BaseBrush(self.selected_colour)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable, True)
+
+        self.selected_signal = SimpleSignal()
+        self.unselected_signal = SimpleSignal()
 
     def paint(self, painter, option, widget):
         # Disable dotted selection rectangle

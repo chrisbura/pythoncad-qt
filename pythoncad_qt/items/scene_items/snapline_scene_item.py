@@ -21,9 +21,11 @@ from PyQt4 import QtGui, QtCore
 
 import settings
 from graphics_items.hover_state import HoverState
+from items.scene_items.simple_signal import SimpleSignal
 
 
 class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
+
     def __init__(self, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)
 
@@ -37,6 +39,10 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
         self.setZValue(-100)
 
         self.setAcceptHoverEvents(True)
+
+        self.hover_enter_signal = SimpleSignal()
+        self.hover_leave_signal = SimpleSignal()
+        self.hover_move_signal = SimpleSignal()
 
     def shape(self):
         p = QtGui.QPainterPath(self.line().p1())

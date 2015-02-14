@@ -21,6 +21,7 @@ from PyQt4 import QtGui, QtCore
 
 from items.snapline_item import SnaplineItem
 from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem
+from input_manager import HorizontalAxisLockFilter
 
 
 class HorizontalSnaplineItem(SnaplineItem):
@@ -32,6 +33,8 @@ class HorizontalSnaplineItem(SnaplineItem):
         self.line = HorizontalSnaplineSceneItem()
         super(HorizontalSnaplineItem, self).__init__(*args, **kwargs)
         self.add_scene_item(self.line)
+
+        self.add_filter(HorizontalAxisLockFilter(self.point.y))
 
     def update_guide(self, event):
         self.set_guide(

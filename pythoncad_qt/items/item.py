@@ -40,6 +40,8 @@ class Item(QtCore.QObject):
         self.child_items = []
         self.scene_items = []
 
+        self.input_filters = []
+
         self.delete.connect(self.delete_item)
 
     def add_scene_item(self, scene_item):
@@ -60,3 +62,23 @@ class Item(QtCore.QObject):
     def delete_item(self):
         for scene_item in self.get_scene_items():
             self.remove_scene_item.emit(scene_item)
+
+    def traverse(self):
+        yield self
+        for child in self.child_items:
+            for item in child.traverse():
+                yield item
+
+    def filters(self):
+        return self.input_filters
+
+    def add_filter(self, input_filter):
+        self.input_filters.append(input_filter)
+
+    def activate_filters(self, *args):
+        for input_filter in self.input_filters:
+            input_filter.set_active(True)
+
+    def deactivate_filters(self, *args):
+        for input_filter in self.input_filters:
+            input_filter.set_active(False)

@@ -29,9 +29,14 @@ class SnaplineItem(Item):
         self.guide = SnapGuideLine()
         self.add_scene_item(self.guide)
 
+        # Guide Line Signals
         self.line.hover_enter_signal.connect(self.show_guide)
         self.line.hover_leave_signal.connect(self.hide_guide)
         self.line.hover_move_signal.connect(self.update_guide)
+
+        # Filter Signals
+        self.line.hover_enter_signal.connect(self.activate_filters)
+        self.line.hover_leave_signal.connect(self.deactivate_filters)
 
     def show_guide(self, event):
         self.guide.setVisible(True)

@@ -24,6 +24,32 @@ from graphics_items.hover_state import HoverState
 from items.scene_items.simple_signal import SimpleSignal
 
 
+class SnapGuidePen(QtGui.QPen):
+    """
+    SnapGuidePen is used for the primary active guide which is usually from the
+    closest point.
+    """
+    colour = settings.SNAP_GUIDE_COLOUR
+    style = settings.SNAP_GUIDE_STYLE
+
+    def __init__(self, *args, **kwargs):
+        super(SnapGuidePen, self).__init__(*args, **kwargs)
+        self.setWidth(1)
+        self.setColor(self.colour)
+        self.setStyle(self.style)
+
+
+class SnapGuideSecondaryPen(SnapGuidePen):
+    colour = settings.SNAP_GUIDE_SECONDARY_COLOUR
+
+
+class SnapGuideLine(QtGui.QGraphicsLineItem):
+    def __init__(self, *args, **kwargs):
+        super(SnapGuideLine, self).__init__(*args, **kwargs)
+        self.setVisible(False)
+        self.setPen(SnapGuidePen())
+
+
 class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
 
     def __init__(self, *args, **kwargs):
@@ -66,7 +92,16 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
         return super(SnaplineSceneItem, self).itemChange(change, value)
 
     def hover_enter_event(self, event):
-        self.setPen(self.hover_pen)
+        self.hover_enter_signal.emit(event.event)
+
+        if settings.DEBUG_SNAP_LINES:
+            self.setPen(self.hover_pen)
 
     def hover_leave_event(self, event):
-        self.setPen(self.default_pen)
+        self.hover_leave_signal.emit(event.event)
+
+        if settings.DEBUG_SNAP_LINES:
+            self.setPen(self.default_pen)
+
+    def hover_move_event(self, event):
+        self.hover_move_signal.emit(event.event)

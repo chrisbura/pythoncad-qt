@@ -18,7 +18,29 @@
 #
 
 from items import Item
+from items.scene_items.snapline_scene_item import SnapGuideLine
 
 
 class SnaplineItem(Item):
-    pass
+    def __init__(self, point, *args, **kwargs):
+        super(SnaplineItem, self).__init__(*args, **kwargs)
+        self.point = point
+
+        self.guide = SnapGuideLine()
+        self.add_scene_item(self.guide)
+
+        self.line.hover_enter_signal.connect(self.show_guide)
+        self.line.hover_leave_signal.connect(self.hide_guide)
+        self.line.hover_move_signal.connect(self.update_guide)
+
+    def show_guide(self, event):
+        self.guide.setVisible(True)
+
+    def hide_guide(self, event):
+        self.guide.setVisible(False)
+
+    def set_guide(self, x1, y1, x2, y2):
+        self.guide.setLine(x1, y1, x2, y2)
+
+    def update_guide(self, event):
+        pass

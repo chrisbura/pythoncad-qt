@@ -27,9 +27,16 @@ class HorizontalSnaplineItem(SnaplineItem):
 
     name = 'Horizontal Snap Line'
 
-    def __init__(self, point, *args, **kwargs):
-        super(HorizontalSnaplineItem, self).__init__(*args, **kwargs)
-        self.point = point
+    def __init__(self, *args, **kwargs):
         # Line dimensions will be set when added to scene
         self.line = HorizontalSnaplineSceneItem()
+        super(HorizontalSnaplineItem, self).__init__(*args, **kwargs)
         self.add_scene_item(self.line)
+
+    def update_guide(self, event):
+        self.set_guide(
+            self.point.x,
+            self.point.y,
+            event.scenePos().x(),
+            self.point.y
+        )

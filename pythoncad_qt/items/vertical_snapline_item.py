@@ -27,9 +27,16 @@ class VerticalSnaplineItem(SnaplineItem):
 
     name = 'Vertical Snap Line'
 
-    def __init__(self, point, *args, **kwargs):
-        self.point = point
-        super(VerticalSnaplineItem, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
         # Line dimensions will be set when added to scene
         self.line = VerticalSnaplineSceneItem()
+        super(VerticalSnaplineItem, self).__init__(*args, **kwargs)
         self.add_scene_item(self.line)
+
+    def update_guide(self, event):
+        self.set_guide(
+            self.point.x,
+            self.point.y,
+            self.point.x,
+            event.scenePos().y()
+        )

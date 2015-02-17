@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,74 +17,54 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from functools import partial
+
 from PyQt4 import QtCore
-
-from sympy.geometry import Point
-
-from items.scene_items import PointSceneItem
-from commands.inputs import PointInput
 
 
 class Command(QtCore.QObject):
 
-    command_finished = QtCore.pyqtSignal(object)
-    command_ended = QtCore.pyqtSignal()
-    add_item = QtCore.pyqtSignal(object)
-    remove_item = QtCore.pyqtSignal(object)
-    add_preview = QtCore.pyqtSignal(object)
+    coordinate_received = QtCore.pyqtSignal(float, float)
+    mouse_received = QtCore.pyqtSignal(float, float)
+    command_finished = QtCore.pyqtSignal()
+    command_cancelled = QtCore.pyqtSignal()
+
+    item_ready = QtCore.pyqtSignal(object)
+    item_remove = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
+        self._inputs = []
+        self.active_input = None
+        self.remaining_inputs = None
 
-        self.values = []
-        self.active_input = 0
-        self.has_preview = False
-        self.preview_start = 0
-        self.preview_graphics_item = None
-        self.input_snapped = False
+    def inputs(self):
+        return self._inputs
 
-    def process_click(self, x, y, items):
-        current_input = self.inputs[self.active_input]
+    def add_input(self, input_):
+        self._inputs.append(input_)
 
-        if isinstance(current_input, PointInput):
-            # TODO: Handle multiple points
-            # TODO(chrisbura): Ignore clicks on preview item when on snapline (try with rectangle and snapline)
-            items = [item for item in items if isinstance(item, PointSceneItem)]
+    def start(self):
+        self.remaining_inputs = iter(self._inputs)
+        self.next_input()
 
-            if items:
-                current_input.value = Point(items[0].entity.x, items[0].entity.y)
-            else:
-                current_input.value = Point(x, y)
+    def next_input(self):
+        # Get next input
+        try:
+            self.active_input = self.remaining_inputs.next()
+        except StopIteration:
+            self.command_finished.emit()
+            return
 
-        if self.has_preview and (self.active_input == self.preview_start):
-            self.preview_graphics_item = self.preview_item()
-            self.add_preview.emit(self.preview_graphics_item)
+        # Connect *_received signals to next input
+        self.coordinate_received.connect(self.active_input.handle_coordinates)
+        self.mouse_received.connect(self.active_input.handle_move)
 
-        self.active_input = self.active_input + 1
+        # When an input is valid, disconnect it from the *_received signals
+        self.active_input.input_valid.connect(
+            partial(self.coordinate_received.disconnect, self.active_input.handle_coordinates))
+        self.active_input.input_valid.connect(
+            partial(self.mouse_received.disconnect, self.active_input.handle_move))
 
-        if self.active_input == len(self.inputs):
-            graphics_items = self.apply_command()
-            self.command_finished.emit(graphics_items)
-            self.cleanup()
-            self.command_ended.emit()
-
-    def snap_preview(self, point):
-        self.input_snapped = True
-        if self.preview_graphics_item:
-            self.preview_graphics_item.update(point.x, point.y)
-
-    def snap_release(self):
-        self.input_snapped = False
-
-    def process_move(self, x, y):
-        if not self.input_snapped:
-            if self.preview_graphics_item:
-                self.preview_graphics_item.update(x, y)
-
-    def cleanup(self):
-        self.remove_preview_item()
-
-    def remove_preview_item(self):
-        if self.preview_graphics_item is not None:
-            self.preview_graphics_item.delete.emit()
-            self.preview_graphics_item = None
+        # On valid input continue to the next input
+        self.active_input.input_valid.connect(self.next_input)

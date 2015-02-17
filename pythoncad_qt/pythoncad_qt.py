@@ -32,8 +32,10 @@ from components.document import Document, DocumentView
 from components.document_control import DocumentControl
 from components.sidebar_panes import *
 from dialogs.document_properties import DocumentPropertiesDialog
-from input_manager import InputManager
 from input_filter import InputFilter
+from item_manager import ItemManager
+from command_manager import CommandManager
+from graphics_items.snap_cursor import SnapCursor
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -79,8 +81,8 @@ class PythoncadQt(QtGui.QMainWindow):
         self.left_sidebar = Sidebar()
 
         # Command Pane
-        command_pane = CommandPane()
-        self.left_sidebar.add_pane('Commands', command_pane)
+        self.command_pane = CommandPane()
+        self.left_sidebar.add_pane('Commands', self.command_pane)
 
         # Document Viewport
         self.document_control = DocumentControl()
@@ -89,23 +91,36 @@ class PythoncadQt(QtGui.QMainWindow):
         self.document_control.document.titlebar.expand_viewport.connect(self.toggle_expand)
         self.document_control.document.titlebar.open_properties.connect(self.open_properties)
 
-        # Input Manager
-        self.input_manager = InputManager()
-        self.input_manager.add_item.connect(scene.addItem)
-        self.input_manager.remove_item.connect(scene.removeItem)
-        scene.mouse_click.connect(self.input_manager.handle_click)
-        scene.mouse_moved.connect(self.input_manager.handle_move)
-        scene.command_cancelled.connect(self.input_manager.cancel_command)
-        scene.command_cancelled.connect(command_pane.command_list.tree.clearSelection)
-
-        command_pane.command_started.connect(self.input_manager.cancel_command)
-        command_pane.command_started.connect(self.input_manager.start_command)
+        self.input_filter = InputFilter()
+        self.command_manager = CommandManager()
+        self.item_manager = ItemManager()
 
         # Input Filter
-        self.input_filter = InputFilter()
-        self.input_manager.command_finished.connect(self.input_filter.add_filters)
+        self.command_manager.add_item.connect(self.input_filter.add_filters)
         scene.mouse_click.connect(self.input_filter.handle_click)
         scene.mouse_moved.connect(self.input_filter.handle_move)
+
+        # Command Manager
+        scene.escape_pressed.connect(self.command_manager.cancel_command)
+        self.command_pane.command_started.connect(self.command_manager.start_command)
+        self.input_filter.filtered_click.connect(self.command_manager.handle_click)
+        self.input_filter.filtered_move.connect(self.command_manager.handle_move)
+
+        # Item Manager
+        self.command_manager.add_item.connect(self.item_manager.add_item)
+        self.command_manager.remove_item.connect(self.item_manager.remove_item)
+        self.item_manager.add_scene_item.connect(scene.addItem)
+        self.item_manager.remove_scene_item.connect(scene.removeItem)
+        scene.remove_item.connect(self.item_manager.remove_item)
+
+        # Cursor
+        self.cursor = SnapCursor(0, 0)
+        self.cursor.hide()
+        scene.addItem(self.cursor)
+
+        self.input_filter.filtered_move.connect(self.cursor.set_position)
+        self.command_manager.command_started.connect(self.cursor.show)
+        self.command_manager.command_stopped.connect(self.cursor.hide)
 
         # Right Sidebar
         self.right_sidebar = Sidebar()
@@ -113,7 +128,8 @@ class PythoncadQt(QtGui.QMainWindow):
         # Outline Pane
         outline_pane = OutlinePane()
         self.right_sidebar.add_pane('Outline', outline_pane)
-        self.input_manager.command_finished.connect(outline_pane.add_item)
+        self.command_manager.add_item.connect(outline_pane.add_item)
+        # TODO: Remove item on delete
 
         self.layer_pane = LayerPane()
         # console_pane = ConsolePane()

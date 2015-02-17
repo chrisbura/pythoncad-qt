@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,24 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from PyQt4 import QtGui, QtCore
-
-from items.scene_items.snapline_scene_item import SnaplineSceneItem
+from PyQt4 import QtCore
 
 
-class HorizontalSnaplineSceneItem(SnaplineSceneItem):
-    def update_line(self, scene_rect):
-        self.setLine(scene_rect.left(), self.parent.point.y, scene_rect.right(), self.parent.point.y)
+class ItemManager(QtCore.QObject):
+
+    add_scene_item = QtCore.pyqtSignal(object)
+    remove_scene_item = QtCore.pyqtSignal(object)
+
+    def __init__(self, *args, **kwargs):
+        super(ItemManager, self).__init__(*args, **kwargs)
+        self.items = []
+
+    def add_item(self, item):
+        for child_item in item.traverse():
+            for scene_item in child_item.scene_items:
+                self.add_scene_item.emit(scene_item)
+
+    def remove_item(self, item):
+        for child_item in item.traverse():
+            for scene_item in child_item.scene_items:
+                self.remove_scene_item.emit(scene_item)

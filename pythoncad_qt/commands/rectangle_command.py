@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,32 +17,43 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from functools import partial
+
 from sympy.geometry import Point
 
 from commands.command import Command
-from commands.inputs import PointInput
+from commands.inputs import CoordinateInput
 from items import SegmentItem
 from items.scene_previews import RectangleScenePreview
 
 
 class RectangleCommand(Command):
-    def __init__(self):
-        super(RectangleCommand, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(RectangleCommand, self).__init__(*args, **kwargs)
 
-        self.has_preview = True
-        self.preview_start = 0
+        self.preview_item = None
 
-        self.inputs = [
-            PointInput('Enter First Point'),
-            PointInput('Enter Second Point'),
-        ]
+        # Start Point
+        self.point1 = CoordinateInput()
+        self.add_input(self.point1)
 
-    def preview_item(self):
-        return RectangleScenePreview(self.inputs[0].value)
+        # End Point
+        self.point2 = CoordinateInput()
+        self.add_input(self.point2)
 
-    def apply_command(self):
-        point1 = self.inputs[0].value
-        point2 = self.inputs[1].value
+        self.point1.input_valid.connect(self.add_preview)
+        self.command_finished.connect(self.add_item)
+
+    def add_preview(self):
+        self.preview_item = RectangleScenePreview(Point(self.point1.x, self.point1.y))
+        self.mouse_received.connect(self.preview_item.update)
+        self.command_finished.connect(partial(self.item_remove.emit, self.preview_item))
+        self.command_cancelled.connect(partial(self.item_remove.emit, self.preview_item))
+        self.item_ready.emit(self.preview_item)
+
+    def add_item(self):
+        point1 = Point(self.point1.x, self.point1.y)
+        point2 = Point(self.point2.x, self.point2.y)
         point3 = Point(point1.x, point2.y)
         point4 = Point(point2.x, point1.y)
 
@@ -53,4 +64,5 @@ class RectangleCommand(Command):
             SegmentItem(point3, point1),
         ]
 
-        return items
+        for item in items:
+            self.item_ready.emit(item)

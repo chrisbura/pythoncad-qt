@@ -37,6 +37,9 @@ class VerticalSnaplineItem(SnaplineItem):
         self.add_filter(VerticalAxisLockFilter(self.point.x))
 
     def update_guide(self, event):
+        # TODO(chrisbura): Instead of using lock on x and y in commands
+        # and hardcoding the y value here, have the scene give off 'filtered'
+        # coordinates
         self.set_guide(
             self.point.x,
             self.point.y,

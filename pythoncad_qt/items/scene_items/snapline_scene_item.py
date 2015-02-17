@@ -34,7 +34,7 @@ class SnapGuidePen(QtGui.QPen):
 
     def __init__(self, *args, **kwargs):
         super(SnapGuidePen, self).__init__(*args, **kwargs)
-        self.setWidth(1)
+        self.setWidth(2)
         self.setColor(self.colour)
         self.setStyle(self.style)
 
@@ -92,16 +92,19 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
         return super(SnaplineSceneItem, self).itemChange(change, value)
 
     def hover_enter_event(self, event):
+        # TODO(chrisbura): Get rid of event.event...
         self.hover_enter_signal.emit(event.event)
 
         if settings.DEBUG_SNAP_LINES:
             self.setPen(self.hover_pen)
 
     def hover_leave_event(self, event):
+        # TODO(chrisbura): Get rid of event.event...
         self.hover_leave_signal.emit(event.event)
 
         if settings.DEBUG_SNAP_LINES:
             self.setPen(self.default_pen)
 
     def hover_move_event(self, event):
+        # TODO(chrisbura): Get rid of event.event...
         self.hover_move_signal.emit(event.event)

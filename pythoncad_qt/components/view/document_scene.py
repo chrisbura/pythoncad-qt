@@ -31,7 +31,8 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     mouse_moved = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
     mouse_click = QtCore.pyqtSignal(float, float, list)
-    command_cancelled = QtCore.pyqtSignal()
+    escape_pressed = QtCore.pyqtSignal()
+    remove_item = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(DocumentScene, self).__init__(*args, **kwargs)
@@ -57,19 +58,28 @@ class DocumentScene(QtGui.QGraphicsScene):
         if event.button() == QtCore.Qt.LeftButton:
             x, y = event.scenePos().x(), event.scenePos().y()
             self.mouse_click.emit(x, y, self.items(event.scenePos()))
+
+        # Context menu to allow accurate selection of an item when multiple
+        # items overlap
+        if event.button() == QtCore.Qt.RightButton:
+            # TODO: Display context menu with all items under scenePos
+            # print('Right Mouse Button Clicked')
+            pass
+
         super(DocumentScene, self).mouseReleaseEvent(event)
 
     def keyReleaseEvent(self, event):
         # Cancel active command on esc
         # TODO: Handle focus, click command and bring focus to QGraphicsScene
         if event.key() == QtCore.Qt.Key_Escape:
-            self.command_cancelled.emit()
+            self.escape_pressed.emit()
 
         # Delete Selected Items
+        # TODO: Decouple item
         selected_items = self.selectedItems()
         if event.key() == QtCore.Qt.Key_Delete and len(selected_items) > 0:
             for item in selected_items:
-                item.parent.delete.emit()
+                self.remove_item.emit(item.parent)
 
         super(DocumentScene, self).keyReleaseEvent(event)
 
@@ -133,7 +143,10 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
 
+        # TODO(chrisbura): Add filtering class to handle things like hovering over multiple
+        # snaplines, only activate preview for closest point
         # TODO: Generalize for all items (not just snaplines)
+        # TODO: Get filtered move to hover
         items = [x for x in self.items(event.scenePos()) if isinstance(x, HoverState)]
         self.hover_manager.process_hover(event, items)
 

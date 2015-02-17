@@ -32,11 +32,11 @@ class OutlinePane(SidebarPane):
         self.tree_widget.tree.setIndentation(10)
         self.add_component(self.tree_widget)
 
-    def add_item(self, items):
-        for item in items:
-            model_item = QtGui.QStandardItem(QtGui.QIcon(item.icon), item.name)
-            self.tree_widget.model.appendRow(model_item)
-            self._get_children(item, model_item)
+    def add_item(self, item):
+        model_item = QtGui.QStandardItem(QtGui.QIcon(item.icon), item.name)
+        self.tree_widget.model.appendRow(model_item)
+        self._get_children(item, model_item)
+
         self.tree_widget.tree.expandAll()
 
     def _get_children(self, item, model_item):

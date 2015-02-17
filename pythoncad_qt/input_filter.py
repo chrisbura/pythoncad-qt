@@ -72,12 +72,10 @@ class InputFilter(QtCore.QObject):
         self.filters.append(input_filter)
 
     # TODO: Recurse to get a list of filters from root item, use here and remove
-    def add_filters(self, items):
-        # TODO: Simplify
-        for item in items:
-            for child in item.traverse():
-                for input_filter in child.filters():
-                    self.add_filter(input_filter)
+    def add_filters(self, item):
+        for child in item.traverse():
+            for input_filter in child.filters():
+                self.add_filter(input_filter)
 
     def apply_filters(self, coordinates):
         # TODO: Only works with coordinate filters

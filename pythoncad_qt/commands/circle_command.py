@@ -17,26 +17,42 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from functools import partial
+
+from sympy.geometry import Point
+
 from commands.command import Command
-from commands.inputs import PointInput
+from commands.inputs import CoordinateInput
 from items import CircleItem
 from items.scene_previews import CircleScenePreview
 
 
 class CircleCommand(Command):
-    def __init__(self):
-        super(CircleCommand, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(CircleCommand, self).__init__(*args, **kwargs)
 
-        self.has_preview = True
-        self.preview_start = 0
+        self.preview_item = None
 
-        self.inputs = [
-            PointInput('Enter Center Point'),
-            PointInput('Enter Second Point'),
-        ]
+        # Start Point
+        self.point1 = CoordinateInput()
+        self.add_input(self.point1)
 
-    def preview_item(self):
-        return CircleScenePreview(self.inputs[0].value)
+        # End Point
+        self.point2 = CoordinateInput()
+        self.add_input(self.point2)
 
-    def apply_command(self):
-        return [CircleItem(self.inputs[0].value, self.inputs[1].value)]
+        self.point1.input_valid.connect(self.add_preview)
+        self.command_finished.connect(self.add_item)
+
+    def add_preview(self):
+        self.preview_item = CircleScenePreview(Point(self.point1.x, self.point1.y))
+        self.mouse_received.connect(self.preview_item.update)
+        self.command_finished.connect(partial(self.item_remove.emit, self.preview_item))
+        self.command_cancelled.connect(partial(self.item_remove.emit, self.preview_item))
+        self.item_ready.emit(self.preview_item)
+
+    def add_item(self):
+        item = CircleItem(
+            Point(self.point1.x, self.point1.y),
+            Point(self.point2.x, self.point2.y))
+        self.item_ready.emit(item)

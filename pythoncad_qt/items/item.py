@@ -19,6 +19,8 @@
 
 from PyQt4 import QtCore, QtGui
 
+
+# TODO: Have Items clean up scene items?
 class Item(QtCore.QObject):
 
     name = 'Item'
@@ -26,10 +28,6 @@ class Item(QtCore.QObject):
 
     hover_enter = QtCore.pyqtSignal(object)
     hover_leave = QtCore.pyqtSignal()
-    lock_horizontal = QtCore.pyqtSignal(float)
-    unlock_horizontal = QtCore.pyqtSignal()
-    lock_vertical = QtCore.pyqtSignal(float)
-    unlock_vertical = QtCore.pyqtSignal()
     deleted = QtCore.pyqtSignal()
     remove_scene_item = QtCore.pyqtSignal(object)
     delete = QtCore.pyqtSignal()

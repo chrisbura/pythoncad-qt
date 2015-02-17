@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,10 +17,42 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-class Input(object):
-    def __init__(self, message):
-        self.message = message
+from PyQt4 import QtCore
 
 
-class PointInput(Input):
+class Input(QtCore.QObject):
+
+    input_valid = QtCore.pyqtSignal()
+
+    def __init__(self, *args, **kwargs):
+        super(Input, self).__init__(*args, **kwargs)
+
+    def handle_coordinates(self, x, y):
+        self.input_valid.emit()
+
+    def handle_item(self):
+        # TODO: Hookup item handling
+        # TODO(chrisbura): Have filter class pass through only required item types to command
+        self.input_valid.emit()
+
+    def handle_move(self, x, y):
+        pass
+
+
+class CoordinateInput(Input):
+    def __init__(self, *args, **kwargs):
+        super(CoordinateInput, self).__init__(*args, **kwargs)
+        self.x = None
+        self.y = None
+
+    def handle_coordinates(self, x, y):
+        self.x, self.y = x, y
+        self.input_valid.emit()
+
+
+class ItemInput(Input):
+    pass
+
+
+class SegmentInput(ItemInput):
     pass

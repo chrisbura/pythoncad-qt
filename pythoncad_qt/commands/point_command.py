@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,18 +17,22 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from sympy.geometry import Point
+
 from commands.command import Command
-from commands.inputs import PointInput
+from commands.inputs import CoordinateInput
 from items import PointItem
 
 
 class PointCommand(Command):
-    def __init__(self):
-        super(PointCommand, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(PointCommand, self).__init__(*args, **kwargs)
 
-        self.inputs = [
-            PointInput('Enter Point'),
-        ]
+        self.point_input = CoordinateInput()
+        self.add_input(self.point_input)
 
-    def apply_command(self):
-        return [PointItem(self.inputs[0].value)]
+        self.command_finished.connect(self.add_item)
+
+    def add_item(self):
+        item = PointItem(Point(self.point_input.x, self.point_input.y))
+        self.item_ready.emit(item)

@@ -24,62 +24,6 @@ from PyQt4 import QtCore, QtGui
 from graphics_items.snap_cursor import SnapCursor
 
 
-class Filter(object):
-    def __init__(self, *args, **kwargs):
-        self._active = False
-        self.filter_dict = {}
-
-    def set_active(self, value):
-        self._active = value
-
-    def is_active(self):
-        return self._active
-
-
-class AxisLockFilter(Filter):
-    pass
-
-
-class HorizontalAxisLockFilter(AxisLockFilter):
-    def __init__(self, value, *args, **kwargs):
-        super(HorizontalAxisLockFilter, self).__init__(*args, **kwargs)
-        self.filter_dict = {'y': value}
-
-
-class VerticalAxisLockFilter(AxisLockFilter):
-    def __init__(self, value, *args, **kwargs):
-        super(VerticalAxisLockFilter, self).__init__(*args, **kwargs)
-        self.filter_dict = {'x': value}
-
-
-class InputFilter(QtCore.QObject):
-    def __init__(self, *args, **kwargs):
-        super(InputFilter, self).__init__(*args, **kwargs)
-        self.filters = []
-
-    def active_filters(self):
-        for input_filter in self.filters:
-            if input_filter.is_active():
-                yield input_filter
-
-    def add_filter(self, input_filter):
-        self.filters.append(input_filter)
-
-    def add_filters(self, items):
-        for item in items:
-            for child in item.traverse():
-                for input_filter in child.filters():
-                    self.add_filter(input_filter)
-
-    def handle_click(self, x, y, *args, **kwargs):
-        coordinates = {'x': x, 'y': y}
-
-        for active_filter in self.active_filters():
-            coordinates.update(active_filter.filter_dict)
-
-        print(coordinates)
-
-
 class InputManager(QtCore.QObject):
 
     mouse_click = QtCore.pyqtSignal(float, float, list)

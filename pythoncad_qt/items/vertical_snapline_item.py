@@ -21,7 +21,7 @@ from PyQt4 import QtGui, QtCore
 
 from items.snapline_item import SnaplineItem
 from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem
-from input_manager import VerticalAxisLockFilter
+from input_filter import VerticalAxisLockFilter
 
 
 class VerticalSnaplineItem(SnaplineItem):

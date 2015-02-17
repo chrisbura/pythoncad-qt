@@ -32,7 +32,8 @@ from components.document import Document, DocumentView
 from components.document_control import DocumentControl
 from components.sidebar_panes import *
 from dialogs.document_properties import DocumentPropertiesDialog
-from input_manager import InputManager, InputFilter
+from input_manager import InputManager
+from input_filter import InputFilter
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -100,11 +101,11 @@ class PythoncadQt(QtGui.QMainWindow):
         command_pane.command_started.connect(self.input_manager.cancel_command)
         command_pane.command_started.connect(self.input_manager.start_command)
 
-
         # Input Filter
         self.input_filter = InputFilter()
         self.input_manager.command_finished.connect(self.input_filter.add_filters)
         scene.mouse_click.connect(self.input_filter.handle_click)
+        scene.mouse_moved.connect(self.input_filter.handle_move)
 
         # Right Sidebar
         self.right_sidebar = Sidebar()

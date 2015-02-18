@@ -106,8 +106,7 @@ class GraphicsStatusBar(HorizontalLayout, ComponentBase):
         self.add_component(self.scene_coordinates)
 
     def update_coordinates(self, event):
-        self.scene_coordinates.setText('X: {0} Y: {1}'.format(
-            event.scenePos().x(), event.scenePos().y()))
+        self.scene_coordinates.setText('X: {0} Y: {1}'.format(event.x, event.y))
 
     def reset_coordinates(self, event):
         self.scene_coordinates.setText('X: ----- Y: -----')

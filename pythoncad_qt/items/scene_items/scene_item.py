@@ -20,7 +20,7 @@
 from PyQt4 import QtCore, QtGui
 
 import settings
-from graphics_items.hover_state import HoverState
+from hover_event_manager import HoverState
 from .simple_signal import SimpleSignal
 
 

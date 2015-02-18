@@ -33,8 +33,8 @@ class SnapCursor(QtGui.QGraphicsRectItem):
         self.pen.setWidth(2)
         self.setPen(self.pen)
 
-    def set_position(self, x, y):
-        self.setRect(self.get_rect(x, y))
+    def set_position(self, event):
+        self.setRect(self.get_rect(event.x, event.y))
 
     def get_rect(self, x, y):
         return QtCore.QRectF(

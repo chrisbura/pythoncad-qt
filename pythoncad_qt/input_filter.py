@@ -56,8 +56,8 @@ class InputFilter(QtCore.QObject):
     filtered_click = QtCore.pyqtSignal(float, float)
 
     # Move Signals
-    raw_move = QtCore.pyqtSignal(float, float)
-    filtered_move = QtCore.pyqtSignal(float, float)
+    raw_move = QtCore.pyqtSignal(object, list)
+    filtered_move = QtCore.pyqtSignal(object, list)
 
     def __init__(self, *args, **kwargs):
         super(InputFilter, self).__init__(*args, **kwargs)
@@ -91,10 +91,15 @@ class InputFilter(QtCore.QObject):
         coordinates = self.apply_filters(coordinates)
         self.filtered_click.emit(coordinates['x'], coordinates['y'])
 
-    def handle_move(self, event):
-        coordinates = {'x': event.scenePos().x(), 'y': event.scenePos().y()}
+    def handle_move(self, event, items):
+        coordinates = {'x': event.x, 'y': event.y}
 
         # TODO: raw_move can be used to ignore filters while adding items
-        self.raw_move.emit(coordinates['x'], coordinates['y'])
+        self.raw_move.emit(event, items)
+
         coordinates = self.apply_filters(coordinates)
-        self.filtered_move.emit(coordinates['x'], coordinates['y'])
+
+        event.x = coordinates['x']
+        event.y = coordinates['y']
+
+        self.filtered_move.emit(event, items)

@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,27 @@
 #
 
 import copy
+
+
+class HoverState(object):
+    def hover_event(self, event):
+        if isinstance(event, HoverEnterEvent):
+            self.hover_enter_event(event)
+
+        if isinstance(event, HoverLeaveEvent):
+            self.hover_leave_event(event)
+
+        if isinstance(event, HoverMoveEvent):
+            self.hover_move_event(event)
+
+    def hover_enter_event(self, event):
+        self.update()
+
+    def hover_leave_event(self, event):
+        self.update()
+
+    def hover_move_event(self, event):
+        self.update()
 
 
 class HoverEvent(object):
@@ -42,7 +63,9 @@ class HoverEventManager(object):
     def __init__(self):
         self.hover_items = []
 
-    def process_hover(self, event, items):
+    def process_hover(self, event, hovered_items):
+        items = [x for x in hovered_items if isinstance(x, HoverState)]
+
         previous_items = copy.copy(self.hover_items)
 
         for item in items:

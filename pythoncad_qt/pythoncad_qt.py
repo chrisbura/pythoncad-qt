@@ -36,6 +36,7 @@ from input_filter import InputFilter
 from item_manager import ItemManager
 from command_manager import CommandManager
 from graphics_items.snap_cursor import SnapCursor
+from hover_event_manager import HoverEventManager
 
 from models.drawing import Drawing
 from models.layer import Layer
@@ -122,6 +123,9 @@ class PythoncadQt(QtGui.QMainWindow):
         self.command_manager.command_started.connect(self.cursor.show)
         self.command_manager.command_stopped.connect(self.cursor.hide)
 
+        self.hover_manager = HoverEventManager()
+        self.input_filter.filtered_move.connect(self.hover_manager.process_hover)
+
         # Right Sidebar
         self.right_sidebar = Sidebar()
 
@@ -146,7 +150,6 @@ class PythoncadQt(QtGui.QMainWindow):
         splitter.setStretchFactor(0, 2)
         splitter.setStretchFactor(1, 9)
         splitter.setStretchFactor(2, 2)
-
 
     def open_drawing(self):
         self.drawing = Drawing(title='New Drawing')

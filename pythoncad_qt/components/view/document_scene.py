@@ -1,6 +1,6 @@
 #
 # PythonCAD-Qt
-# Copyright (C) 2014 Christopher Bura
+# Copyright (C) 2014-2015 Christopher Bura
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,14 +22,19 @@ import math
 from PyQt4 import QtCore, QtGui
 
 import settings
-from hover_event_manager import HoverEventManager
-from items.scene_items.snapline_scene_item import SnaplineSceneItem
-from graphics_items.hover_state import HoverState
+
+
+class MoveEvent(object):
+    def __init__(self, event, *args, **kwargs):
+        super(MoveEvent, self).__init__(*args, **kwargs)
+        self.raw_event = event
+        self.x = self.raw_event.scenePos().x()
+        self.y = self.raw_event.scenePos().y()
 
 
 class DocumentScene(QtGui.QGraphicsScene):
 
-    mouse_moved = QtCore.pyqtSignal(QtGui.QGraphicsSceneMouseEvent)
+    mouse_moved = QtCore.pyqtSignal(MoveEvent, list)
     mouse_click = QtCore.pyqtSignal(float, float, list)
     escape_pressed = QtCore.pyqtSignal()
     remove_item = QtCore.pyqtSignal(object)
@@ -46,9 +51,6 @@ class DocumentScene(QtGui.QGraphicsScene):
 
         # Axes
         self.setting_draw_axes = settings.DRAW_AXES
-
-        # Hover Manager
-        self.hover_manager = HoverEventManager()
 
     def reset_scene(self):
         # TODO: Reset scene properly
@@ -142,12 +144,5 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
-
-        # TODO(chrisbura): Add filtering class to handle things like hovering over multiple
-        # snaplines, only activate preview for closest point
-        # TODO: Generalize for all items (not just snaplines)
-        # TODO: Get filtered move to hover
-        items = [x for x in self.items(event.scenePos()) if isinstance(x, HoverState)]
-        self.hover_manager.process_hover(event, items)
-
-        self.mouse_moved.emit(event)
+        items = self.items(event.scenePos())
+        self.mouse_moved.emit(MoveEvent(event), items)

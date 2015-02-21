@@ -22,6 +22,7 @@ from PyQt4 import QtGui, QtCore
 from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 
+# TODO: Have guide use internal
 class VerticalSnaplineSceneItem(SnaplineSceneItem):
     def update_line(self, *args, **kwargs):
         point = self.point.scenePos()

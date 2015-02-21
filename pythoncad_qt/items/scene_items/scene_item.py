@@ -174,13 +174,30 @@ class MovableMixin(object):
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
         self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges, True)
 
+        self.ignored_filters = []
+
         self.position_changed = SimpleSignal()
 
+    def ignore_filter(self, input_filter):
+        self.ignored_filters.append(input_filter)
+
     def itemChange(self, change, value):
-        if change == QtGui.QGraphicsItem.ItemPositionChange:
+
+        if change == QtGui.QGraphicsItem.ItemPositionChange and self.scene():
+            coordinates = {'x': value.x(), 'y': value.y()}
+
+            # TODO: Clean up
+            for item in self.scene().items(value):
+                for input_filter in [x for x in item.parent.filters() if x not in self.ignored_filters]:
+                    coordinates.update(input_filter.filter_dict)
+
+            value = QtCore.QPointF(coordinates['x'], coordinates['y'])
             self.position_changed.emit(value)
+            return value
+
         return super(MovableMixin, self).itemChange(change, value)
 
 
+# TODO: Clean up...
 class SceneItem(MovableMixin, HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
     pass

@@ -42,6 +42,10 @@ class BasePointItem(Item):
         self.vertical_snapline = VerticalSnaplineItem(self.point_item)
         self.add_child_item(self.vertical_snapline)
 
+        # When moving the point item, prevent snapping to it's own guides
+        self.point_item.ignore_filter(self.horizontal_snapline.filter)
+        self.point_item.ignore_filter(self.vertical_snapline.filter)
+
 
 class PointItem(BasePointItem):
     pass

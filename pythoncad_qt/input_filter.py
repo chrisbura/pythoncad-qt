@@ -42,11 +42,17 @@ class HorizontalAxisLockFilter(AxisLockFilter):
         super(HorizontalAxisLockFilter, self).__init__(*args, **kwargs)
         self.filter_dict = {'y': value}
 
+    def set_value(self, value):
+        self.filter_dict['y'] = value
+
 
 class VerticalAxisLockFilter(AxisLockFilter):
     def __init__(self, value, *args, **kwargs):
         super(VerticalAxisLockFilter, self).__init__(*args, **kwargs)
         self.filter_dict = {'x': value}
+
+    def set_value(self, value):
+        self.filter_dict['x'] = value
 
 
 class InputFilter(QtCore.QObject):

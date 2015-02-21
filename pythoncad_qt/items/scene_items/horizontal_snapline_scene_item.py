@@ -23,5 +23,6 @@ from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 
 class HorizontalSnaplineSceneItem(SnaplineSceneItem):
-    def update_line(self, scene_rect):
-        self.setLine(scene_rect.left(), self.parent.point.y, scene_rect.right(), self.parent.point.y)
+    def update_line(self, *args, **kwargs):
+        point = self.point.scenePos()
+        self.setLine(self.scene_rect.left(), point.y(), self.scene_rect.right(), point.y())

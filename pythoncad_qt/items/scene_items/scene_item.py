@@ -168,5 +168,19 @@ class ShapeDebugMixin(object):
         super(ShapeDebugMixin, self).paint(painter, *args, **kwargs)
 
 
-class SceneItem(HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
+class MovableMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(MovableMixin, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
+        self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges, True)
+
+        self.position_changed = SimpleSignal()
+
+    def itemChange(self, change, value):
+        if change == QtGui.QGraphicsItem.ItemPositionChange:
+            self.position_changed.emit(value)
+        return super(MovableMixin, self).itemChange(change, value)
+
+
+class SceneItem(MovableMixin, HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
     pass

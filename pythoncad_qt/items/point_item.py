@@ -24,17 +24,7 @@ from items.vertical_snapline_item import VerticalSnaplineItem
 from items.horizontal_snapline_item import HorizontalSnaplineItem
 
 
-class PointSnaplines(object):
-    def __init__(self, *args, **kwargs):
-        super(PointSnaplines, self).__init__(*args, **kwargs)
-
-        self.horizontal_snapline = HorizontalSnaplineItem(self.point)
-        self.vertical_snapline = VerticalSnaplineItem(self.point)
-        self.add_child_item(self.horizontal_snapline)
-        self.add_child_item(self.vertical_snapline)
-
-
-class BasePointItem(PointSnaplines, Item):
+class BasePointItem(Item):
 
     name = 'Point'
     scene_item = PointSceneItem
@@ -42,8 +32,15 @@ class BasePointItem(PointSnaplines, Item):
     def __init__(self, point, *args, **kwargs):
         self.point = point
         super(BasePointItem, self).__init__(*args, **kwargs)
+
         self.point_item = self.scene_item(point)
         self.add_scene_item(self.point_item)
+
+        self.horizontal_snapline = HorizontalSnaplineItem(self.point_item)
+        self.add_child_item(self.horizontal_snapline)
+
+        self.vertical_snapline = VerticalSnaplineItem(self.point_item)
+        self.add_child_item(self.vertical_snapline)
 
 
 class PointItem(BasePointItem):

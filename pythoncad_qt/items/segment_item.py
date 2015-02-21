@@ -37,19 +37,20 @@ class SegmentItem(Item):
 
         self.segment = Segment(self.point1, self.point2)
 
-        # Segment
-        self.segment_item = SegmentSceneItem(self.point1, self.point2)
-        self.add_scene_item(self.segment_item)
+        self.start_point = EndPointItem(self.point1)
+        self.add_child_item(self.start_point)
 
-        # Start Point
-        self.point1_item = EndPointItem(self.point1)
-        self.add_child_item(self.point1_item)
-
-        # End Point
-        self.point2_item = EndPointItem(self.point2)
-        self.add_child_item(self.point2_item)
+        self.end_point = EndPointItem(self.point2)
+        self.add_child_item(self.end_point)
 
         # Mid Point
         # TODO: Set only visible on PointInput
         self.midpoint_item = MidPointItem(self.segment.midpoint)
         self.add_child_item(self.midpoint_item)
+
+        # Segment
+        self.segment_item = SegmentSceneItem(
+            self.start_point.point_item,
+            self.end_point.point_item)
+        self.add_scene_item(self.segment_item)
+        self.segment_item.update_line()

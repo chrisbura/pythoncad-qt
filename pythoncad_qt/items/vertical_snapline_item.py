@@ -28,13 +28,22 @@ class VerticalSnaplineItem(SnaplineItem):
 
     name = 'Vertical Snap Line'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, scene_point, *args, **kwargs):
+
+        self.scene_point = scene_point
+
         # Line dimensions will be set when added to scene
-        self.line = VerticalSnaplineSceneItem()
+        self.line = VerticalSnaplineSceneItem(self.scene_point)
         super(VerticalSnaplineItem, self).__init__(*args, **kwargs)
         self.add_scene_item(self.line)
 
-        self.add_filter(VerticalAxisLockFilter(self.point.x))
+        self.filter = VerticalAxisLockFilter(self.scene_point.scenePos().x())
+        self.scene_point.position_changed.connect(self.update_filter)
+        self.add_filter(self.filter)
 
     def update_guide(self, event):
-        self.set_guide(self.point.x, self.point.y, self.point.x, event.y)
+        point = self.scene_point.scenePos()
+        self.set_guide(point.x(), point.y(), point.x(), event.y)
+
+    def update_filter(self, *args, **kwargs):
+        self.filter.set_value(self.scene_point.scenePos().x())

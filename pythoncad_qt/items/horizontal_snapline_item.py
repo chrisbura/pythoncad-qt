@@ -28,14 +28,23 @@ class HorizontalSnaplineItem(SnaplineItem):
 
     name = 'Horizontal Snap Line'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, scene_point, *args, **kwargs):
+
+        self.scene_point = scene_point
+
         # Line dimensions will be set when added to scene
-        self.line = HorizontalSnaplineSceneItem()
+        self.line = HorizontalSnaplineSceneItem(self.scene_point)
         super(HorizontalSnaplineItem, self).__init__(*args, **kwargs)
         self.add_scene_item(self.line)
 
         # TODO: Activate filters manually instead of ALL
-        self.add_filter(HorizontalAxisLockFilter(self.point.y))
+        self.filter = HorizontalAxisLockFilter(self.scene_point.scenePos().y())
+        self.scene_point.position_changed.connect(self.update_filter)
+        self.add_filter(self.filter)
 
     def update_guide(self, event):
-        self.set_guide(self.point.x, self.point.y, event.x, self.point.y)
+        point = self.scene_point.scenePos()
+        self.set_guide(point.x(), point.y(), event.x, point.y())
+
+    def update_filter(self, *args, **kwargs):
+        self.filter.set_value(self.scene_point.scenePos().y())

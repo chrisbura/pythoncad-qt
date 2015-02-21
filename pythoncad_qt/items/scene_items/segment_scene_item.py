@@ -23,21 +23,27 @@ from items.scene_items import SceneItem
 
 
 class SegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
-    def __init__(self, point1, point2):
+    def __init__(self, start_point, end_point, *args, **kwargs):
+        super(SegmentSceneItem, self).__init__(*args, **kwargs)
 
-        self.point1 = point1
-        self.point2 = point2
+        self.start_point = start_point
+        self.end_point = end_point
 
-        super(SegmentSceneItem, self).__init__(
-            self.point1.x, self.point1.y,
-            self.point2.x, self.point2.y)
+        self.start_point.position_changed.connect(self.update_line)
+        self.end_point.position_changed.connect(self.update_line)
 
     def shape(self):
-        p = QtGui.QPainterPath(QtCore.QPointF(self.point1.x, self.point1.y))
-        p.lineTo(self.point2.x, self.point2.y)
+        p = QtGui.QPainterPath(self.line().p1())
+        p.lineTo(self.line().p2())
 
         stroker = QtGui.QPainterPathStroker()
         stroker.setWidth(5.0)
         path = stroker.createStroke(p)
 
         return path
+
+    def update_line(self, *args, **kwargs):
+        line = QtCore.QLineF(
+            self.mapFromItem(self.start_point, 0, 0),
+            self.mapFromItem(self.end_point, 0, 0))
+        self.setLine(line)

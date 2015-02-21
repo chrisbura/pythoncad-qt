@@ -52,8 +52,12 @@ class SnapGuideLine(QtGui.QGraphicsLineItem):
 
 class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, point, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)
+
+        self.point = point
+        self.point.position_changed.connect(self.update_line)
+        self.scene_rect = QtCore.QRectF()
 
         self.default_pen = QtGui.QPen(QtCore.Qt.transparent)
         self.default_pen.setWidth(1)
@@ -88,7 +92,8 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemSceneChange and value is not None:
-            self.update_line(value.sceneRect())
+            self.scene_rect = value.sceneRect()
+            self.update_line()
         return super(SnaplineSceneItem, self).itemChange(change, value)
 
     def hover_enter_event(self, event):
@@ -108,3 +113,6 @@ class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
     def hover_move_event(self, event):
         # TODO(chrisbura): Get rid of event.event...
         self.hover_move_signal.emit(event.event)
+
+    def update_line(self, *args, **kwargs):
+        pass

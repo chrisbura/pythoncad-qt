@@ -33,17 +33,19 @@ class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
         self.shape_cache = None
 
         super(PointSceneItem, self).__init__(
-            self.entity.x - self.radius,
-            self.entity.y - self.radius,
+            -1 * self.radius,
+            -1 * self.radius,
             self.diameter,
             self.diameter)
+
+        self.setPos(self.entity.x, self.entity.y)
 
     def shape(self):
         # TODO: Find how to properly handle overzealous shape calculations
         if not self.shape_cache:
             path = QtGui.QPainterPath()
             width = 20.0
-            path.addEllipse(self.entity.x - width / 2.0, self.entity.y - width / 2.0, width, width)
+            path.addEllipse(-1 * width / 2.0, -1 * width / 2.0, width, width)
             self.shape_cache = path
         return self.shape_cache
 
@@ -78,7 +80,7 @@ class MidPoint(SnapPoint):
     pass
 
 
-class EndPoint(SnapPoint):
+class EndPoint(PointSceneItem):
     pass
 
 

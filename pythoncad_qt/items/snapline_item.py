@@ -22,9 +22,8 @@ from items.scene_items.snapline_scene_item import SnapGuideLine
 
 
 class SnaplineItem(Item):
-    def __init__(self, point, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(SnaplineItem, self).__init__(*args, **kwargs)
-        self.point = point
 
         self.guide = SnapGuideLine()
         self.add_scene_item(self.guide)

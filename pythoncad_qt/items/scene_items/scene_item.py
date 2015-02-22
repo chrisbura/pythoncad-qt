@@ -182,8 +182,15 @@ class MovableMixin(object):
         self.ignored_filters.append(input_filter)
 
     def itemChange(self, change, value):
-
         if change == QtGui.QGraphicsItem.ItemPositionChange and self.scene():
+
+            button = QtGui.QApplication.mouseButtons() == QtCore.Qt.LeftButton
+            modifier = QtGui.QApplication.keyboardModifiers() == QtCore.Qt.AltModifier
+
+            if not (button and modifier):
+                self.position_changed.emit(value)
+                return super(MovableMixin, self).itemChange(change, value)
+
             coordinates = {'x': value.x(), 'y': value.y()}
 
             # TODO: Clean up

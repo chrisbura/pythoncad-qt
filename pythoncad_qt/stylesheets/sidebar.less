@@ -108,3 +108,13 @@ FilterableTreeView {
         }
     }
 }
+
+CommandPane {
+    QTreeView {
+        &::item {
+            &:has-children {
+                color: #2991D6;
+            }
+        }
+    }
+}

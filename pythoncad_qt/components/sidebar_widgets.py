@@ -47,7 +47,7 @@ class ClearableLineEdit(QtGui.QLineEdit):
         self.layout = QtGui.QHBoxLayout(self)
         self.layout.setSpacing(0)
         # TODO: Find a way to do in stylesheets, QLayout can't be styled
-        self.layout.setMargin(5)
+        self.layout.setContentsMargins(5, 5, 5, 5)
 
         # Clear Button
         self.clear_button = QtGui.QToolButton(self)
@@ -76,6 +76,8 @@ class CollapseExpandButtonBar(HorizontalLayout, ComponentBase):
         self.add_component(self.expand_button)
 
 
+# TODO: Doesn't work in PySide, even basic def paint... with super()
+# SEE: https://bugreports.qt.io/browse/PYSIDE-152
 class BoldParentDelegate(QtGui.QStyledItemDelegate):
     def paint(self, painter, option, index):
         if not index.parent().isValid():
@@ -109,7 +111,7 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
 
         # Setup Tree model and proxy model
         self.proxy_model = CommandFilterProxy(self)
-        self.proxy_model.setFilterCaseSensitivity(False)
+        self.proxy_model.setFilterCaseSensitivity(QtCore.Qt.CaseInsensitive)
         self.proxy_model.setSourceModel(self.model)
 
         # Tree
@@ -120,7 +122,7 @@ class FilterableTreeView(VerticalLayout, ComponentBase):
         self.tree.setIndentation(0)
         self.tree.setHeaderHidden(True)
         self.tree.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.tree.setItemDelegate(BoldParentDelegate())
+        # self.tree.setItemDelegate(BoldParentDelegate())
         self.tree.setSelectionBehavior(QtGui.QAbstractItemView.SelectItems)
         self.tree.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
 

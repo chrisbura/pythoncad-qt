@@ -154,6 +154,9 @@ FilterableTreeView QTreeView::item:selected {
   color: #000;
   background-color: #b9d4ec;
 }
+CommandPane QTreeView::item:has-children {
+  color: #2991D6;
+}
 TopBar {
   background-color: #445059;
 }

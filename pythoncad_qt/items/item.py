@@ -26,12 +26,6 @@ class Item(QtCore.QObject):
     name = 'Item'
     icon = 'images/commands/new.png'
 
-    hover_enter = QtCore.pyqtSignal(object)
-    hover_leave = QtCore.pyqtSignal()
-    deleted = QtCore.pyqtSignal()
-    remove_scene_item = QtCore.pyqtSignal(object)
-    delete = QtCore.pyqtSignal()
-
     def __init__(self, *args, **kwargs):
         super(Item, self).__init__(*args, **kwargs)
         self.parent = None
@@ -40,8 +34,6 @@ class Item(QtCore.QObject):
 
         self.input_filters = []
 
-        self.delete.connect(self.delete_item)
-
     def add_scene_item(self, scene_item):
         scene_item.parent = self
         self.scene_items.append(scene_item)
@@ -49,17 +41,6 @@ class Item(QtCore.QObject):
     def add_child_item(self, child):
         child.parent = self
         self.child_items.append(child)
-
-    def get_scene_items(self):
-        for scene_item in self.scene_items:
-            yield scene_item
-        for child in self.child_items:
-            for item in child.get_scene_items():
-                yield item
-
-    def delete_item(self):
-        for scene_item in self.get_scene_items():
-            self.remove_scene_item.emit(scene_item)
 
     def traverse(self):
         yield self

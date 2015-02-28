@@ -49,19 +49,6 @@ class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
             self.shape_cache = path
         return self.shape_cache
 
-    def set_position(self, point):
-        self.entity = point
-
-        # Invalidate shape cache
-        self.shape_cache = None
-
-        # Args - x, y, w, h
-        self.setRect(
-            self.entity.x - self.radius,
-            self.entity.y - self.radius,
-            self.diameter, self.diameter
-        )
-
     def hoverEnterEvent(self, event):
         super(PointSceneItem, self).hoverEnterEvent(event)
         self.parent.hover_enter.emit(self.entity)

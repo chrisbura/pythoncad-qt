@@ -24,6 +24,13 @@ from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 # TODO: Have guide use internal
 class VerticalSnaplineSceneItem(SnaplineSceneItem):
-    def update_line(self, *args, **kwargs):
-        point = self.point.scenePos()
-        self.setLine(point.x(), self.scene_rect.top(), point.x(), self.scene_rect.bottom())
+    def paint(self, painter, option, widget):
+        rect = self.scene().sceneRect()
+
+        top = self.mapFromScene(0, rect.top()).y()
+        bottom = self.mapFromScene(0, rect.bottom()).y()
+
+        line = QtCore.QLineF(0, top, 0, bottom)
+        self.setLine(line)
+        super(VerticalSnaplineSceneItem, self).paint(painter, option, widget)
+

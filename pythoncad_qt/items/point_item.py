@@ -20,8 +20,8 @@
 from items.item import Item
 from items.scene_items import PointSceneItem
 from items.scene_items.point_scene_item import EndPoint, CenterPoint, MidPoint, QuarterPoint, HiddenPoint
-from items.vertical_snapline_item import VerticalSnaplineItem
-from items.horizontal_snapline_item import HorizontalSnaplineItem
+from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem
+from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem
 
 
 class BasePointItem(Item):
@@ -34,17 +34,14 @@ class BasePointItem(Item):
         super(BasePointItem, self).__init__(*args, **kwargs)
 
         self.point_item = self.scene_item(point)
+        self.point_item.setPos(self.point.x, self.point.y)
         self.add_scene_item(self.point_item)
 
-        self.horizontal_snapline = HorizontalSnaplineItem(self.point_item)
-        self.add_child_item(self.horizontal_snapline)
+        self.horizontal_snapline = HorizontalSnaplineSceneItem()
+        self.horizontal_snapline.setParentItem(self.point_item)
 
-        self.vertical_snapline = VerticalSnaplineItem(self.point_item)
-        self.add_child_item(self.vertical_snapline)
-
-        # When moving the point item, prevent snapping to it's own guides
-        self.point_item.ignore_filter(self.horizontal_snapline.filter)
-        self.point_item.ignore_filter(self.vertical_snapline.filter)
+        self.vertical_snapline = VerticalSnaplineSceneItem()
+        self.vertical_snapline.setParentItem(self.point_item)
 
 
 class PointItem(BasePointItem):

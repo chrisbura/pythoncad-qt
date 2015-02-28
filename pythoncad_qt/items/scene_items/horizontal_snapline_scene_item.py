@@ -23,6 +23,13 @@ from items.scene_items.snapline_scene_item import SnaplineSceneItem
 
 
 class HorizontalSnaplineSceneItem(SnaplineSceneItem):
-    def update_line(self, *args, **kwargs):
-        point = self.point.scenePos()
-        self.setLine(self.scene_rect.left(), point.y(), self.scene_rect.right(), point.y())
+    def paint(self, painter, option, widget):
+        rect = self.scene().sceneRect()
+
+        left = self.mapFromScene(rect.left(), 0).x()
+        right = self.mapFromScene(rect.right(), 0).x()
+
+        line = QtCore.QLineF(left, 0, right, 0)
+        self.setLine(line)
+        super(HorizontalSnaplineSceneItem, self).paint(painter, option, widget)
+

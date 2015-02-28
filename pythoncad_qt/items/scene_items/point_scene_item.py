@@ -27,18 +27,17 @@ from items.scene_items.scene_item import FilledShapeMixin, UnselectableMixin
 class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, point):
         self.entity = point
+    def __init__(self, *args, **kwargs):
         self.radius = 2.0
         self.diameter = self.radius * 2.0
 
         self.shape_cache = None
 
         super(PointSceneItem, self).__init__(
-            -1 * self.radius,
-            -1 * self.radius,
+            self.radius * -1,
+            self.radius * -1,
             self.diameter,
             self.diameter)
-
-        self.setPos(self.entity.x, self.entity.y)
 
     def shape(self):
         # TODO: Find how to properly handle overzealous shape calculations
@@ -49,18 +48,14 @@ class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
             self.shape_cache = path
         return self.shape_cache
 
-    def hoverEnterEvent(self, event):
-        super(PointSceneItem, self).hoverEnterEvent(event)
-        self.parent.hover_enter.emit(self.entity)
-
-    def hoverLeaveEvent(self, event):
-        super(PointSceneItem, self).hoverLeaveEvent(event)
-        self.parent.hover_leave.emit()
-
 
 class SnapPoint(UnselectableMixin, PointSceneItem):
     default_colour = QtCore.Qt.transparent
     hover_colour = QtCore.Qt.transparent
+
+    def __init__(self, *args, **kwargs):
+        super(SnapPoint, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
 
 
 class MidPoint(SnapPoint):

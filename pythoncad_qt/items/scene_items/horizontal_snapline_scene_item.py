@@ -33,3 +33,6 @@ class HorizontalSnaplineSceneItem(SnaplineSceneItem):
         self.setLine(line)
         super(HorizontalSnaplineSceneItem, self).paint(painter, option, widget)
 
+    def snap_coordinate(self, value):
+        value.setY(self.parentItem().y())
+        return value

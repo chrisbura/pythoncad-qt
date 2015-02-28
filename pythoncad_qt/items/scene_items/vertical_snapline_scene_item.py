@@ -34,3 +34,6 @@ class VerticalSnaplineSceneItem(SnaplineSceneItem):
         self.setLine(line)
         super(VerticalSnaplineSceneItem, self).paint(painter, option, widget)
 
+    def snap_coordinate(self, value):
+        value.setX(self.parentItem().x())
+        return value

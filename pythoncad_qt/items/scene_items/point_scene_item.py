@@ -21,12 +21,10 @@ from PyQt4 import QtGui, QtCore
 
 import settings
 from items.scene_items import SceneItem
-from items.scene_items.scene_item import FilledShapeMixin, UnselectableMixin
+from items.scene_items.scene_item import FilledShapeMixin, UnselectableMixin, CoordinateSnapMixin, MovableMixin
 
 
-class PointSceneItem(FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
-    def __init__(self, point):
-        self.entity = point
+class PointSceneItem(CoordinateSnapMixin, MovableMixin, FilledShapeMixin, SceneItem, QtGui.QGraphicsEllipseItem):
     def __init__(self, *args, **kwargs):
         self.radius = 2.0
         self.diameter = self.radius * 2.0

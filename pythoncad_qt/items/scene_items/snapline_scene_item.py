@@ -22,6 +22,7 @@ from PyQt4 import QtGui, QtCore
 import settings
 from hover_event_manager import HoverState
 from items.scene_items.simple_signal import SimpleSignal
+from items.scene_items.scene_item import SnapsCoordinates
 
 
 class SnapGuidePen(QtGui.QPen):
@@ -50,7 +51,7 @@ class SnapGuideLine(QtGui.QGraphicsLineItem):
         self.setPen(SnapGuidePen())
 
 
-class SnaplineSceneItem(HoverState, QtGui.QGraphicsLineItem):
+class SnaplineSceneItem(SnapsCoordinates, HoverState, QtGui.QGraphicsLineItem):
 
     def __init__(self, *args, **kwargs):
         super(SnaplineSceneItem, self).__init__(*args, **kwargs)

@@ -171,40 +171,47 @@ class ShapeDebugMixin(object):
 class MovableMixin(object):
     def __init__(self, *args, **kwargs):
         super(MovableMixin, self).__init__(*args, **kwargs)
+
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
-        self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges, True)
-
-        self.ignored_filters = []
-
         self.position_changed = SimpleSignal()
 
-    def ignore_filter(self, input_filter):
-        self.ignored_filters.append(input_filter)
+
+class CoordinateSnapMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(CoordinateSnapMixin, self).__init__(*args, **kwargs)
+        self.setFlag(QtGui.QGraphicsItem.ItemSendsGeometryChanges, True)
 
     def itemChange(self, change, value):
         if change == QtGui.QGraphicsItem.ItemPositionChange and self.scene():
 
+            # If Left mouse + alt is pressed then don't snap
             button = QtGui.QApplication.mouseButtons() == QtCore.Qt.LeftButton
             modifier = QtGui.QApplication.keyboardModifiers() == QtCore.Qt.AltModifier
 
-            if not (button and modifier):
+            if button and modifier:
                 self.position_changed.emit(value)
-                return super(MovableMixin, self).itemChange(change, value)
+                return super(CoordinateSnapMixin, self).itemChange(change, value)
 
-            coordinates = {'x': value.x(), 'y': value.y()}
+            # Get all items under the mouse
+            # TODO: Use try instead of isinstance
+            # TODO: Add priority
+            items = [x for x in self.scene().items(value) if isinstance(x, SnapsCoordinates) and x.parentItem() is not self]
 
-            # TODO: Clean up
-            for item in self.scene().items(value):
-                for input_filter in [x for x in item.parent.filters() if x not in self.ignored_filters]:
-                    coordinates.update(input_filter.filter_dict)
+            for item in items:
+                value = item.snap_coordinate(value)
 
-            value = QtCore.QPointF(coordinates['x'], coordinates['y'])
             self.position_changed.emit(value)
-            return value
+        return super(CoordinateSnapMixin, self).itemChange(change, value)
 
-        return super(MovableMixin, self).itemChange(change, value)
+
+class SnapsCoordinates(object):
+    def __init__(self, *args, **kwargs):
+        super(SnapsCoordinates, self).__init__(*args, **kwargs)
+
+    def snap_coordinate(self, value):
+        pass
 
 
 # TODO: Clean up...
-class SceneItem(MovableMixin, HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
+class SceneItem(HoverMixin, HoverState, DefaultPenMixin, SelectableMixin, ShapeDebugMixin):
     pass

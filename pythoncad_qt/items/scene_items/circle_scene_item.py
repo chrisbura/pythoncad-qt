@@ -19,26 +19,19 @@
 
 from PyQt4 import QtGui, QtCore
 
-from sympy.geometry import Segment
-
 from items.scene_items import SceneItem
 
 
 class CircleSceneItem(SceneItem, QtGui.QGraphicsEllipseItem):
-    def __init__(self, point1, point2):
+    def __init__(self, radius, *args, **kwargs):
+        self.radius = radius
+        diameter = self.radius * 2.0
 
         self.shape_cache = None
 
-        self.point1 = point1
-        self.point2 = point2
-
-        radius_segment = Segment(self.point1, self.point2)
-        self.radius = radius_segment.length
-        diameter = self.radius * 2.0
-
         super(CircleSceneItem, self).__init__(
-            self.point1.x - self.radius,
-            self.point1.y - self.radius,
+            self.radius * -1.0,
+            self.radius * -1.0,
             diameter,
             diameter
         )

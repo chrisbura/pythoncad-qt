@@ -17,11 +17,11 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from sympy.geometry import Point
+from sympy.geometry import Point, Segment
 
 from items.item import Item
 from items.scene_items import CircleSceneItem
-from items.point_item import CenterPointItem, QuarterPointItem
+from items.scene_items.point_scene_item import CenterPoint, QuarterPoint
 
 
 class CircleItem(Item):
@@ -35,19 +35,28 @@ class CircleItem(Item):
         self.point1 = point1
         self.point2 = point2
 
-        circle_item = CircleSceneItem(self.point1, self.point2)
-        self.add_scene_item(circle_item)
+        self.center_point = CenterPoint()
+        self.center_point.setPos(self.point1.x, self.point1.y)
+        self.add_scene_item(self.center_point)
 
-        # Snap Points
-        center_point_item = CenterPointItem(self.point1)
-        self.add_child_item(center_point_item)
+        radius_segment = Segment(self.point1, self.point2)
+        radius = radius_segment.length
 
-        quarter_points = [
-            Point(self.point1.x, self.point1.y + circle_item.radius),
-            Point(self.point1.x, self.point1.y - circle_item.radius),
-            Point(self.point1.x + circle_item.radius, self.point1.y),
-            Point(self.point1.x - circle_item.radius, self.point1.y)
-        ]
+        self.circle = CircleSceneItem(radius)
+        self.circle.setParentItem(self.center_point)
 
-        for point in quarter_points:
-            self.add_child_item(QuarterPointItem(point))
+        self.top = QuarterPoint()
+        self.top.setPos(0, -radius)
+        self.top.setParentItem(self.center_point)
+
+        self.bottom = QuarterPoint()
+        self.bottom.setPos(0, radius)
+        self.bottom.setParentItem(self.center_point)
+
+        self.left = QuarterPoint()
+        self.left.setPos(-radius, 0)
+        self.left.setParentItem(self.center_point)
+
+        self.right = QuarterPoint()
+        self.right.setPos(radius, 0)
+        self.right.setParentItem(self.center_point)

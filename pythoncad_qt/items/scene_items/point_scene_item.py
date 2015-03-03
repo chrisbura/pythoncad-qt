@@ -64,11 +64,11 @@ class EndPoint(PointSceneItem):
     pass
 
 
-class CenterPoint(SnapPoint):
+class CenterPoint(PointSceneItem):
     pass
 
 
-class QuarterPoint(SnapPoint):
+class QuarterPoint(PointSceneItem):
     pass
 
 

@@ -132,7 +132,14 @@ class SelectableMixin(object):
                 self.on_selected()
             else:
                 self.on_unselected()
-        return super(SelectableMixin, self).itemChange(change, value)
+
+        # itemChange and setParentItem causes error in PyQt4
+        # TODO: Test with PySide and PyQt5
+        # See http://www.riverbankcomputing.com/pipermail/pyqt/2012-August/031818.html
+        result =  super(SelectableMixin, self).itemChange(change, value)
+        if isinstance(result, QtGui.QGraphicsItem):
+            result = sip.cast(result, QtGui.QGraphicsItem)
+        return result
 
 
 class DefaultPenMixin(object):
@@ -196,6 +203,7 @@ class CoordinateSnapMixin(object):
             # Get all items under the mouse
             # TODO: Use try instead of isinstance
             # TODO: Add priority
+            # TODO: Use childItems
             items = [x for x in self.scene().items(value) if isinstance(x, SnapsCoordinates) and x.parentItem() is not self]
 
             for item in items:

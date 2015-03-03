@@ -35,5 +35,5 @@ class VerticalSnaplineSceneItem(SnaplineSceneItem):
         super(VerticalSnaplineSceneItem, self).paint(painter, option, widget)
 
     def snap_coordinate(self, value):
-        value.setX(self.parentItem().x())
+        value.setX(self.parentItem().scenePos().x())
         return value

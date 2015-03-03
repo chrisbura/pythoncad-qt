@@ -37,11 +37,8 @@ class BasePointItem(Item):
         self.point_item.setPos(self.point.x, self.point.y)
         self.add_scene_item(self.point_item)
 
-        self.horizontal_snapline = HorizontalSnaplineSceneItem()
-        self.horizontal_snapline.setParentItem(self.point_item)
-
-        self.vertical_snapline = VerticalSnaplineSceneItem()
-        self.vertical_snapline.setParentItem(self.point_item)
+        self.horizontal_snapline = HorizontalSnaplineSceneItem(self.point_item)
+        self.vertical_snapline = VerticalSnaplineSceneItem(self.point_item)
 
 
 class PointItem(BasePointItem):

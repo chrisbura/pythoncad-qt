@@ -33,7 +33,7 @@ class BasePointItem(Item):
         self.point = point
         super(BasePointItem, self).__init__(*args, **kwargs)
 
-        self.point_item = self.scene_item(point)
+        self.point_item = self.scene_item()
         self.point_item.setPos(self.point.x, self.point.y)
         self.add_scene_item(self.point_item)
 

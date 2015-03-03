@@ -17,6 +17,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+import sip
 from PyQt4 import QtCore, QtGui
 
 import settings
@@ -201,7 +202,14 @@ class CoordinateSnapMixin(object):
                 value = item.snap_coordinate(value)
 
             self.position_changed.emit(value)
-        return super(CoordinateSnapMixin, self).itemChange(change, value)
+
+        # itemChange and setParentItem causes error in PyQt4
+        # TODO: Test with PySide and PyQt5
+        # See http://www.riverbankcomputing.com/pipermail/pyqt/2012-August/031818.html
+        result =  super(CoordinateSnapMixin, self).itemChange(change, value)
+        if isinstance(result, QtGui.QGraphicsItem):
+            result = sip.cast(result, QtGui.QGraphicsItem)
+        return result
 
 
 class SnapsCoordinates(object):

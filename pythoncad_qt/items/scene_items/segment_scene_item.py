@@ -17,20 +17,32 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+import sip
 from PyQt4 import QtGui, QtCore
 
 from items.scene_items import SceneItem
+from items.scene_items.point_scene_item import EndPoint
 
+
+class SegmentEndPointSceneItem(EndPoint):
+    def itemChange(self, change, value):
+        if change == QtGui.QGraphicsItem.ItemPositionHasChanged and self.scene():
+            self.parentItem().update()
+
+        # itemChange and setParentItem causes error in PyQt4
+        # TODO: Test with PySide and PyQt5
+        # See http://www.riverbankcomputing.com/pipermail/pyqt/2012-August/031818.html
+        result =  super(SegmentEndPointSceneItem, self).itemChange(change, value)
+        if isinstance(result, QtGui.QGraphicsItem):
+            result = sip.cast(result, QtGui.QGraphicsItem)
+        return result
 
 class SegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
-    def __init__(self, start_point, end_point, *args, **kwargs):
+    def __init__(self, start, end, *args, **kwargs):
         super(SegmentSceneItem, self).__init__(*args, **kwargs)
 
-        self.start_point = start_point
-        self.end_point = end_point
-
-        self.start_point.position_changed.connect(self.update_line)
-        self.end_point.position_changed.connect(self.update_line)
+        self.start = start
+        self.end = end
 
     def shape(self):
         p = QtGui.QPainterPath(self.line().p1())
@@ -42,8 +54,7 @@ class SegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
 
         return path
 
-    def update_line(self, *args, **kwargs):
-        line = QtCore.QLineF(
-            self.mapFromItem(self.start_point, 0, 0),
-            self.mapFromItem(self.end_point, 0, 0))
+    def paint(self, *args, **kwargs):
+        line = QtCore.QLineF(self.start.pos(), self.end.pos())
         self.setLine(line)
+        super(SegmentSceneItem, self).paint(*args, **kwargs)

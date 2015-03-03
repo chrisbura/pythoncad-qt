@@ -46,11 +46,11 @@ class CircleItem(Item):
         self.circle.setParentItem(self.center_point)
 
         self.top = QuarterPoint()
-        self.top.setPos(0, -radius)
+        self.top.setPos(0, radius)
         self.top.setParentItem(self.center_point)
 
         self.bottom = QuarterPoint()
-        self.bottom.setPos(0, radius)
+        self.bottom.setPos(0, -radius)
         self.bottom.setParentItem(self.center_point)
 
         self.left = QuarterPoint()

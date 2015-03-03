@@ -97,7 +97,6 @@ class PythoncadQt(QtGui.QMainWindow):
         self.item_manager = ItemManager()
 
         # Input Filter
-        self.command_manager.add_item.connect(self.input_filter.add_filters)
         scene.mouse_click.connect(self.input_filter.handle_click)
         scene.mouse_moved.connect(self.input_filter.handle_move)
 

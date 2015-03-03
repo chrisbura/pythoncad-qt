@@ -38,11 +38,11 @@ class CommandManager(QtCore.QObject):
 
         self.active_command = None
 
-    def handle_click(self, x, y):
-        self.coordinate_click.emit(x, y)
+    def handle_click(self, event, items, point):
+        self.coordinate_click.emit(point.x(), point.y())
 
-    def handle_move(self, event, *args, **kwargs):
-        self.mouse_move.emit(event.x, event.y)
+    def handle_move(self, event, items, point):
+        self.mouse_move.emit(point.x(), point.y())
 
     def start_command(self, command):
         if self.active_command:

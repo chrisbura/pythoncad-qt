@@ -24,22 +24,17 @@ class SnapCursor(QtGui.QGraphicsRectItem):
     def __init__(self, x, y):
 
         self.width = 10
-        self.x, self.y = x, y
 
-        super(SnapCursor, self).__init__(self.get_rect(x, y))
+        super(SnapCursor, self).__init__(
+            (self.width / 2) * -1,
+            (self.width / 2) * -1,
+            self.width, self.width
+        )
 
         self.pen = QtGui.QPen()
         self.pen.setColor(QtCore.Qt.magenta)
         self.pen.setWidth(2)
         self.setPen(self.pen)
 
-    def set_position(self, event):
-        self.setRect(self.get_rect(event.x, event.y))
-
-    def get_rect(self, x, y):
-        return QtCore.QRectF(
-            x - self.width / 2,
-            y - self.width / 2,
-            self.width,
-            self.width
-        )
+    def set_position(self, event, items, point):
+        self.setPos(point.x(), point.y())

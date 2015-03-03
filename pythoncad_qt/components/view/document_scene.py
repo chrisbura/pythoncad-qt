@@ -24,18 +24,10 @@ from PyQt4 import QtCore, QtGui
 import settings
 
 
-class MoveEvent(object):
-    def __init__(self, event, *args, **kwargs):
-        super(MoveEvent, self).__init__(*args, **kwargs)
-        self.raw_event = event
-        self.x = self.raw_event.scenePos().x()
-        self.y = self.raw_event.scenePos().y()
-
-
 class DocumentScene(QtGui.QGraphicsScene):
 
-    mouse_moved = QtCore.pyqtSignal(MoveEvent, list)
-    mouse_click = QtCore.pyqtSignal(float, float, list)
+    mouse_moved = QtCore.pyqtSignal(object, list)
+    mouse_click = QtCore.pyqtSignal(object, list)
     escape_pressed = QtCore.pyqtSignal()
     remove_item = QtCore.pyqtSignal(object)
 
@@ -58,8 +50,7 @@ class DocumentScene(QtGui.QGraphicsScene):
 
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
-            x, y = event.scenePos().x(), event.scenePos().y()
-            self.mouse_click.emit(x, y, self.items(event.scenePos()))
+            self.mouse_click.emit(event, self.items(event.scenePos()))
 
         # Context menu to allow accurate selection of an item when multiple
         # items overlap
@@ -145,4 +136,4 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
         items = self.items(event.scenePos())
-        self.mouse_moved.emit(MoveEvent(event), items)
+        self.mouse_moved.emit(event, items)

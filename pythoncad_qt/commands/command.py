@@ -31,6 +31,7 @@ class Command(QtCore.QObject):
 
     item_ready = QtCore.pyqtSignal(object)
     item_remove = QtCore.pyqtSignal(object)
+    preview_ready = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)

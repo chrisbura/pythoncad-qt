@@ -33,7 +33,6 @@ from commands.rectangle_command import RectangleCommand
 from commands.dimension_command import DimensionCommand, HorizontalDimensionCommand, VerticalDimensionCommand
 
 # TODO: Move QActions to pythoncad_qt.py
-# TODO: Deselect command on command_cancel (Esc) via signals
 
 
 class CommandListModel(QtGui.QStandardItemModel):

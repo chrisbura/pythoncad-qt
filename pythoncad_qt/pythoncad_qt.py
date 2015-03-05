@@ -92,6 +92,8 @@ class PythoncadQt(QtGui.QMainWindow):
         self.document_control.document.titlebar.expand_viewport.connect(self.toggle_expand)
         self.document_control.document.titlebar.open_properties.connect(self.open_properties)
 
+        scene.escape_pressed.connect(self.command_pane.command_list.tree.clearSelection)
+
         self.input_filter = InputFilter()
         self.command_manager = CommandManager()
         self.item_manager = ItemManager()
@@ -109,6 +111,7 @@ class PythoncadQt(QtGui.QMainWindow):
         # Item Manager
         self.command_manager.add_item.connect(self.item_manager.add_item)
         self.command_manager.remove_item.connect(self.item_manager.remove_item)
+        self.command_manager.add_preview.connect(self.item_manager.add_item)
         self.item_manager.add_scene_item.connect(scene.addItem)
         self.item_manager.remove_scene_item.connect(scene.removeItem)
         scene.remove_item.connect(self.item_manager.remove_item)

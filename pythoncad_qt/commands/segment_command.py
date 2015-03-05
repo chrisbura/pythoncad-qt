@@ -49,7 +49,7 @@ class SegmentCommand(Command):
         self.mouse_received.connect(self.preview_item.update)
         self.command_finished.connect(partial(self.item_remove.emit, self.preview_item))
         self.command_cancelled.connect(partial(self.item_remove.emit, self.preview_item))
-        self.item_ready.emit(self.preview_item)
+        self.preview_ready.emit(self.preview_item)
 
     def add_item(self):
         item = SegmentItem(

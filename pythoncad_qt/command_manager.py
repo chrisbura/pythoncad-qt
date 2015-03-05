@@ -29,6 +29,7 @@ class CommandManager(QtCore.QObject):
     item_click = QtCore.pyqtSignal()
     add_item = QtCore.pyqtSignal(object)
     remove_item = QtCore.pyqtSignal(object)
+    add_preview = QtCore.pyqtSignal(object)
 
     command_started = QtCore.pyqtSignal()
     command_stopped = QtCore.pyqtSignal()
@@ -56,11 +57,13 @@ class CommandManager(QtCore.QObject):
         self.mouse_move.connect(self.active_command.mouse_received.emit)
         self.active_command.item_ready.connect(self.add_item.emit)
         self.active_command.item_remove.connect(self.remove_item.emit)
+        self.active_command.preview_ready.connect(self.add_preview.emit)
         self.active_command.command_finished.connect(self.end_command)
 
         self.active_command.start()
         self.command_started.emit()
 
+        # Restart command when completed
         self.active_command.command_finished.connect(
             partial(self.start_command, command)
         )

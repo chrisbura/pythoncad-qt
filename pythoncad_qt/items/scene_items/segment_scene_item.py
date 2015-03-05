@@ -37,6 +37,7 @@ class SegmentEndPointSceneItem(EndPoint):
             result = sip.cast(result, QtGui.QGraphicsItem)
         return result
 
+
 class SegmentSceneItem(SceneItem, QtGui.QGraphicsLineItem):
     def __init__(self, start, end, *args, **kwargs):
         super(SegmentSceneItem, self).__init__(*args, **kwargs)

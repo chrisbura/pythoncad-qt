@@ -20,8 +20,7 @@
 from items.item import Item
 from items.scene_items import PointSceneItem
 from items.scene_items.point_scene_item import EndPoint, CenterPoint, MidPoint, QuarterPoint, HiddenPoint
-from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem
-from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem
+from items.snapline_item import SnaplineItem
 
 
 class BasePointItem(Item):
@@ -37,8 +36,7 @@ class BasePointItem(Item):
         self.point_item.setPos(self.point.x, self.point.y)
         self.add_scene_item(self.point_item)
 
-        self.horizontal_snapline = HorizontalSnaplineSceneItem(self.point_item)
-        self.vertical_snapline = VerticalSnaplineSceneItem(self.point_item)
+        self.snaplines = SnaplineItem(self.point_item)
 
 
 class PointItem(BasePointItem):

@@ -50,6 +50,12 @@ class SnapGuideLine(QtGui.QGraphicsLineItem):
         self.setVisible(False)
         self.setPen(SnapGuidePen())
 
+    def show_guide(self, *args, **kwargs):
+        self.setVisible(True)
+
+    def hide_guide(self, *args, **kwargs):
+        self.setVisible(False)
+
 
 class SnaplineSceneItem(SnapsCoordinates, HoverState, QtGui.QGraphicsLineItem):
 

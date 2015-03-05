@@ -23,6 +23,9 @@ from PyQt4 import QtCore, QtGui
 
 import settings
 
+from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem
+from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem
+
 
 class DocumentScene(QtGui.QGraphicsScene):
 
@@ -136,4 +139,31 @@ class DocumentScene(QtGui.QGraphicsScene):
     def mouseMoveEvent(self, event):
         super(DocumentScene, self).mouseMoveEvent(event)
         items = self.items(event.scenePos())
+
+        horizontal = [x for x in items if isinstance(x, HorizontalSnaplineSceneItem)]
+        vertical = [x for x in items if isinstance(x, VerticalSnaplineSceneItem)]
+
+        # TODO: Handle priority, i.e. prefer own snaplines when making segment
+        # Calculate the distance to all the horizontal snaplines
+        distances = []
+        for line in horizontal:
+            distance = abs(event.scenePos().x() - line.scenePos().x())
+            distances.append(distance)
+
+        # Remove the snapline with the shortest distance
+        if distances:
+            horizontal.pop(distances.index(min(distances)))
+
+        # Do the same thing for the vertical snaplines
+        distances = []
+        for line in vertical:
+            distance = abs(event.scenePos().y() - line.scenePos().y())
+            distances.append(distance)
+
+        if distances:
+            vertical.pop(distances.index(min(distances)))
+
+        # Remove leftover snaplines
+        items = [x for x in items if x not in horizontal and x not in vertical]
+
         self.mouse_moved.emit(event, items)

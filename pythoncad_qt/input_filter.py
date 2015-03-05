@@ -19,8 +19,6 @@
 
 from PyQt4 import QtCore
 
-from items.scene_items.scene_item import SnapsCoordinates
-
 
 class InputFilter(QtCore.QObject):
 

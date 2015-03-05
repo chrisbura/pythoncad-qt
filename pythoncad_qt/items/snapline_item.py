@@ -17,34 +17,22 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from items import Item
-from items.scene_items.snapline_scene_item import SnapGuideLine
+from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem, HorizontalSnapGuideLine
+from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem, VerticalSnapGuideLine
 
 
-class SnaplineItem(Item):
-    def __init__(self, *args, **kwargs):
+class SnaplineItem(object):
+    def __init__(self, point, *args, **kwargs):
         super(SnaplineItem, self).__init__(*args, **kwargs)
 
-        self.guide = SnapGuideLine()
-        self.add_scene_item(self.guide)
+        self.vertical = VerticalSnaplineSceneItem(point)
+        self.vertical_guide = VerticalSnapGuideLine(self.vertical)
+        self.vertical.hover_enter_signal.connect(self.vertical_guide.show_guide)
+        self.vertical.hover_move_signal.connect(self.vertical_guide.update_guide)
+        self.vertical.hover_leave_signal.connect(self.vertical_guide.hide_guide)
 
-        # Guide Line Signals
-        self.line.hover_enter_signal.connect(self.show_guide)
-        self.line.hover_leave_signal.connect(self.hide_guide)
-        self.line.hover_move_signal.connect(self.update_guide)
-
-        # Filter Signals
-        self.line.hover_enter_signal.connect(self.activate_filters)
-        self.line.hover_leave_signal.connect(self.deactivate_filters)
-
-    def show_guide(self, event):
-        self.guide.setVisible(True)
-
-    def hide_guide(self, event):
-        self.guide.setVisible(False)
-
-    def set_guide(self, x1, y1, x2, y2):
-        self.guide.setLine(x1, y1, x2, y2)
-
-    def update_guide(self, event):
-        pass
+        self.horizontal = HorizontalSnaplineSceneItem(point)
+        self.horizontal_guide = HorizontalSnapGuideLine(self.horizontal)
+        self.horizontal.hover_enter_signal.connect(self.horizontal_guide.show_guide)
+        self.horizontal.hover_move_signal.connect(self.horizontal_guide.update_guide)
+        self.horizontal.hover_leave_signal.connect(self.horizontal_guide.hide_guide)

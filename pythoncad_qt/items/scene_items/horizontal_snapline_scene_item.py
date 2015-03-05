@@ -19,7 +19,7 @@
 
 from PyQt4 import QtGui, QtCore
 
-from items.scene_items.snapline_scene_item import SnaplineSceneItem
+from items.scene_items.snapline_scene_item import SnaplineSceneItem, SnapGuideLine
 
 
 class HorizontalSnaplineSceneItem(SnaplineSceneItem):
@@ -36,3 +36,10 @@ class HorizontalSnaplineSceneItem(SnaplineSceneItem):
     def snap_coordinate(self, value):
         value.setY(self.parentItem().scenePos().y())
         return value
+
+
+class HorizontalSnapGuideLine(SnapGuideLine):
+    def update_guide(self, event):
+        point = self.mapFromScene(event.scenePos())
+        line = QtCore.QLineF(0, 0, point.x(), 0)
+        self.setLine(line)

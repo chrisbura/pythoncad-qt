@@ -19,7 +19,7 @@
 
 from PyQt4 import QtGui, QtCore
 
-from items.scene_items.snapline_scene_item import SnaplineSceneItem
+from items.scene_items.snapline_scene_item import SnaplineSceneItem, SnapGuideLine
 
 
 # TODO: Have guide use internal
@@ -37,3 +37,10 @@ class VerticalSnaplineSceneItem(SnaplineSceneItem):
     def snap_coordinate(self, value):
         value.setX(self.parentItem().scenePos().x())
         return value
+
+
+class VerticalSnapGuideLine(SnapGuideLine):
+    def update_guide(self, event):
+        point = self.mapFromScene(event.scenePos())
+        line = QtCore.QLineF(0, 0, 0, point.y())
+        self.setLine(line)

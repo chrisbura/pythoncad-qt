@@ -22,6 +22,7 @@ from sympy.geometry import Segment
 from items.item import Item
 from items.scene_items.segment_scene_item import SegmentSceneItem, SegmentEndPointSceneItem
 from items.point_item import MidPointItem
+from items.snapline_item import SnaplineItem
 
 
 class SegmentItem(Item):
@@ -48,6 +49,9 @@ class SegmentItem(Item):
         self.end.setPos(self.point2.x, self.point2.y)
 
         self.add_scene_item(self.line)
+
+        self.start_snaplines = SnaplineItem(self.start)
+        self.end_snaplines = SnaplineItem(self.end)
 
         # Mid Point
         # TODO: Set only visible on PointInput

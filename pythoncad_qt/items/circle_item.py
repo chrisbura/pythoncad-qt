@@ -22,8 +22,7 @@ from sympy.geometry import Point, Segment
 from items.item import Item
 from items.scene_items import CircleSceneItem
 from items.scene_items.point_scene_item import CenterPoint, QuarterPoint
-from items.scene_items.horizontal_snapline_scene_item import HorizontalSnaplineSceneItem
-from items.scene_items.vertical_snapline_scene_item import VerticalSnaplineSceneItem
+from items.snapline_item import SnaplineItem
 
 
 class CircleItem(Item):
@@ -40,6 +39,7 @@ class CircleItem(Item):
         self.center_point = CenterPoint()
         self.center_point.setPos(self.point1.x, self.point1.y)
         self.add_scene_item(self.center_point)
+        self.center_snap = SnaplineItem(self.center_point)
 
         radius_segment = Segment(self.point1, self.point2)
         radius = radius_segment.length
@@ -50,23 +50,19 @@ class CircleItem(Item):
         self.top = QuarterPoint()
         self.top.setPos(0, radius)
         self.top.setParentItem(self.center_point)
-        self.top_vsnap = VerticalSnaplineSceneItem(self.top)
-        self.top_hsnap = HorizontalSnaplineSceneItem(self.top)
+        self.top_snap = SnaplineItem(self.top)
 
         self.bottom = QuarterPoint()
         self.bottom.setPos(0, -radius)
         self.bottom.setParentItem(self.center_point)
-        self.bottom_vsnap = VerticalSnaplineSceneItem(self.bottom)
-        self.bottom_hsnap = HorizontalSnaplineSceneItem(self.bottom)
+        self.bottom_snap = SnaplineItem(self.bottom)
 
         self.left = QuarterPoint()
         self.left.setPos(-radius, 0)
         self.left.setParentItem(self.center_point)
-        self.left_vsnap = VerticalSnaplineSceneItem(self.left)
-        self.left_hsnap = HorizontalSnaplineSceneItem(self.left)
+        self.left_snap = SnaplineItem(self.left)
 
         self.right = QuarterPoint()
         self.right.setPos(radius, 0)
         self.right.setParentItem(self.center_point)
-        self.right_vsnap = VerticalSnaplineSceneItem(self.right)
-        self.right_hsnap = HorizontalSnaplineSceneItem(self.right)
+        self.right_snap = SnaplineItem(self.right)

@@ -145,7 +145,7 @@ FilterableTreeView QTreeView {
 FilterableTreeView QTreeView::item {
   border: none;
   font-size: 12px;
-  padding: 10px;
+  padding: 5px;
 }
 FilterableTreeView QTreeView::item:hover {
   background-color: #f2f2f2;

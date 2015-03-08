@@ -19,6 +19,8 @@
 
 from PyQt4 import QtCore
 
+from items.scene_items.point_scene_item import PointSceneItem
+
 
 class Input(QtCore.QObject):
 
@@ -27,7 +29,7 @@ class Input(QtCore.QObject):
     def __init__(self, *args, **kwargs):
         super(Input, self).__init__(*args, **kwargs)
 
-    def handle_coordinates(self, x, y):
+    def handle_click(self, event, items, point):
         self.input_valid.emit()
 
     def handle_item(self):
@@ -45,13 +47,29 @@ class CoordinateInput(Input):
         self.x = None
         self.y = None
 
-    def handle_coordinates(self, x, y):
-        self.x, self.y = x, y
+    def handle_click(self, event, items, point):
+        self.x, self.y = point.x(), point.y()
         self.input_valid.emit()
 
 
 class ItemInput(Input):
     pass
+
+
+class PointInput(Input):
+    def __init__(self, *args, **kwargs):
+        super(PointInput, self).__init__(*args, **kwargs)
+        self.point = None
+        self.x = None
+        self.y = None
+
+    def handle_click(self, event, items, point):
+        self.point = next((item for item in items if isinstance(item, PointSceneItem)), None)
+
+        if self.point:
+            self.x = self.point.scenePos().x()
+            self.y = self.point.scenePos().y()
+            self.input_valid.emit()
 
 
 class SegmentInput(ItemInput):

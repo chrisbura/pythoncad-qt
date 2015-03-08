@@ -24,9 +24,9 @@ from PyQt4 import QtCore
 
 class CommandManager(QtCore.QObject):
 
-    coordinate_click = QtCore.pyqtSignal(float, float)
+    mouse_click = QtCore.pyqtSignal(object, list, object)
     mouse_move = QtCore.pyqtSignal(float, float)
-    item_click = QtCore.pyqtSignal()
+
     add_item = QtCore.pyqtSignal(object)
     remove_item = QtCore.pyqtSignal(object)
     add_preview = QtCore.pyqtSignal(object)
@@ -40,7 +40,7 @@ class CommandManager(QtCore.QObject):
         self.active_command = None
 
     def handle_click(self, event, items, point):
-        self.coordinate_click.emit(point.x(), point.y())
+        self.mouse_click.emit(event, items, point)
 
     def handle_move(self, event, items, point):
         self.mouse_move.emit(point.x(), point.y())
@@ -52,8 +52,8 @@ class CommandManager(QtCore.QObject):
         self.active_command = command()
 
         # Connect Signals to Command
-        self.coordinate_click.connect(
-            self.active_command.coordinate_received.emit)
+        self.mouse_click.connect(
+            self.active_command.click_received.emit)
         self.mouse_move.connect(self.active_command.mouse_received.emit)
         self.active_command.item_ready.connect(self.add_item.emit)
         self.active_command.item_remove.connect(self.remove_item.emit)
@@ -69,7 +69,7 @@ class CommandManager(QtCore.QObject):
         )
 
     def end_command(self):
-        self.coordinate_click.disconnect()
+        self.mouse_click.disconnect()
         self.mouse_move.disconnect()
 
         self.active_command = None

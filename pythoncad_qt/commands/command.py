@@ -24,7 +24,7 @@ from PyQt4 import QtCore
 
 class Command(QtCore.QObject):
 
-    coordinate_received = QtCore.pyqtSignal(float, float)
+    click_received = QtCore.pyqtSignal(object, list, object)
     mouse_received = QtCore.pyqtSignal(float, float)
     command_finished = QtCore.pyqtSignal()
     command_cancelled = QtCore.pyqtSignal()
@@ -58,12 +58,12 @@ class Command(QtCore.QObject):
             return
 
         # Connect *_received signals to next input
-        self.coordinate_received.connect(self.active_input.handle_coordinates)
+        self.click_received.connect(self.active_input.handle_click)
         self.mouse_received.connect(self.active_input.handle_move)
 
         # When an input is valid, disconnect it from the *_received signals
         self.active_input.input_valid.connect(
-            partial(self.coordinate_received.disconnect, self.active_input.handle_coordinates))
+            partial(self.click_received.disconnect, self.active_input.handle_click))
         self.active_input.input_valid.connect(
             partial(self.mouse_received.disconnect, self.active_input.handle_move))
 

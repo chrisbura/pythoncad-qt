@@ -22,7 +22,7 @@ from functools import partial
 from sympy.geometry import Point
 
 from commands.command import Command
-from commands.inputs import CoordinateInput
+from commands.inputs import CoordinateInput, PointInput
 from items import DimensionItem, VerticalDimensionItem, HorizontalDimensionItem
 from items.scene_previews import DimensionScenePreview
 from items.scene_previews.horizontal_dimension_scene_preview import HorizontalDimensionScenePreview
@@ -39,12 +39,13 @@ class DimensionCommand(Command):
     def __init__(self, *args, **kwargs):
         super(DimensionCommand, self).__init__(*args, **kwargs)
 
-        self.point1 = CoordinateInput()
+        self.point1 = PointInput()
         self.add_input(self.point1)
 
-        self.point2 = CoordinateInput()
+        self.point2 = PointInput()
         self.add_input(self.point2)
 
+        # Label position
         self.point3 = CoordinateInput()
         self.add_input(self.point3)
 
